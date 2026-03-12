@@ -1,0 +1,10 @@
+interface:
+  display_name: "Stock Technical Analysis"
+  short_description: "图表/行情数据技术分析与条件式交易计划"
+  default_prompt: "Use $stock-technical-analysis to analyze chart screenshots or MCP/OHLC market data, build the analysis evidence first, then produce a conditional trade plan with risk controls."
+
+# 注意：此文件最初为 OpenAI 自定义 GPT 配置，现通用化。
+# 不同平台可能以不同方式读取此文件；核心 skill 逻辑在 SKILL.md 和 workflows/ 中。
+
+policy:
+  allow_implicit_invocation: true
