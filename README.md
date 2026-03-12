@@ -1,72 +1,74 @@
 # stock-technical-analysis
 
-面向多 AI Agent 复用的 `stock-technical-analysis` Skill 仓库。
+`stock-technical-analysis` 是一个给 AI Agent 使用的交易技术分析 Skill。  
+它的核心价值不是“讲概念”，而是把分析过程标准化，让不同 AI 在面对同一市场输入时，输出更一致、更可执行的条件式交易计划。
 
-该仓库采用“**单 Skill 仓库**”标准布局：仓库根目录就是 Skill 本体，便于被不同 Agent 平台直接读取或分发。
+## 这个 Skill 解决什么问题
 
-## Standard Layout
+- 把“凭感觉看图”变成可复用的多步骤分析流程。
+- 把“只给方向”升级为“方向 + 关键位 + 触发条件 + 风控”。
+- 降低 AI 在复杂分析中的幻觉率，优先使用结构化行情数据（MCP/OHLC）。
+- 减少风格漂移，让不同 AI 给出的结论结构一致、便于比较和复盘。
 
-```text
-stock-technical-analysis/
-├── SKILL.md                    # 必需：触发描述 + 核心工作流入口
-├── agents/                     # 推荐：平台 UI 元数据
-│   └── openai.yaml
-├── workflows/                  # 推荐：主工作流（高频执行）
-│   └── chart-analysis-workflow.md
-├── references/                 # 可选：按需加载的详细知识库
-│   ├── core/
-│   ├── patterns/
-│   ├── indicators/
-│   ├── playbooks/
-│   ├── checklists/
-│   └── risk/
-├── scripts/                    # 可选：确定性脚本（当前可按需新增）
-└── assets/                     # 可选：模板/静态资源（当前可按需新增）
-```
+## 适用场景
 
-## Design Principles
+- 用户上传 1 张或多张 K 线图，想快速判断当前结构与关键点位。
+- 用户要求多周期联动分析（例如 `4H + 1H`）并给出日内计划。
+- 用户不提供图片，只给标的，要求 AI 主动拉取行情并分析。
+- 用户需要“可执行计划”，而不是泛泛而谈的市场点评。
 
-- `SKILL.md` 只保留高价值指令和触发语义，避免冗长背景描述。
-- 高频规则优先内嵌在 `workflows/`，降低 Agent 机械读取大量 references 的成本。
-- `references/` 只放边界情况、复杂定义、扩展知识，按需读取。
-- 目录保持一层可见、可预期，避免深层嵌套导致可移植性下降。
+## 输入与输出
 
-## Use With Different AI Agents
+输入支持：
 
-### Codex / 类 Codex Agent
+- K 线截图（单图或多图）。
+- MCP / OHLC 结构化行情数据。
+- 图片 + 行情数据混合输入。
 
-将本仓库作为 skill 根目录使用，或复制到：
+输出目标：
 
-- `$CODEX_HOME/skills/stock-technical-analysis`
+- `分析证据`：市场结构、关键位、形态、动量、综合研判。
+- `交易决策卡`：方向、setup、触发、止损、目标、仓位建议、失效条件。
+- `风险约束`：明确不满足条件时观望，不强行给单。
 
-### 通用 Agent（自定义 Skill Loader）
+## 核心方法
 
-最小可用集合：
+- 先分析后结论：先证据，后决策，避免“先拍方向再补理由”。
+- 数据优先：`MCP/OHLC > 用户明确数值 > 清晰截图 > 模糊截图`。
+- 最小读取：高频规则内置在 workflow，只有边界情况再查 references。
+- 图片保守：图像细节不清时只给结构判断，不输出硬价位或微观 K 线强结论。
 
-1. `SKILL.md`
-2. `workflows/`
-3. `references/`（可选但建议）
+## 快速使用示例
 
-解析规则建议：
+- `分析 BTC 4H 和 1H，给我今天可执行的多空条件。`
+- `只用你能拉到的 MCP 数据，做 ETH 日内交易计划。`
+- `我发两张图，你按高周期定方向、低周期找触发。`
+- `如果信号冲突，请明确告诉我观望，不要强行给点位。`
 
-1. 先读 `SKILL.md` frontmatter (`name` + `description`)
-2. 再按 `SKILL.md` 指引加载 workflow
-3. 最后按需读取 references
+## 给不同 AI 的接入建议
 
-## Maintenance Guide
+- 必需文件：`SKILL.md`、`workflows/`
+- 建议文件：`references/`
+- 平台元数据：`agents/openai.yaml`
 
-- 将仓库根目录视为单一事实源（single source of truth）。
-- 变更 workflow 时，优先保持向后兼容，不随意改动关键输出字段名。
-- 新增脚本时放入 `scripts/` 并附最小可运行示例。
+加载顺序建议：
 
-## Current Scope
+1. 读取 `SKILL.md`（触发条件 + 使用规则）。
+2. 执行 `workflows/chart-analysis-workflow.md`。
+3. 仅在需要时按需读取 `references/` 细节。
 
-当前版本聚焦：
+## 仓库范围
 
-- 图表与行情数据驱动分析
-- 多时间框架联动
-- 条件式交易计划与风险控制
+包含：
+
+- 图表/行情数据驱动的技术分析流程。
+- 多时间框架联动判断。
+- 条件式交易计划与风险控制框架。
 
 不包含：
 
-- 交易日志与复盘数据目录（已从 skill 仓库剥离）
+- 交易日志、复盘数据库、绩效统计系统。
+
+## 免责声明
+
+本 Skill 仅用于研究与学习，不构成任何投资建议。交易有风险，决策与结果由使用者自行承担。
