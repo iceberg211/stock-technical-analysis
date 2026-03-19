@@ -7,6 +7,7 @@
 | market-structure.md | 市场结构 | 判断趋势方向、识别BOS/CHoCH、评估市场状态 |
 | price-action.md | 价格行为 | 分析K线力度、突破真假、实体与影线的含义 |
 | support-resistance.md | 支撑与阻力 | 画关键位、判断翻转、评估突破/守住信号 |
+| volume-analysis.md | 成交量分析 | 量价配合、突破确认、趋势健康度、持仓量 |
 
 ## 三者关系
 
@@ -27,4 +28,5 @@
 - 用户问"当前趋势/方向/该做多还是做空" → `market-structure.md`
 - 用户问"支撑在哪/阻力在哪/关键位" → `support-resistance.md`
 - 用户问"这根K线的力度/突破是否有效" → `price-action.md`
-- 用户要求"完整分析" → 按顺序加载全部三个文件
+- 用户问"成交量/量能/突破放量/缩量" → `volume-analysis.md`
+- 用户要求"完整分析" → 按顺序加载全部文件

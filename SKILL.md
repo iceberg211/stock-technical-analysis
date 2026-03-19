@@ -24,9 +24,11 @@ description: |
 
 | 用户意图 | 加载路径 |
 |------|---------|
-| 上传一张或多张同品种 K 线图，要求分析走势 | `workflows/chart-analysis-workflow.md` |
-| 要求完整技术分析或多时间框架联动分析 | `workflows/chart-analysis-workflow.md` |
-| 要求使用 MCP / OHLC / 实时行情数据分析 | `workflows/chart-analysis-workflow.md` |
+| 上传一张或多张同品种 K 线图，要求分析走势 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
+| 要求完整技术分析或多时间框架联动分析 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
+| 要求使用 MCP / OHLC / 实时行情数据分析 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
+| 分析完成后需要输出交易方案 | `workflows/trading-decision.md`（Playbook 匹配、Checklist、仓位、回测） |
+| 输出格式选择 | `workflows/output-templates.md`（标准模板、决策卡、AI 注意事项） |
 
 ## 知识加载
 
@@ -40,18 +42,20 @@ description: |
   `references/core/INDEX.md` -> `references/core/support-resistance.md`
 - 价格行为、突破真假、当前 K 线力度：
   `references/core/INDEX.md` -> `references/core/price-action.md`
+- 成交量、量能、量价配合、持仓量：
+  `references/core/INDEX.md` -> `references/core/volume-analysis.md`
 - K 线形态：
   `references/patterns/INDEX.md` -> `references/patterns/candlestick-patterns.md`
 - 图表形态：
   `references/patterns/INDEX.md` -> `references/patterns/chart-patterns.md`
-- RSI、MACD、SMC：
+- RSI、MACD：
   `references/indicators/INDEX.md` -> 对应指标文件
 - 需要总纲时：
   `references/overview.md`
 
 ### 交易计划层（"这是不是我的 setup，怎么做"）
 
-- 顺势回调 / 突破回踩 / 区间反转等交易 setup：
+- 顺势回调 / 突破回踩 / 区间反转 / 假突破反转 / 旗形楔形突破等交易 setup：
   `references/playbooks/INDEX.md` -> 对应 playbook 文件
 - 入场前过滤、持仓管理：
   `references/checklists/INDEX.md` -> 对应检查单文件
