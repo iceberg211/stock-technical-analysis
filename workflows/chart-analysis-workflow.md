@@ -177,7 +177,7 @@
 
 - 找到图表中最明显的 **Swing High** 和 **Swing Low**
 - 只标记 Major Swing（一眼能看到的），忽略 Minor Swing
-- **Major vs Minor 判断标准**：Major Swing 的推动段至少包含 3 根以上同向 K 线，且价格变动幅度在图表可见范围内占比 >= 10%；不满足的视为 Minor Swing，忽略
+- **Major vs Minor 判断标准**：Major Swing 的推动段至少包含 3 根以上同向 K 线，且价格变动幅度在当前分析范围内（或图表可见范围内）高低点绝对落差中占比 >= 10%；不满足的视为 Minor Swing，忽略
 
 ### 2.2 判断市场状态
 
@@ -414,10 +414,10 @@
 
 | 信号强度 | 行动 |
 | -------- | ------ |
-| **强/中** | 读取 `workflows/trading-decision.md` 执行交易决策流程（Playbook 匹配 -> Checklist -> 仓位 -> 方案输出） |
+| **强/中** | 👉 **强制流转**：AI 必须立即调用工具读取 `workflows/trading-decision.md` 继续后续分析（Playbook 匹配 -> Checklist -> 仓位），并将决策结果无缝衔接在当前输出后。 |
 | **弱** | 不输出交易方案，只给观察建议 |
 | **观望** | 明确说”当前不满足交易条件，建议观望” |
 
 > **强制自查 (Sanity Check)**：在进入交易决策流程前，务必默默自查：1) 信号方向是否与大周期趋势冲突？2) 是否存在事件冲突等硬性否决项？如有冲突则直接观望，不进入决策流程。
 
-输出格式参考 `workflows/output-templates.md`，根据对话场景选择完整模式、精简模式或快问快答模式。
+👉 **输出格式限制**：必须读取 `workflows/output-templates.md`，严格遵守其模板结构，并根据对话场景选择完整模式、精简模式或快快答模式构建输出。

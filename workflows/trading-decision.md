@@ -97,6 +97,8 @@
 | t2 | $xxx / N/A | |
 | analysis_time | ISO 8601 UTC | |
 
+> 如果本次分析已输出 JSON 结构化块（见 `output-templates.md` 的 eval 模式），回测锚点信息已包含在 JSON 的 `trade` 和 `meta` 对象中，不需要再单独输出表格形式的锚点。
+
 ---
 
 ## 8.7 多方案对比（如适用）
