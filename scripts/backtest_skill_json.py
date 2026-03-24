@@ -17,6 +17,8 @@ import json
 import os
 import sys
 import subprocess
+import shutil
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -60,7 +62,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-root",
         default=None,
-        help="输出根目录（默认 eval/results/cache_skill_backtest_<utc时间>）",
+        help="输出根目录（默认语义化目录：eval/results/skill_backtest__<symbols>__...）",
+    )
+    parser.add_argument(
+        "--no-clean-output",
+        action="store_true",
+        help="不清理已有输出目录（默认会清理，避免 results 下重复目录/重复文件）",
     )
     parser.add_argument(
         "--prepare-only",
@@ -88,6 +95,30 @@ def parse_args() -> argparse.Namespace:
 
 def normalize_symbol(symbol: str) -> str:
     return symbol.strip().upper()
+
+
+def _slugify(text: str) -> str:
+    s = re.sub(r"[^A-Za-z0-9._-]+", "-", text.strip())
+    s = s.strip("-")
+    return s.lower() or "na"
+
+
+def build_semantic_run_name(
+    symbols: list[str],
+    interval: str,
+    lookback: int = 0,
+    forward: int = 0,
+    sample: int = 0,
+    step: int = 0,
+    repeat: int = 1,
+    engine: str = "",
+) -> str:
+    """生成可读的 run 目录名。格式: {symbol}_{interval}
+    
+    参数细节（lookback/forward等）保存在 config.json，不编入目录名。
+    """
+    symbol_tag = "+".join(s.replace(".", "_") for s in symbols)
+    return f"{symbol_tag}_{interval}"
 
 
 def convert_cached_csv_to_eval_csv(src: Path, dst: Path) -> dict[str, Any]:
@@ -151,6 +182,65 @@ def score_summary(scored_path: Path) -> dict[str, Any]:
         "parse_error": parse_error,
         "win_rate_pct": win_rate,
     }
+
+
+def append_template_alignment_summary(
+    symbol_out_dir: Path,
+    artifact_index_file: Path | None,
+    template_file: Path,
+) -> None:
+    """
+    在 summary.md 追加“与 output-templates.md 的对应关系”说明，
+    让结果文件可直接看出模板映射链路。
+    """
+    summary_path = symbol_out_dir / "summary.md"
+    if not summary_path.exists():
+        return
+
+    first_report = None
+    first_sample = None
+    case_count = 0
+
+    if artifact_index_file and artifact_index_file.exists():
+        try:
+            items = json.loads(artifact_index_file.read_text(encoding="utf-8"))
+            if isinstance(items, list):
+                case_count = len(items)
+                if items:
+                    first = items[0]
+                    report_path = Path(str(first.get("analysis_report", "")))
+                    sample_path = Path(str(first.get("sample_json", "")))
+                    if report_path.exists():
+                        first_report = report_path
+                    if sample_path.exists():
+                        first_sample = sample_path
+        except Exception:
+            pass
+
+    section_lines = [
+        "",
+        "## 与 output-templates.md 的对应关系",
+        "",
+        f"- 模板文件: `{template_file}`",
+        "- 可读分析模板: `标准输出模板（完整模式） + 交易决策卡 + 免责声明`",
+        "- 机器回测模板: `历史回测样本 JSON（backtest_sample_v1）`",
+        f"- 本次 case 数（analysis artifacts）: {case_count}",
+    ]
+    if first_report is not None:
+        section_lines.append(f"- 样例可读分析: `{first_report}`")
+    if first_sample is not None:
+        section_lines.append(f"- 样例结构化 JSON: `{first_sample}`")
+    section_lines.extend(
+        [
+            "- 映射关系: `analysis_report.md` 对应模板中的“基础信息/市场结构/关键价位/价格行为/形态识别/指标信号/综合研判/交易决策卡”。",
+            "- 映射关系: `backtest_sample_v1.json` 对应模板中的“meta/decision/trade”等可评分字段，由 `runs.jsonl.parsed_json` 进入评分器。",
+        ]
+    )
+
+    old = summary_path.read_text(encoding="utf-8")
+    if "## 与 output-templates.md 的对应关系" in old:
+        return
+    summary_path.write_text(old.rstrip() + "\n" + "\n".join(section_lines) + "\n", encoding="utf-8")
 
 
 def _ema(series: pd.Series, n: int) -> pd.Series:
@@ -550,9 +640,22 @@ def generate_local_runs(
                     normalized if normalized is not None else payload,
                     context,
                 )
+                # 兼容新旧 make_cases 契约：
+                # 新版仅返回 analysis_start；旧版可能直接带 forward_rows。
+                analysis_start = int(case.get("analysis_start", -1))
+                if "forward_rows" in case and case["forward_rows"] is not None:
+                    forward_rows = case["forward_rows"]
+                elif analysis_start >= 0:
+                    forward_start = analysis_start + lookback
+                    forward_end = forward_start + forward
+                    forward_rows = df.iloc[forward_start:forward_end].to_dict("records")
+                else:
+                    forward_rows = []
+
                 run = {
                     "run_id": run_id,
                     "case_id": case["case_id"],
+                    "analysis_start": analysis_start,
                     "symbol": symbol,
                     "interval": interval,
                     "temperature": 0.0,
@@ -560,7 +663,7 @@ def generate_local_runs(
                     "parse_error": parse_error,
                     "validation_error": err,
                     "parsed_json": normalized if normalized is not None else payload,
-                    "forward_rows": case["forward_rows"],
+                    "forward_rows": forward_rows,
                     "raw_response_preview": "generated_by_local_skill_engine",
                     "artifacts": artifacts,
                 }
@@ -593,12 +696,6 @@ def main() -> None:
     symbols = [normalize_symbol(s) for s in args.symbols]
 
     run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%SZ")
-    output_root = (
-        Path(args.output_root).resolve()
-        if args.output_root
-        else (REPO_ROOT / "eval" / "results" / f"cache_skill_backtest_{run_ts}")
-    )
-    output_root.mkdir(parents=True, exist_ok=True)
 
     env = os.environ.copy()
     if args.model:
@@ -612,8 +709,29 @@ def main() -> None:
         # 自动降级到 local，避免因未配置 key 中断
         engine = "local"
 
+    semantic_name = build_semantic_run_name(
+        symbols=symbols,
+        interval=args.interval,
+        lookback=args.lookback,
+        forward=args.forward,
+        sample=args.sample,
+        step=args.step,
+        repeat=args.repeat,
+        engine=engine,
+    )
+    output_root = (
+        Path(args.output_root).resolve()
+        if args.output_root
+        else (REPO_ROOT / "eval" / "results" / semantic_name)
+    )
+    # 默认清理旧结果，避免 results 下堆积重复目录与重复文件
+    if output_root.exists() and not args.no_clean_output:
+        shutil.rmtree(output_root)
+    output_root.mkdir(parents=True, exist_ok=True)
+
     index: dict[str, Any] = {
         "run_id": run_ts,
+        "semantic_name": semantic_name,
         "symbols": symbols,
         "config": {
             "interval": args.interval,
@@ -626,6 +744,7 @@ def main() -> None:
             "prepare_only": args.prepare_only,
             "model": env.get("EVAL_MODEL"),
             "engine": engine,
+            "clean_output": (not args.no_clean_output),
         },
         "items": [],
     }
@@ -658,6 +777,7 @@ def main() -> None:
             continue
 
         try:
+            artifact_index_path: Path | None = None
             if engine == "openai":
                 run_cmd(
                     [
@@ -699,9 +819,9 @@ def main() -> None:
                     out_runs_file=out_dir / "runs.jsonl",
                 )
                 item["local_generation"] = local_meta
+                artifact_index_path = Path(str(local_meta.get("artifact_index", "")))
                 if not args.hide_analysis:
-                    artifact_index = Path(str(local_meta.get("artifact_index", "")))
-                    _print_case_reports(artifact_index)
+                    _print_case_reports(artifact_index_path)
 
             run_cmd(
                 [
@@ -721,16 +841,23 @@ def main() -> None:
                     "python3",
                     "-m",
                     "eval.report",
-                    "--scored",
-                    str(out_dir / "scored.jsonl"),
+                    "--dir",
+                    str(out_dir),
+                    "--save",
                 ],
                 cwd=REPO_ROOT,
                 env=env,
+            )
+            append_template_alignment_summary(
+                symbol_out_dir=out_dir,
+                artifact_index_file=artifact_index_path,
+                template_file=REPO_ROOT / "workflows" / "output-templates.md",
             )
             item["status"] = "done"
             item["results"] = {
                 "runs": str(out_dir / "runs.jsonl"),
                 "scored": str(out_dir / "scored.jsonl"),
+                "summary": str(out_dir / "summary.md"),
             }
             item["summary"] = score_summary(out_dir / "scored.jsonl")
         except subprocess.CalledProcessError as exc:

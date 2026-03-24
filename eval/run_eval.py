@@ -39,7 +39,12 @@ from eval.config import (
     TEMPERATURE_CONSISTENCY,
     TEMPERATURE_EVAL,
 )
-from eval.prompt_builder import build_system_prompt, build_user_message, format_ohlcv_csv
+from eval.prompt_builder import (
+    build_system_prompt,
+    build_user_message,
+    format_ohlcv_csv,
+    format_indicator_context,
+)
 
 
 # ── JSON 提取 ─────────────────────────────────────────
@@ -281,8 +286,9 @@ def run_single_case(
 ) -> list[dict]:
     """对单个 case 运行 repeat 次 LLM 调用。"""
     ohlcv_text = format_ohlcv_csv(case["analysis_rows"])
+    indicator_text = format_indicator_context(case["analysis_rows"])
     user_msg = build_user_message(
-        ohlcv_text, symbol, interval,
+        ohlcv_text, indicator_text, symbol, interval,
         case["case_id"], lookback_bars, forward_bars,
     )
 
@@ -344,7 +350,7 @@ def run_single_case(
 # ── 输出 ──────────────────────────────────────────────
 
 def _make_output_dir(base: Path, symbol: str, interval: str) -> Path:
-    """生成简短的输出目录名: {YYYYMMDD_HHMM}_{symbol}_{interval}"""
+    """在 base 下生成带时间戳的子目录: {YYYYMMDD_HHMM}_{symbol}_{interval}"""
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M")
     name = f"{ts}_{symbol}_{interval}"
     out = base / name
@@ -424,7 +430,9 @@ def main():
     parser.add_argument("--repeat", type=int, default=1, help="每个 case 重复次数")
     parser.add_argument("--sample", type=int, default=DEFAULT_SAMPLE, help="采样 case 数量")
     parser.add_argument("--step", type=int, default=DEFAULT_STEP, help="窗口步进根数")
-    parser.add_argument("--output", default=str(DEFAULT_RESULTS_DIR), help="结果根目录")
+    parser.add_argument("--output", default=str(DEFAULT_RESULTS_DIR), help="结果根目录（内部自动创建时间戳子目录）")
+    parser.add_argument("--output-dir", default=None, dest="output_dir",
+                        help="精确输出目录（直接使用，不再创建子目录）；由外部脚本管理目录时使用")
     parser.add_argument("--lookback", type=int, default=LOOKBACK_BARS, help="分析窗口大小")
     parser.add_argument("--forward", type=int, default=FORWARD_BARS, help="事后窗口大小")
     parser.add_argument("--save-reports", action="store_true", help="保存 LLM 原始文本到 reports/")
@@ -447,7 +455,13 @@ def main():
     print(f"📊 切出 {len(cases)} 个 case (lookback={args.lookback}, forward={args.forward}, step={args.step})")
 
     # 准备输出目录
-    output_dir = _make_output_dir(Path(args.output), args.symbol, args.interval)
+    if args.output_dir:
+        # 外部精确指定，直接使用
+        output_dir = Path(args.output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        # 默认：在 --output 根目录下创建时间戳子目录
+        output_dir = _make_output_dir(Path(args.output), args.symbol, args.interval)
     reports_dir = None
     if args.save_reports:
         reports_dir = output_dir / "reports"

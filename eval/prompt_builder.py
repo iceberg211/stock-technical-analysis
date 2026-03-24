@@ -8,6 +8,7 @@ Prompt 组装器。
 from __future__ import annotations
 
 from eval.config import SKILL_FILES
+from eval.indicator_calc import indicator_snapshot_from_rows
 
 
 def build_system_prompt() -> str:
@@ -22,6 +23,7 @@ def build_system_prompt() -> str:
 
 def build_user_message(
     ohlcv_text: str,
+    indicator_text: str,
     symbol: str,
     interval: str,
     case_id: str,
@@ -48,6 +50,7 @@ def build_user_message(
         f"lookback_bars: {lookback_bars}\n"
         f"forward_bars: {forward_bars}\n"
         f"数据格式: timestamp,open,high,low,close,volume\n\n"
+        f"{indicator_text}\n\n"
         "输出要求（必须严格遵守）:\n"
         "1) 只输出一个 ```json 代码块，且仅包含 backtest_sample_v1 结构化 JSON。\n"
         "2) 不要输出额外解释文字，不要输出多个 JSON 代码块。\n"
@@ -69,5 +72,32 @@ def format_ohlcv_csv(rows: list[dict]) -> str:
         lines.append(
             f"{r['timestamp']},{r['open']},{r['high']},"
             f"{r['low']},{r['close']},{r['volume']}"
+        )
+    return "\n".join(lines)
+
+
+def format_indicator_context(rows: list[dict]) -> str:
+    """
+    数据模式下的附加指标上下文（MACD / RSI14）。
+    放在 prompt 里，可减少模型自行估算误差。
+    """
+    snap = indicator_snapshot_from_rows(rows, tail=5)
+    if not snap:
+        return "指标上下文: 无法计算（数据不足或字段缺失）"
+
+    lines = [
+        "指标上下文（由脚本基于 OHLC 自动计算）:",
+        f"- latest_time: {snap.get('latest_time')}",
+        f"- rsi14: {snap.get('rsi14')} ({snap.get('rsi_state')})",
+        f"- macd: {snap.get('macd')}",
+        f"- macd_signal: {snap.get('macd_signal')}",
+        f"- macd_hist: {snap.get('macd_hist')}",
+        f"- macd_side: {snap.get('macd_side')}",
+        "- 最近5行指标: timestamp,close,rsi14,macd,signal,hist",
+    ]
+    for r in snap.get("tail", []):
+        lines.append(
+            f"  {r.get('timestamp')},{r.get('close')},{r.get('rsi14')},"
+            f"{r.get('macd')},{r.get('signal')},{r.get('hist')}"
         )
     return "\n".join(lines)
