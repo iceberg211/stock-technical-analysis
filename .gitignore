@@ -1,0 +1,29 @@
+# macOS / 系统文件
+.DS_Store
+
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+*.so
+.python-version
+.venv/
+venv/
+env/
+
+# 测试与工具缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 本地环境变量
+.env
+.env.*
+
+# 历史行情与分析派生数据（默认不入库）
+data/opend_kline/
+
+# 回测运行产物（默认不入库）
+eval/results/
+
+# 通用日志
+*.log
