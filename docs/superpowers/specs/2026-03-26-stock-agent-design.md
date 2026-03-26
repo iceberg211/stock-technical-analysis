@@ -336,6 +336,93 @@ interface TradeOutcome {
   exitReason: string
   notes?: string
 }
+
+// Eval 专用——由 score_eval 产出，与 TradeOutcome 并立（不替换）
+interface EvalScore {
+  outcome: "t1_hit" | "sl_hit" | "neither" | "no_trade"
+  mfe: number | null               // Maximum Favorable Excursion
+  mae: number | null               // Maximum Adverse Excursion
+  barsToOutcome: number | null     // 触达结果所需 K 线根数
+  maxMoveUpPct?: number | null     // watch case：事后最大上涨幅度%
+  maxMoveDownPct?: number | null   // watch case：事后最大下跌幅度%
+}
+```
+
+### 3.9 EvalSample（机器回测样本契约）
+
+> `backtest_sample_v1` 是 Skill 输出的"机器可评分子集"，独立于 `TradePlan`（后者面向人）。  
+> 两者关系：`TradePlan` 描述完整决策意图，`EvalSample` 是评分器消费的精简版本，字段严格受约束、可自动验证。
+
+```typescript
+interface EvalSampleMeta {
+  schema_version: "backtest_sample_v1"
+  symbol: string
+  interval: string
+  case_id: string                  // "case_0000_20260322T060000"
+  analysis_time: string            // ISO 8601 UTC
+  lookback_bars: number
+  forward_bars: number
+  data_source: "screenshot" | "ohlc" | "mixed"
+}
+
+type ChecklistKey =
+  | "htf_direction" | "position" | "setup_match"
+  | "trigger" | "risk_reward" | "events" | "counter_reason"
+
+interface EvalDecision {
+  action: "long" | "short" | "watch"
+  playbook: PlaybookType | "none"
+  checklist: Record<ChecklistKey, "pass" | "fail" | "degraded">
+  checklist_result: "pass" | "pass_degraded" | "fail"
+  position_size_pct: number        // 0-100
+}
+
+interface EvalTrade {
+  entry_price: number | null
+  stop_loss: number | null
+  t1: number | null
+  t2: number | null
+  risk_reward: number | null
+  trigger_type: "price_touch" | "close_above" | "close_below" | null
+  invalidation: string | null
+}
+
+interface EvalSample {
+  meta: EvalSampleMeta
+  decision: EvalDecision
+  trade: EvalTrade
+  verdict?: {                      // 可选，供 RAG 入库
+    bias: "bullish" | "bearish" | "range_trade" | "watch"
+    confidence: ConfidenceLevel
+    signal_strength: "strong" | "medium" | "weak"
+  }
+  structure?: {
+    market_state: MarketStructure["trend"]
+  }
+}
+
+// runs.jsonl 每行记录（run_eval 产出）
+interface EvalRun {
+  run_id: number
+  case_id: string
+  analysis_start: number           // 分析窗口在 CSV 中的起始行
+  symbol: string
+  interval: string
+  parse_error: boolean
+  validation_error: string | null
+  parsed_json: EvalSample | null
+}
+
+// scored.jsonl 每行记录（score_eval 产出）
+interface EvalScoredRun extends EvalRun {
+  action: string
+  playbook: string
+  confidence: string
+  entry_price: number | null
+  stop_loss: number | null
+  t1: number | null
+  score: EvalScore
+}
 ```
 
 ### 3.5 Trade Journal 相关
@@ -677,19 +764,29 @@ function checkDrawdownLimits(params: {
 
 ## 8. RAG Service（共享知识服务）
 
-### 两类数据入库
+### 三类数据入库
 
-**8.1 历史分析报告：**
+**8.1 Eval 回测结果（优先，Phase 1 即可开始积累）：**
 
 ```
-每次分析完成后：
-  ChartAnalysis + TradeDecision + TradeOutcome（如有）
-  → 结构化存储（关系数据库）
-  → 关键文本字段向量化（narrative、keyObservation 等）
-  → 按形态、品种、Playbook、时间等维度可检索
+Eval Module 每次跑完后（scored.jsonl）：
+  EvalScoredRun（EvalSample + EvalScore）
+  → 按 playbook / outcome / confidence / market_state 分组统计
+  → 向量化关键字段，供 RAG 相似 case 检索
+
+价值：不需等真实交易，50 个历史 case 即可为 RAG 建立胜率基线。
 ```
 
-**8.2 Playbook 知识库：**
+**8.2 真实交易日志（Journal，高精度，加权更重）：**
+
+```
+记录真实交易执行结果：
+  ChartAnalysis + TradeDecision + TradeOutcome
+  → 与 Eval 样本合并，作为高权重训练样本
+  → 关键文本字段向量化，供 RAG 检索
+```
+
+**8.3 Playbook 知识库：**
 
 ```
 现有 references/ 下的 markdown 文件
@@ -734,15 +831,16 @@ function checkDrawdownLimits(params: {
 - 文本字段（narrative、notes）同时写入向量索引，供 RAG 检索
 - "无信号"的分析也记录（用于统计"不做的准确率"）
 
-### 回测支持
+### 与 Eval Module 的关系
 
-```
-Trade Journal 积累足够数据后：
-  → 按 Playbook 分组统计胜率
-  → 按品种/时间段切片分析
-  → 识别 "哪些条件组合效果最好"
-  → 反馈到 Playbook 规则迭代
-```
+| | Eval（离线回放） | Journal（真实交易） |
+|--|--|--|
+| 数据量 | 批量（50~500 条） | 少（真实交易频率低） |
+| 精度 | 受模型随机性影响 | 精确（有实际入场单） |
+| 时效 | 可向历史任意时段重放 | 仅当前时点之后 |
+| 价值 | 建立统计基线，快速迭代 | 验证策略真实可行 |
+
+**顺序：** Eval 先建立基线 → Journal 校验真实有效性 → 两者合并喂给 RAG。
 
 ### 数据录入
 
@@ -754,7 +852,75 @@ Trade Journal 积累足够数据后：
 
 ---
 
-## 10. Scheduler（定时任务）
+## 10. Eval Module（离线回测评估）
+
+### 类型：纯代码（Python 脚本，Phase 1 即可独立运行）
+
+### 职责
+
+将历史 K 线滑窗回放，驱动 Skill 产出 `EvalSample`，再由评分器计算 T1/SL 命中率，生成 Playbook 胜率统计，为 RAG 提供数据基础。
+
+### 架构
+
+```
+历史 K 线 CSV
+     ↓
+run_eval.py       ← 滑动窗口切片 → 调用 LLM/LocalEngine → runs.jsonl
+     ↓
+score_eval.py     ← 逐 bar 遍历 forward 窗口 → T1/SL 命中判断 → scored.jsonl
+     ↓
+report.py         ← 按 playbook/confidence/market_state 聚合 → summary.md
+     ↓
+[待实现] ingest.py ← scored.jsonl → RAG 向量库写入
+```
+
+### 评分指标
+
+| 指标 | 说明 | 意义 |
+|------|------|------|
+| **T1 命中率** | `t1_hit / (t1_hit + sl_hit)` | 方向判断准确率 |
+| **信心校准** | high/medium/low 各自的命中率 | 模型是否过度自信 |
+| **Playbook 胜率** | 按 Playbook 分组的命中率 | 哪套 Setup 最有效 |
+| **MFE/MAE 比** | 平均顺势 vs 逆势幅度 | 止据/目标设置是否合理 |
+| **watch 漏单率** | watch case 事后最大价格波动 | 错过了多少机会 |
+
+### 验证閘值（基线）
+
+```
+总样本 ≥ 30 个有效 trade case 后才有统计意义
+high confidence 命中率目标：≥ 60%
+medium confidence 命中率目标：≥ 50%
+high 命中率 > medium > low（若不满足则信心未校准）
+```
+
+### 目录结构
+
+```
+eval/results/{SYMBOL}_{interval}/
+  ├── config.json       ← 运行参数（lookback/forward/sample 等，完整可复现）
+  ├── runs.jsonl        ← LLM 调用记录（EvalRun 格式）
+  ├── scored.jsonl      ← 带评分结果（EvalScoredRun 格式）
+  ├── summary.md        ← 人可读报告（胜率表 + 信心校准）
+  └── reports/          ← 可选：LLM 原始文本响应
+```
+
+### 与现有 eval/ 目录的对应关系
+
+```
+eval/
+  ├── run_eval.py           ← 已实现：LLM 调用 + JSON 提取 + Schema 验证
+  ├── score_eval.py         ← 已实现：逐 bar T1/SL 判断
+  ├── report.py             ← 已实现：Markdown 聚合报告
+  ├── config.py             ← 常数配置
+  ├── prompt_builder.py     ← Prompt 构建
+  └── [待实现] ingest.py   ← scored.jsonl → RAG 向量库写入
+```
+
+> **说明：** Eval Module 在 TypeScript 化时，可保留 Python 脚本（离线批量回放场景 Python 更自然）。仅 `ingest.py` 需对接 TypeScript 向量库接口。
+
+---
+
+## 11. Scheduler（定时任务）
 
 ### 类型：代码
 
@@ -813,7 +979,7 @@ Cron 触发
 
 ---
 
-## 11. Notifier（信号通知）
+## 12. Notifier（信号通知）
 
 ### 类型：代码 Tool
 
@@ -882,7 +1048,7 @@ Cron 触发
 
 ---
 
-## 12. Orchestrator Agent（编排层）
+## 13. Orchestrator Agent（编排层）
 
 ### Agent 定义
 
@@ -938,7 +1104,7 @@ for each watchlist item (并行, 受 maxConcurrent 限制):
 
 ---
 
-## 13. 错误处理策略
+## 14. 错误处理策略
 
 | 模块 | 失败场景 | 处理方式 |
 |------|---------|---------|
@@ -957,7 +1123,7 @@ for each watchlist item (并行, 受 maxConcurrent 限制):
 
 ---
 
-## 14. 测试策略
+## 15. 测试策略
 
 | 层级 | 范围 | 方法 |
 |------|------|------|
@@ -973,7 +1139,7 @@ for each watchlist item (并行, 受 maxConcurrent 限制):
 
 ---
 
-## 15. 项目结构
+## 16. 项目结构
 
 ```
 stock-technical-analysis/
@@ -1070,7 +1236,7 @@ stock-technical-analysis/
 
 ---
 
-## 16. 开发优先级
+## 17. 开发优先级
 
 分阶段交付，每个阶段是一个可独立运行的版本。
 
@@ -1134,7 +1300,7 @@ stock-technical-analysis/
 
 ---
 
-## 17. 技术栈总结
+## 18. 技术栈总结
 
 | 层面 | 选型 |
 |------|------|
@@ -1152,7 +1318,7 @@ stock-technical-analysis/
 
 ---
 
-## 18. 风险与缓解
+## 19. 风险与缓解
 
 | 风险 | 影响 | 缓解 |
 |------|------|------|
