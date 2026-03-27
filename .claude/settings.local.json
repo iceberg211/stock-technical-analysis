@@ -6,7 +6,14 @@
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(python3 -m json.tool)",
+      "Bash(xargs file:*)",
+      "Bash(wc -l /Users/wei.he/Documents/GitHub/stock-technical-analysis/eval/*.py /Users/wei.he/Documents/GitHub/stock-technical-analysis/eval/pipeline/*.py)",
+      "Bash(python -m pytest eval/tests/test_eval_v2.py -v)",
+      "Bash(python -c \":*)",
+      "Bash(du -sh /Users/wei.he/Documents/GitHub/stock-technical-analysis/data/*/)",
+      "Bash(git rm:*)"
     ]
   }
 }

@@ -15,6 +15,7 @@ import argparse
 import json
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timezone
 from datetime import date, timedelta
 from pathlib import Path
@@ -23,9 +24,13 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from eval.indicator_calc import ema, rsi, atr, add_all_indicators, maybe_float
 
 DEFAULT_OPENAPI_KLINE_SCRIPT = Path.home() / ".codex/skills/openapi/scripts/quote/get_kline.py"
-REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def parse_args() -> argparse.Namespace:
@@ -101,34 +106,8 @@ def to_df(obj: dict[str, Any]) -> pd.DataFrame:
     return df.sort_values("time").reset_index(drop=True)
 
 
-def ema(series: pd.Series, n: int) -> pd.Series:
-    return series.ewm(span=n, adjust=False).mean()
-
-
-def rsi(close: pd.Series, period: int = 14) -> pd.Series:
-    delta = close.diff()
-    up = delta.clip(lower=0)
-    down = -delta.clip(upper=0)
-    ma_up = up.ewm(alpha=1 / period, adjust=False).mean()
-    ma_down = down.ewm(alpha=1 / period, adjust=False).mean()
-    rs = ma_up / ma_down.replace(0, np.nan)
-    return 100 - (100 / (1 + rs))
-
-
-def atr(df: pd.DataFrame, n: int = 14) -> pd.Series:
-    prev_close = df["close"].shift(1)
-    tr = pd.concat(
-        [
-            df["high"] - df["low"],
-            (df["high"] - prev_close).abs(),
-            (df["low"] - prev_close).abs(),
-        ],
-        axis=1,
-    ).max(axis=1)
-    return tr.ewm(alpha=1 / n, adjust=False).mean()
-
-
 def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
+    """为 OpenD 数据添加指标（基于 time 列而非 timestamp）。"""
     if df.empty:
         return df
     out = df.copy()
@@ -151,12 +130,6 @@ def pivot_levels(df: pd.DataFrame, n: int) -> dict[str, list[float]]:
     hi = part["high"].nlargest(3).sort_values(ascending=False).round(3).tolist()
     lo = part["low"].nsmallest(3).sort_values(ascending=True).round(3).tolist()
     return {"resistance": hi, "support": lo}
-
-
-def maybe_float(value: Any, ndigits: int = 3) -> float | None:
-    if value is None or (isinstance(value, float) and np.isnan(value)):
-        return None
-    return round(float(value), ndigits)
 
 
 def main() -> None:
