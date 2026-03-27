@@ -1,0 +1,64 @@
+{
+  "input_csv": "/Users/hewei/Documents/GitHub/stock-technical-analysis/data/mcp_kline/BTCUSDT/kline_4h_merged.csv",
+  "output_csv": "/Users/hewei/Documents/GitHub/stock-technical-analysis/data/mcp_kline/BTCUSDT/kline_4h_merged_indicators.csv",
+  "rows": 200,
+  "latest": {
+    "timestamp": "2026-03-26T12:00:00Z",
+    "close": 69374.01,
+    "rsi14": 43.04,
+    "macd": -30.3994,
+    "signal": 95.6521,
+    "hist": -126.0515
+  },
+  "snapshot": {
+    "latest_time": "2026-03-26T12:00:00Z",
+    "rsi14": 43.04,
+    "rsi_state": "neutral",
+    "macd": -30.3994,
+    "macd_signal": 95.6521,
+    "macd_hist": -126.0515,
+    "macd_side": "below_zero",
+    "tail": [
+      {
+        "timestamp": "2026-03-25T20:00:00Z",
+        "close": 71334.09,
+        "rsi14": 56.3136,
+        "macd": 260.4703,
+        "signal": 104.8019,
+        "hist": 155.6683
+      },
+      {
+        "timestamp": "2026-03-26T00:00:00Z",
+        "close": 70884.83,
+        "rsi14": 52.8264,
+        "macd": 252.9164,
+        "signal": 134.4248,
+        "hist": 118.4915
+      },
+      {
+        "timestamp": "2026-03-26T04:00:00Z",
+        "close": 70108.98,
+        "rsi14": 47.3709,
+        "macd": 182.2246,
+        "signal": 143.9848,
+        "hist": 38.2399
+      },
+      {
+        "timestamp": "2026-03-26T08:00:00Z",
+        "close": 69295.7,
+        "rsi14": 42.4249,
+        "macd": 59.8857,
+        "signal": 127.165,
+        "hist": -67.2792
+      },
+      {
+        "timestamp": "2026-03-26T12:00:00Z",
+        "close": 69374.01,
+        "rsi14": 43.0416,
+        "macd": -30.3994,
+        "signal": 95.6521,
+        "hist": -126.0515
+      }
+    ]
+  }
+}

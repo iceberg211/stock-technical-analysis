@@ -46,6 +46,10 @@ from eval.prompt_builder import (
     format_indicator_context,
 )
 
+RUN_SCHEMA_VERSION = "run_v2"
+ARTIFACT_LEVEL_CHOICES = ("core", "standard", "full")
+CASE_MODE_CHOICES = ("rolling", "non_overlap")
+
 
 # ── JSON 提取 ─────────────────────────────────────────
 
@@ -211,6 +215,8 @@ def make_cases(
     forward: int,
     sample: int,
     step: int,
+    case_mode: str = "non_overlap",
+    warmup_bars: int = 120,
 ) -> list[dict]:
     """
     按滑动窗口从 DataFrame 中切出 case 列表。
@@ -231,7 +237,24 @@ def make_cases(
 
     cases = []
     max_start = total - min_required
-    starts = list(range(0, max_start + 1, step))[:sample]
+    start_from = max(0, int(warmup_bars))
+    if start_from > max_start:
+        print(
+            f"⚠️  数据不足: warmup={start_from}, 可用最大起点={max_start}",
+            file=sys.stderr,
+        )
+        return []
+
+    if case_mode not in CASE_MODE_CHOICES:
+        raise ValueError(f"不支持的 case_mode: {case_mode}")
+    if case_mode == "rolling":
+        stride = max(1, int(step))
+    else:
+        stride = max(1, int(lookback + forward))
+
+    starts = list(range(start_from, max_start + 1, stride))
+    if sample > 0:
+        starts = starts[:sample]
 
     for i, start in enumerate(starts):
         end_analysis = start + lookback
@@ -369,6 +392,11 @@ def _save_config(output_dir: Path, args: argparse.Namespace, num_cases: int):
         "sample": args.sample,
         "step": args.step,
         "repeat": args.repeat,
+        "case_mode": args.case_mode,
+        "warmup_bars": args.warmup_bars,
+        "artifact_level": args.artifact_level,
+        "embed_forward_rows": bool(args.embed_forward_rows),
+        "run_schema_version": RUN_SCHEMA_VERSION,
         "model": MODEL,
         "temperature_eval": TEMPERATURE_EVAL,
         "temperature_consistency": TEMPERATURE_CONSISTENCY,
@@ -435,6 +463,29 @@ def main():
                         help="精确输出目录（直接使用，不再创建子目录）；由外部脚本管理目录时使用")
     parser.add_argument("--lookback", type=int, default=LOOKBACK_BARS, help="分析窗口大小")
     parser.add_argument("--forward", type=int, default=FORWARD_BARS, help="事后窗口大小")
+    parser.add_argument(
+        "--case-mode",
+        choices=CASE_MODE_CHOICES,
+        default="non_overlap",
+        help="切片模式：rolling 使用 step；non_overlap 使用 lookback+forward",
+    )
+    parser.add_argument(
+        "--warmup-bars",
+        type=int,
+        default=120,
+        help="切片起点预热根数，避免指标冷启动污染",
+    )
+    parser.add_argument(
+        "--artifact-level",
+        choices=ARTIFACT_LEVEL_CHOICES,
+        default="standard",
+        help="产物层级：core|standard|full",
+    )
+    parser.add_argument(
+        "--embed-forward-rows",
+        action="store_true",
+        help="将 forward_rows 内联写入 runs.jsonl（默认关闭）",
+    )
     parser.add_argument("--save-reports", action="store_true", help="保存 LLM 原始文本到 reports/")
     args = parser.parse_args()
 
@@ -449,10 +500,22 @@ def main():
     print(f"   共 {len(df)} 根 K 线")
 
     # 切 case
-    cases = make_cases(df, args.lookback, args.forward, args.sample, args.step)
+    cases = make_cases(
+        df,
+        args.lookback,
+        args.forward,
+        args.sample,
+        args.step,
+        case_mode=args.case_mode,
+        warmup_bars=args.warmup_bars,
+    )
     if not cases:
         sys.exit(1)
-    print(f"📊 切出 {len(cases)} 个 case (lookback={args.lookback}, forward={args.forward}, step={args.step})")
+    print(
+        f"📊 切出 {len(cases)} 个 case "
+        f"(mode={args.case_mode}, warmup={args.warmup_bars}, "
+        f"lookback={args.lookback}, forward={args.forward}, step={args.step})"
+    )
 
     # 准备输出目录
     if args.output_dir:
@@ -463,7 +526,8 @@ def main():
         # 默认：在 --output 根目录下创建时间戳子目录
         output_dir = _make_output_dir(Path(args.output), args.symbol, args.interval)
     reports_dir = None
-    if args.save_reports:
+    save_reports = bool(args.save_reports or args.artifact_level == "full")
+    if save_reports:
         reports_dir = output_dir / "reports"
         reports_dir.mkdir(exist_ok=True)
 
@@ -490,6 +554,13 @@ def main():
             args.symbol, args.interval, args.repeat,
             args.lookback, args.forward, reports_dir,
         )
+        for r in runs:
+            r["run_schema_version"] = RUN_SCHEMA_VERSION
+            if args.embed_forward_rows:
+                analysis_start = int(case.get("analysis_start", -1))
+                forward_start = analysis_start + args.lookback
+                forward_end = forward_start + args.forward
+                r["forward_rows"] = df.iloc[forward_start:forward_end].to_dict("records")
         all_results.extend(runs)
 
         # 每个 case 后保存（断点续传）

@@ -2,11 +2,13 @@
 
 > **Playbook = 一套完整的入场规则。不在 Playbook 里的交易，不做。**
 
-| Playbook | 适用场景 | 核心逻辑 | 文件 |
-|----------|---------|---------|------|
-| **顺势回调** | 明确趋势 + 健康回调 | 趋势为友，在回调结束点顺势入场 | `trend-pullback.md` |
-| **突破回踩** | 关键位被有效突破 | 等回踩确认翻转，不追突破 | `breakout-retest.md` |
-| **区间反转** | 成熟震荡区间 | 仅在边缘做拒绝反转，中间不碰 | `range-reversal.md` |
+| Playbook | 适用场景 | 执行规则位置 |
+|----------|---------|------------|
+| **顺势回调** `trend-pullback` | 明确趋势 + 健康回调 | `trend-pullback.md`（详细）/ `trading-decision.md 8.2`（快速） |
+| **突破回踩** `breakout-retest` | 关键位被有效突破 | `breakout-retest.md`（详细）/ `trading-decision.md 8.2`（快速） |
+| **区间反转** `range-reversal` | 成熟震荡区间边缘 | `range-reversal.md`（详细）/ `trading-decision.md 8.2`（快速） |
+| **假突破反转** `false-breakout-reversal` | 关键位被穿后快速收回 | ✅ **已内联至 `trading-decision.md 8.2`**，无独立文件 |
+| **旗形/楔形突破** `flag-wedge-breakout` | 趋势中继形态突破 | ✅ **已内联至 `trading-decision.md 8.2`**，无独立文件 |
 
 不匹配任何 Playbook → 输出"当前不满足任何已定义 setup，建议观望"
 

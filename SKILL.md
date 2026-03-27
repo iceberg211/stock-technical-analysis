@@ -18,6 +18,8 @@ description: |
 - 默认按 workflow 内置规则完成分析，不要为了走流程而机械读取所有 `references/` 文件。
 - 仅在遇到模糊形态、少见指标、复杂 Playbook 分歧时，再按最小必要原则读取单个 reference 文件。
 - 只有图片、且价格刻度或最近几根 K 线细节不清晰时，只输出结构与条件，不输出具体价位或微观 K 线断言。
+- RSI / MACD 判断遵循“背离优先、数值辅助”原则：必须先给背离类型与锚点，再补充超买超卖、零轴、金叉死叉等信息。
+- 数据中存在 `volume` 时，必须执行量价一致性判断；缺失 `volume` 时必须显式写明“量能数据不可用”。
 - 每次输出含交易分析的回复，末尾必须附加免责声明。
 
 ## 模式路由
@@ -42,7 +44,7 @@ description: |
   `references/core/INDEX.md` -> `references/core/support-resistance.md`
 - 价格行为、突破真假、当前 K 线力度：
   `references/core/INDEX.md` -> `references/core/price-action.md`
-- 成交量、量能、量价配合、持仓量：
+- 成交量、量能、量价配合：
   `references/core/INDEX.md` -> `references/core/volume-analysis.md`
 - K 线形态：
   `references/patterns/INDEX.md` -> `references/patterns/candlestick-patterns.md`
@@ -67,3 +69,5 @@ description: |
 - 用概率语言表达结论，不做确定性承诺。
 - 优先给条件式交易计划，而不是绝对价位断言。
 - 图表信息不足时，停止推进到具体执行建议。
+- 指标段必须输出 RSI/MACD 背离结论（含锚点）；若证据不足，明确写“无背离”。
+- Checklist 段必须写项目中文名与原因，禁止仅用编号（如 3/4/5）表达状态。
