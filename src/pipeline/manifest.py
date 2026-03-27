@@ -4,12 +4,12 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from src.pipeline.layout import RunLayout, DataLayout
+from src.pipeline.layout import RunLayout, REPO_ROOT
 
 
 class GlobalRegistry:
     """全局注册表管理器，用于记录所有运行历史"""
-    
+
     @staticmethod
     def append_run(
         run_id: str,
@@ -19,8 +19,10 @@ class GlobalRegistry:
         run_path: str,
         error: str = "",
     ) -> None:
-        """追加一条运行记录到全局索引 Runs.jsonl"""
-        registry_file = DataLayout.get_registry_file()
+        """追加一条运行记录到全局索引 registry.jsonl"""
+        registry_dir = REPO_ROOT / "outputs"
+        registry_dir.mkdir(parents=True, exist_ok=True)
+        registry_file = registry_dir / "registry.jsonl"
         record = {
             "run_id": run_id,
             "symbol": symbol,
