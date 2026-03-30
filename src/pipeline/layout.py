@@ -115,4 +115,4 @@ class DataLayout:
     @classmethod
     def get_registry_file(cls) -> Path:
         cls._registry_dir.mkdir(parents=True, exist_ok=True)
-        return cls._registry_dir / "runs.jsonl"
+        return cls._registry_dir / "registry.jsonl"

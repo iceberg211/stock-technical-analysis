@@ -1,0 +1,2 @@
+{"run_id": "20260327_signalbt_demo", "symbol": "BTCUSDT", "interval": "1h", "status": "done", "path": "outputs/runs/20260327_signalbt_demo/BTCUSDT", "error": "", "updated_at": "2026-03-27T13:14:57.727824+00:00"}
+{"run_id": "20260327_signalbt_demo2", "symbol": "BTCUSDT", "interval": "1h", "status": "done", "path": "outputs/runs/20260327_signalbt_demo2/BTCUSDT", "error": "", "updated_at": "2026-03-27T13:15:42.674251+00:00"}

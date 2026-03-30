@@ -22,16 +22,19 @@ env/
 # 历史行情与分析派生数据（默认不入库）
 
 # Raw and clean market data (regenerable)
+data/raw/
 data/binance_kline/
 data/opend_kline/
 data/mcp_kline/
 data/clean/
 
-# Pipeline outputs (regenerable)
-outputs/
+# Pipeline outputs
+# runs 中间文件可再生；summary/details/scored/metrics 可按需入库
+outputs/runs/**/input.parquet
+outputs/runs/**/eval_input.csv
+outputs/runs/**/runs.jsonl
 
-# Data catalog (regenerable)
-data/catalog.json
+# Data catalog（项目索引，建议入库）
 
 # 回测运行产物（默认不入库）
 eval/results/

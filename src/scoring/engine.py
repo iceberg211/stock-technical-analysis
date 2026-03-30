@@ -327,12 +327,21 @@ def score_watch(forward_rows: list[dict]) -> dict:
 # ── Forward 窗口重建/兼容读取 ─────────────────────────
 
 def _load_csv_df(csv_path: str | None) -> pd.DataFrame | None:
+    """兼容读取 CSV / Parquet 行情文件。"""
     if not csv_path:
         return None
     p = Path(csv_path)
     if not p.exists():
-        return None
-    df = pd.read_csv(p)
+        alt = Path.cwd() / p
+        if alt.exists():
+            p = alt
+        else:
+            return None
+    suffix = p.suffix.lower()
+    if suffix in (".parquet", ".pq"):
+        df = pd.read_parquet(p)
+    else:
+        df = pd.read_csv(p)
     required_cols = {"timestamp", "open", "high", "low", "close", "volume"}
     if not required_cols.issubset(set(df.columns)):
         return None
@@ -422,9 +431,9 @@ def score_runs(
     """读取 runs.jsonl 并逐行评分。"""
     scored: list[dict] = []
     source_stats = {
-        "config_csv": 0,
+        "config_data": 0,
         "inline_forward_rows": 0,
-        "eval_input_csv": 0,
+        "run_input": 0,
         "none": 0,
     }
 
@@ -459,16 +468,16 @@ def score_runs(
             # 1) config + csv 重建
             forward_rows = _slice_forward_rows(primary_df, analysis_start, lookback, forward)
             if forward_rows:
-                forward_source = "config_csv"
+                forward_source = "config_data"
             # 2) run.forward_rows 兼容
             elif "forward_rows" in run and isinstance(run["forward_rows"], list) and run["forward_rows"]:
                 forward_rows = run["forward_rows"]
                 forward_source = "inline_forward_rows"
-            # 3) 同目录 eval_input.csv 回退
+            # 3) 同目录 input.parquet / eval_input.csv 回退
             else:
                 forward_rows = _slice_forward_rows(fallback_df, analysis_start, lookback, forward)
                 if forward_rows:
-                    forward_source = "eval_input_csv"
+                    forward_source = "run_input"
 
             source_stats[forward_source] = source_stats.get(forward_source, 0) + 1
 
@@ -494,7 +503,7 @@ def _write_compat_manifest(
     run_dir: Path,
     config_exists: bool,
     primary_csv_path: str | None,
-    fallback_csv_path: str | None,
+    fallback_input_path: str | None,
     legacy_run_schema_detected: bool,
     source_stats: dict[str, int],
 ) -> None:
@@ -506,7 +515,7 @@ def _write_compat_manifest(
         "score_schema_version": SCORE_SCHEMA_VERSION,
         "config_exists": config_exists,
         "primary_csv_path": primary_csv_path,
-        "fallback_eval_input_csv": fallback_csv_path,
+        "fallback_input_path": fallback_input_path,
         "legacy_run_schema_detected": legacy_run_schema_detected,
         "forward_source_stats": source_stats,
         "note": "懒迁移兼容标记：仅记录识别结果，不改写旧数据。",
@@ -549,7 +558,7 @@ def main():
     run_dir: Path | None = None
     config_exists = False
     primary_csv_path: str | None = None
-    fallback_csv_path: str | None = None
+    fallback_input_path: str | None = None
 
     # 解析参数来源
     if args.dir:
@@ -567,9 +576,13 @@ def main():
         forward = int(config.get("forward", args.forward))
         out_file = Path(args.output) if args.output else run_dir / "scored.jsonl"
 
-        fallback_eval_input = run_dir / "eval_input.csv"
-        if fallback_eval_input.exists():
-            fallback_csv_path = str(fallback_eval_input)
+        fallback_input = run_dir / "input.parquet"
+        if fallback_input.exists():
+            fallback_input_path = str(fallback_input)
+        else:
+            fallback_eval_input = run_dir / "eval_input.csv"
+            if fallback_eval_input.exists():
+                fallback_input_path = str(fallback_eval_input)
     elif args.results:
         runs_file = Path(args.results)
         primary_csv_path = args.csv
@@ -588,18 +601,18 @@ def main():
 
     primary_df = _load_csv_df(primary_csv_path)
     fallback_df = None
-    if fallback_csv_path:
+    if fallback_input_path:
         # 如果 fallback 与 primary 相同路径，避免重复读取
-        if not primary_csv_path or Path(fallback_csv_path).resolve() != Path(primary_csv_path).resolve():
-            fallback_df = _load_csv_df(fallback_csv_path)
+        if not primary_csv_path or Path(fallback_input_path).resolve() != Path(primary_csv_path).resolve():
+            fallback_df = _load_csv_df(fallback_input_path)
 
     if primary_df is not None:
-        print(f"📂 从 CSV 重建 forward 优先路径: {primary_csv_path}")
+        print(f"📂 从配置数据重建 forward 优先路径: {primary_csv_path}")
     else:
-        print("ℹ️  主 CSV 不可用，优先走 JSONL 内联 forward_rows")
+        print("ℹ️  主数据文件不可用，优先走 JSONL 内联 forward_rows")
 
     if fallback_df is not None:
-        print(f"📂 启用回退 CSV: {fallback_csv_path}")
+        print(f"📂 启用回退输入: {fallback_input_path}")
 
     # 评分
     print(f"📊 评分: {runs_file} (slippage={args.slippage:.4%}, fee={args.fee:.4%})")
@@ -623,17 +636,17 @@ def main():
         (not config_exists)
         or legacy_run_schema_detected
         or source_stats.get("inline_forward_rows", 0) > 0
-        or source_stats.get("eval_input_csv", 0) > 0
+        or source_stats.get("run_input", 0) > 0
     )
     if run_dir is not None and needs_compat_manifest:
         _write_compat_manifest(
             run_dir=run_dir,
-                config_exists=config_exists,
-                primary_csv_path=primary_csv_path,
-                fallback_csv_path=fallback_csv_path,
-                legacy_run_schema_detected=legacy_run_schema_detected,
-                source_stats=source_stats,
-            )
+            config_exists=config_exists,
+            primary_csv_path=primary_csv_path,
+            fallback_input_path=fallback_input_path,
+            legacy_run_schema_detected=legacy_run_schema_detected,
+            source_stats=source_stats,
+        )
 
     # 统计
     total = len(scored)
@@ -658,9 +671,9 @@ def main():
     print(f"   观望: {watch}  解析错误: {errors}")
     print(
         "   forward 来源: "
-        f"config_csv={source_stats.get('config_csv', 0)}, "
+        f"config_data={source_stats.get('config_data', 0)}, "
         f"inline={source_stats.get('inline_forward_rows', 0)}, "
-        f"eval_input={source_stats.get('eval_input_csv', 0)}, "
+        f"run_input={source_stats.get('run_input', 0)}, "
         f"none={source_stats.get('none', 0)}"
     )
     print(f"\n✅ 结果: {out_file}")

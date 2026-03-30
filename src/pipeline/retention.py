@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from src.pipeline.layout import SymbolLayout
 
 
@@ -21,7 +19,7 @@ def apply_artifact_retention(layout: SymbolLayout, artifact_level: str) -> None:
         shutil.rmtree(cases_dir)
 
     if artifact_level == "core":
-        # core: 还需删掉 details.md 和 eval_input.csv（只留最精简产物）
-        for f in (layout.details_md, layout.eval_input_csv):
+        # core: 还需删掉 details 与输入切片（只留最精简产物）
+        for f in (layout.details_md, layout.input_parquet, layout.eval_input_csv):
             if f.exists():
                 f.unlink()

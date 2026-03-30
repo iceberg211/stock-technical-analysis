@@ -1,0 +1,11 @@
+{
+  "time_utc": "2026-03-27T13:00:00Z",
+  "price_now": 66530.01,
+  "1h": {
+    "state": "uptrend"
+  },
+  "4h": {
+    "state": "uptrend"
+  },
+  "decision": "long"
+}

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "symbols": {
+    "BTCUSDT": {
+      "1h": {
+        "rows": 500,
+        "start": "2026-03-06T18:00:00Z",
+        "end": "2026-03-27T13:00:00Z",
+        "file": "data/clean/BTCUSDT/1h.parquet",
+        "updated_at": "2026-03-27T13:14:27Z",
+        "source": "binance"
+      },
+      "4h": {
+        "rows": 500,
+        "start": "2026-01-03T08:00:00Z",
+        "end": "2026-03-27T12:00:00Z",
+        "file": "data/clean/BTCUSDT/4h.parquet",
+        "updated_at": "2026-03-27T13:14:36Z",
+        "source": "binance"
+      }
+    }
+  }
+}

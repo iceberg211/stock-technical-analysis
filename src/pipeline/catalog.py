@@ -43,15 +43,20 @@ class Catalog:
         return path
 
     def prepare_eval_input(self, symbol: str, interval: str, dst: Path) -> dict[str, Any]:
-        """从 clean parquet 准备评估用 CSV（兼容旧 pipeline）。"""
+        """从 clean parquet 准备评估输入切片（input.parquet）。"""
         df = self.read_clean(symbol, interval)
         df_out = df.copy()
-        df_out["timestamp"] = pd.to_datetime(df_out["timestamp"]).dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        df_out["timestamp"] = pd.to_datetime(df_out["timestamp"], errors="coerce", utc=True).dt.strftime("%Y-%m-%dT%H:%M:%SZ")
         dst.parent.mkdir(parents=True, exist_ok=True)
-        df_out.to_csv(dst, index=False)
+        df_out.to_parquet(dst, index=False)
+        path_str = str(dst)
+        try:
+            path_str = dst.relative_to(self.root).as_posix()
+        except Exception:
+            pass
         return {
             "rows": len(df_out),
             "start": df_out["timestamp"].iloc[0] if len(df_out) else None,
             "end": df_out["timestamp"].iloc[-1] if len(df_out) else None,
-            "path": str(dst),
+            "path": path_str,
         }
