@@ -13,7 +13,15 @@
       "Bash(python -m pytest eval/tests/test_eval_v2.py -v)",
       "Bash(python -c \":*)",
       "Bash(du -sh /Users/wei.he/Documents/GitHub/stock-technical-analysis/data/*/)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(xargs ls:*)",
+      "Bash(wc -l /Users/wei.he/Documents/GitHub/stock-technical-analysis/data/binance_kline/BTCUSDT/*.csv)",
+      "Bash(curl -s \"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=200\")",
+      "Bash(python3 -c \":*)",
+      "Bash(curl -s \"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=200\")",
+      "Bash(curl -s \"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=5\")",
+      "Bash(python3:*)",
+      "Bash(ls -d outputs/runs/20260326_*/ outputs/runs/20260327_105927_*/)"
     ]
   }
 }

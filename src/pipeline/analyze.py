@@ -86,6 +86,7 @@ def build_local_backtest_sample(
             "schema_version": "backtest_sample_v1",
             "symbol": symbol, "interval": interval, "case_id": case_id,
             "analysis_time": ts, "lookback_bars": lookback_bars, "forward_bars": forward_bars,
+            "data_source": "ohlc",
         },
         "decision": {
             "action": action, "playbook": playbook, "checklist": checklist,
