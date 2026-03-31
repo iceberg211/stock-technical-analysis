@@ -13,6 +13,7 @@ export interface Signal {
   t2?: number;
   snapshot: Record<string, unknown> | null;
   report: string;
+  validation?: ValidationResult;
 }
 
 export interface BacktestSymbol {
@@ -25,8 +26,16 @@ export interface BacktestSymbol {
 
 export interface Backtest {
   run_id: string;
+  type: 'skill' | 'local';
   manifest: Record<string, unknown> | null;
   symbols: BacktestSymbol[];
+}
+
+export interface ValidationResult {
+  outcome: string;
+  entry_triggered: boolean;
+  bars_to_entry?: number | null;
+  bars_to_outcome?: number | null;
 }
 
 export interface Conversation {

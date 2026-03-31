@@ -1,6 +1,130 @@
 [
   {
+    "run_id": "20260331_090829_signalbt_btcusdt",
+    "type": "skill",
+    "manifest": {
+      "run_id": "20260331_090829_signalbt_btcusdt",
+      "created_at": "2026-03-31T09:08:29.773453+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "lookback": 160,
+        "forward": 40,
+        "since": null,
+        "until": null,
+        "limit": 0,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "import_legacy": false,
+        "run_id": null,
+        "slippage": 0.0005,
+        "fee": 0.001
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 8871,
+            "start": "2025-03-26T18:00:00Z",
+            "end": "2026-03-31T08:00:00Z",
+            "path": "outputs/runs/20260331_090829_signalbt_btcusdt/BTCUSDT/input.parquet"
+          },
+          "signal_candidates": 5,
+          "runs_written": 2,
+          "skipped": 3,
+          "parse_errors": 0,
+          "summary": {
+            "runs": 2,
+            "trade_cases": 2,
+            "t1_hit": 0,
+            "t2_hit": 0,
+            "sl_hit": 2,
+            "missed_entry": 0,
+            "watch_or_no_trade": 0,
+            "parse_error": 0,
+            "win_rate_pct": 0
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "",
+        "details": "",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-31T09:08:29Z",
+          "total_runs": 2,
+          "parse_error_cases": 0,
+          "tradable_signal_cases": 2,
+          "executed_trade_cases": 2,
+          "watch_cases": 0,
+          "missed_entry_cases": 0,
+          "t1_hit": 0,
+          "sl_hit": 2,
+          "neither": 0,
+          "win_rate": 0,
+          "entry_trigger_rate": 1,
+          "missed_entry_rate": 0,
+          "win_rate_pct": 0,
+          "entry_trigger_rate_pct": 100,
+          "missed_entry_rate_pct": 0,
+          "expectancy_r": -1.0962,
+          "profit_factor_r": 0,
+          "avg_estimated_rr": 1.5,
+          "median_bars_to_outcome": 5.5,
+          "mfe_quantiles": {
+            "p50": 374.2684,
+            "p75": 523.8653,
+            "p90": 613.6234
+          },
+          "mae_quantiles": {
+            "p50": 980.6216,
+            "p75": 1095.5597,
+            "p90": 1164.5226
+          },
+          "avg_realized_r_by_playbook": {
+            "trend-pullback": -1.0962
+          },
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30",
+            "high 命中率 0.00% < 60%",
+            "medium 命中率 0.00% < 50%",
+            "high 命中率未高于 medium"
+          ]
+        },
+        "config": {
+          "run_id": "20260331_090829_signalbt_btcusdt",
+          "symbol": "BTCUSDT",
+          "interval": "1h",
+          "csv": "data/clean/BTCUSDT/1h.parquet",
+          "lookback": 160,
+          "forward": 40,
+          "source": "signal_backtest",
+          "signal_filters": {
+            "since": null,
+            "until": null,
+            "limit": 0
+          },
+          "artifact_level": "standard",
+          "embed_forward_rows": false,
+          "run_schema_version": "run_v2"
+        }
+      }
+    ]
+  },
+  {
     "run_id": "20260331_083839_signalbt_btcusdt",
+    "type": "skill",
     "manifest": {
       "run_id": "20260331_083839_signalbt_btcusdt",
       "created_at": "2026-03-31T08:38:39.520128+00:00",
@@ -123,6 +247,7 @@
   },
   {
     "run_id": "20260331_082406_signalbt_solusdt",
+    "type": "skill",
     "manifest": {
       "run_id": "20260331_082406_signalbt_solusdt",
       "created_at": "2026-03-31T08:24:06.920891+00:00",
@@ -232,6 +357,7 @@
   },
   {
     "run_id": "20260331_082404_signalbt_ethusdt",
+    "type": "skill",
     "manifest": {
       "run_id": "20260331_082404_signalbt_ethusdt",
       "created_at": "2026-03-31T08:24:04.284154+00:00",
@@ -341,6 +467,7 @@
   },
   {
     "run_id": "20260331_082359_signalbt_btcusdt",
+    "type": "skill",
     "manifest": {
       "run_id": "20260331_082359_signalbt_btcusdt",
       "created_at": "2026-03-31T08:23:59.468026+00:00",
@@ -463,6 +590,7 @@
   },
   {
     "run_id": "20260330_103900_btcusdt",
+    "type": "local",
     "manifest": {
       "run_id": "20260330_103900_btcusdt",
       "created_at": "2026-03-30T10:39:00.881636+00:00",
@@ -593,6 +721,7 @@
   },
   {
     "run_id": "20260330_103851_btcusdt",
+    "type": "local",
     "manifest": {
       "run_id": "20260330_103851_btcusdt",
       "created_at": "2026-03-30T10:38:51.837734+00:00",
@@ -724,6 +853,7 @@
   },
   {
     "run_id": "20260327_110047_btcusdt",
+    "type": "local",
     "manifest": {
       "run_id": "20260327_110047_btcusdt",
       "created_at": "2026-03-27T11:00:47.331023+00:00",

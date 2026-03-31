@@ -11,6 +11,17 @@ function formatPrice(n: unknown) {
 const decisionLabel: Record<string, string> = { long: '做多', short: '做空', watch: '观望' };
 const biasLabel: Record<string, string> = { bullish: '看涨', bearish: '看跌', neutral: '中性' };
 
+const outcomeConfig: Record<string, { label: string; color: string; bg: string }> = {
+  t1_hit: { label: '✅ 目标 1 命中', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
+  sl_hit: { label: '❌ 止损命中', color: 'text-red-700', bg: 'bg-red-50 border-red-200' },
+  neither: { label: '⏸ 未触达目标或止损', color: 'text-gray-600', bg: 'bg-gray-50 border-gray-200' },
+  not_triggered: { label: '⏳ 入场条件未触发', color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' },
+  no_data: { label: '无可用 K 线数据', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-200' },
+  insufficient_data: { label: '后续 K 线数据不足', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-200' },
+  no_levels: { label: '缺少关键点位（无法验证）', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-200' },
+  pending: { label: '🔘 待验证', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-200' },
+};
+
 export default function SignalDetail({ signal, onBack }: { signal: Signal; onBack: () => void }) {
   const s = signal;
   const snap = s.snapshot as Record<string, unknown> | null;
@@ -20,6 +31,10 @@ export default function SignalDetail({ signal, onBack }: { signal: Signal; onBac
   const t1 = s.t1 || trade.t1 as number;
   const t2 = s.t2 || trade.t2 as number;
   const price = s.price_at_signal || (snap?.price_now as number);
+
+  const v = s.validation;
+  const outcome = v?.outcome || 'pending';
+  const cfg = outcomeConfig[outcome] || outcomeConfig.pending;
 
   return (
     <div className="p-8 max-w-4xl">
@@ -34,6 +49,30 @@ export default function SignalDetail({ signal, onBack }: { signal: Signal; onBac
         <Badge value={s.bias} label={biasLabel[s.bias]} />
         <Badge value={s.confidence} />
         <span className="text-sm text-gray-400 ml-auto font-mono">{s.timestamp_utc?.replace('T', ' ').replace('Z', '').slice(0, 16)}</span>
+      </div>
+
+      {/* 验证结果卡片 */}
+      <div className={`rounded-xl border p-5 mb-6 ${cfg.bg}`}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">事后验证</h3>
+            <div className={`text-lg font-semibold ${cfg.color}`}>{cfg.label}</div>
+          </div>
+          {v && (
+            <div className="text-right text-sm">
+              {v.entry_triggered && (
+                <div className="text-gray-600">
+                  入场触发 · {typeof v.bars_to_entry === 'number' ? `第 ${v.bars_to_entry} 根 bar` : '-'}
+                </div>
+              )}
+              {typeof v.bars_to_outcome === 'number' && (
+                <div className="text-gray-500">
+                  入场后 {v.bars_to_outcome} 根 bar 出结果
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Key Levels Card */}
