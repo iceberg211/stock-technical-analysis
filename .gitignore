@@ -41,3 +41,4 @@ eval/results/
 
 # 通用日志
 *.log
+dashboard/public/data/_*
