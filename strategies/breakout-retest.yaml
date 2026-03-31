@@ -1,0 +1,17 @@
+name: breakout-retest
+description: 突破回踩确认入场
+extends: _defaults
+conditions:
+  long:
+    market_state: uptrend
+    rsi_min: 50
+    macd_hist_min: 0
+  short:
+    market_state: downtrend
+    rsi_max: 50
+    macd_hist_max: 0
+stop_loss:
+  atr_multiplier: 1.2
+targets:
+  t1_atr_multiplier: 1.8
+  t2_atr_multiplier: 3.5

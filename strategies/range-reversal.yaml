@@ -1,0 +1,17 @@
+name: range-reversal
+description: 区间边界反转入场
+extends: _defaults
+conditions:
+  long:
+    market_state: range
+    rsi_min: 30
+    rsi_max: 45
+  short:
+    market_state: range
+    rsi_min: 55
+    rsi_max: 70
+stop_loss:
+  atr_multiplier: 0.8
+targets:
+  t1_atr_multiplier: 1.5
+  t2_atr_multiplier: 2.5
