@@ -1,0 +1,88 @@
+{
+  "time_utc": "2026-03-31T08:00:00Z",
+  "price_now": 2057.21,
+  "4h": {
+    "state": "downtrend",
+    "close": 2057.21,
+    "ema20": 2040.05,
+    "ema50": 2062.72,
+    "ema200": 2081.95,
+    "rsi14": 53.11,
+    "macd": -0.70,
+    "signal": -9.09,
+    "hist": 8.39,
+    "atr14": 37.12,
+    "resistance_top3": [2092, 2199, 2386],
+    "support_top3": [1939, 1971, 2023],
+    "swing_highs": [2386, 2199, 2092],
+    "swing_lows": [2099, 2023, 1939],
+    "momentum": "indecisive",
+    "volume_state": "mixed",
+    "volume_text": "放量下跌后缩量反弹",
+    "rsi_divergence": "possible_bullish_regular",
+    "macd_divergence": "none",
+    "trend_health": "exhaustion"
+  },
+  "1h": {
+    "state": "bounce_fading",
+    "close": 2057.22,
+    "ema20": 2052.12,
+    "ema50": 2039.95,
+    "rsi14": 54.36,
+    "macd": 6.96,
+    "signal": 7.12,
+    "hist": -0.16,
+    "atr14": 19.32,
+    "momentum": "indecisive",
+    "volume_state": "contracting",
+    "volume_text": "缩量整理，1H MACD即将死叉",
+    "position": "middle",
+    "rsi_divergence": "none",
+    "macd_divergence": "none"
+  },
+  "decision": "watch",
+  "playbook": "none",
+  "bias": "bearish",
+  "confidence": "low",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "low",
+    "signal_strength": "weak",
+    "mtf_alignment": "neutral"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "trend_health": "exhaustion",
+    "latest_bos_choch": "bos_bear",
+    "notes": "4H LH+LL序列: 2386→2199→2092(LH), 2099→2023→1939(LL); 反弹至EMA20/50区间后犹豫; 底部RSI疑似看涨背离"
+  },
+  "levels": {
+    "resistances": [2092, 2199, 2386],
+    "supports": [1939, 1971, 2023],
+    "current_price": 2057.21,
+    "position": "middle"
+  },
+  "pattern": {
+    "candle_pattern": null,
+    "chart_pattern": null,
+    "signal_score": 1
+  },
+  "trade": {
+    "entry_price": null,
+    "stop_loss": null,
+    "t1": null,
+    "t2": null,
+    "risk_reward": null,
+    "trigger_type": null,
+    "invalidation": null
+  },
+  "triggers": {
+    "short": "4H收盘跌破2023(前低),或反弹至2090-2100被拒后1H出现BOS Bear",
+    "long": "4H收盘突破2100且回踩不破2060,量能放大确认"
+  },
+  "counter_reasons": [
+    "底部RSI疑似看涨背离(1939低点RSI高于1971低点RSI)",
+    "价格夹在EMA20(2040)和EMA50(2063)之间,方向不明",
+    "BTC同步偏空,板块联动下ETH难独立走强"
+  ]
+}

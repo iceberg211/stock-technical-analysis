@@ -1,0 +1,110 @@
+{
+  "time_utc": "2026-03-31T08:00:00Z",
+  "price_now": 67250.0,
+  "4h": {
+    "state": "downtrend",
+    "close": 67250.0,
+    "ema20": 67249.41,
+    "ema50": 68096.76,
+    "ema200": 69106.09,
+    "rsi14": 49.33,
+    "macd": -224.67,
+    "signal": -408.21,
+    "hist": 183.55,
+    "atr14": 915.82,
+    "resistance_top3": [68400, 72026, 76000],
+    "support_top3": [65548, 65000, 63000],
+    "swing_highs": [76000, 72026, 68408],
+    "swing_lows": [68793, 67361, 65000],
+    "momentum": "bearish",
+    "volume_state": "contracting_on_rally",
+    "volume_text": "放量下跌 + 上攻缩量",
+    "rsi_divergence": "possible_bullish_regular",
+    "macd_divergence": "possible_bullish_regular",
+    "price_anchor": [65548, 65000],
+    "rsi_anchor_est": [28, 35],
+    "trend_health": "healthy_but_early_exhaustion_signs"
+  },
+  "1h": {
+    "state": "fading_bounce",
+    "close": 67250.0,
+    "ema20": 67340.02,
+    "ema50": 67181.63,
+    "rsi14": 51.42,
+    "macd": 118.23,
+    "signal": 114.08,
+    "hist": 4.15,
+    "atr14": 462.3,
+    "momentum": "bearish",
+    "volume_state": "contracting",
+    "volume_text": "反弹动量衰竭，MACD即将死叉",
+    "position": "middle",
+    "rsi_divergence": "none",
+    "macd_divergence": "none"
+  },
+  "decision": "short",
+  "playbook": "trend-pullback",
+  "bias": "bearish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "medium",
+    "signal_strength": "medium",
+    "mtf_alignment": "aligned"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "trend_health": "healthy_but_early_exhaustion_signs",
+    "latest_bos_choch": "bos_bear",
+    "notes": "LH+LL序列清晰，2x BOS Bear确认；反弹精确触及Fib 50%(68,513)后被拒"
+  },
+  "levels": {
+    "resistances": [68400, 72026, 76000],
+    "supports": [65548, 65000, 63000],
+    "current_price": 67250,
+    "position": "middle",
+    "fib_50_level": 68513
+  },
+  "pattern": {
+    "candle_pattern": "rejection_candle_at_resistance",
+    "chart_pattern": "bear_flag_forming",
+    "signal_score": 3
+  },
+  "trade": {
+    "plan_a": {
+      "label": "conservative_retest",
+      "entry_price": 68100,
+      "stop_loss": 68700,
+      "t1": 65500,
+      "t2": 63000,
+      "risk_reward": 4.3,
+      "trigger_type": "price_touch",
+      "invalidation": "4H收盘突破68700"
+    },
+    "plan_b": {
+      "label": "aggressive_current",
+      "entry_price": 67250,
+      "stop_loss": 68000,
+      "t1": 65500,
+      "t2": 63000,
+      "risk_reward": 2.3,
+      "trigger_type": "close_below",
+      "invalidation": "1H收盘突破68000",
+      "position_size_note": "降仓至0.5-1%"
+    }
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "degraded",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "counter_reasons": [
+    "底部可能存在RSI/MACD看涨背离，65000支撑若守住可能构筑更大底部",
+    "当前价格已离开阻力区，非最佳做空位置"
+  ]
+}

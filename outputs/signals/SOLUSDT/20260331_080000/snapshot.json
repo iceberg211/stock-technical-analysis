@@ -1,0 +1,114 @@
+{
+  "time_utc": "2026-03-31T08:00:00Z",
+  "price_now": 83.22,
+  "4h": {
+    "state": "downtrend",
+    "close": 83.22,
+    "ema20": 83.52,
+    "ema50": 85.31,
+    "ema200": 87.15,
+    "rsi14": 45.98,
+    "macd": -0.71,
+    "signal": -0.99,
+    "hist": 0.29,
+    "atr14": 1.57,
+    "resistance_top3": [84.62, 84.99, 93.47],
+    "support_top3": [78.96, 81.69, 81.86],
+    "swing_highs": [97.68, 93.47, 84.99, 84.62],
+    "swing_lows": [88.55, 85.11, 81.86, 78.96],
+    "momentum": "bearish",
+    "volume_state": "normal",
+    "volume_text": "量能常态，无明显放缩量",
+    "rsi_divergence": "possible_bullish_regular",
+    "macd_divergence": "none",
+    "trend_health": "healthy"
+  },
+  "1h": {
+    "state": "indecisive",
+    "close": 83.22,
+    "ema20": 83.33,
+    "ema50": 83.28,
+    "rsi14": 49.09,
+    "macd": 0.03,
+    "signal": 0.06,
+    "hist": -0.03,
+    "atr14": 0.80,
+    "momentum": "indecisive",
+    "volume_state": "contracting",
+    "volume_text": "缩量整理，MACD即将死叉",
+    "position": "middle",
+    "rsi_divergence": "none",
+    "macd_divergence": "none"
+  },
+  "decision": "short",
+  "playbook": "trend-pullback",
+  "bias": "bearish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "medium",
+    "signal_strength": "medium",
+    "mtf_alignment": "aligned"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "trend_health": "healthy",
+    "latest_bos_choch": "bos_bear",
+    "notes": "4H清晰LH+LL: 97.68→93.47→84.99→84.62(LH), 88.55→85.11→81.86→78.96(LL); 多次BOS Bear; 反弹至84.6-85.0被EMA20/50压制; SOL beta高于BTC"
+  },
+  "levels": {
+    "resistances": [84.62, 85.00, 93.47],
+    "supports": [78.96, 81.69, 81.86],
+    "current_price": 83.22,
+    "position": "middle"
+  },
+  "pattern": {
+    "candle_pattern": "rejection_at_ema",
+    "chart_pattern": "bear_flag_forming",
+    "signal_score": 3
+  },
+  "trade": {
+    "plan_a": {
+      "label": "conservative_retest",
+      "entry_price": 84.50,
+      "stop_loss": 85.50,
+      "t1": 79.00,
+      "t2": 76.50,
+      "risk_reward": 5.5,
+      "trigger_type": "price_touch",
+      "invalidation": "4H收盘突破85.50"
+    },
+    "plan_b": {
+      "label": "aggressive_current",
+      "entry_price": 83.20,
+      "stop_loss": 84.70,
+      "t1": 79.00,
+      "t2": 76.50,
+      "risk_reward": 2.8,
+      "trigger_type": "close_below",
+      "invalidation": "1H收盘突破84.70"
+    },
+    "entry_price": 84.50,
+    "stop_loss": 85.50,
+    "t1": 79.00,
+    "t2": 76.50,
+    "risk_reward": 5.5,
+    "trigger_type": "price_touch",
+    "invalidation": "4H收盘突破85.50"
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "degraded",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "counter_reasons": [
+    "底部78.96可能存在RSI看涨背离",
+    "SOL高beta特性：一旦BTC反弹，SOL反弹幅度更大",
+    "当前价格在中间区域，非理想做空位置"
+  ]
+}

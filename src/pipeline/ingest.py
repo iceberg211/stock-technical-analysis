@@ -213,12 +213,11 @@ def run_ingest(
     raw_path = _raw_file(root, source_l, symbol_u, interval)
 
     if not dry_run:
-        if raw_payload:
-            raw_path.parent.mkdir(parents=True, exist_ok=True)
-            raw_path.write_text(json.dumps(raw_payload, ensure_ascii=False, indent=2), encoding="utf-8")
-
         merged_df.to_parquet(clean_path, index=False)
         catalog_path = _write_catalog(root, symbol_u, interval, merged_df, source_l, clean_path)
+
+        # raw JSON 仅在 clean parquet 写入成功后才需要，不再保留
+        # （clean parquet 是唯一数据源，raw 是可重新拉取的中间产物）
 
         if legacy_used:
             _write_compat_manifest(
@@ -241,7 +240,6 @@ def run_ingest(
         "merged_rows": int(len(merged_df)),
         "fetch_error": fetch_error,
         "clean_path": _repo_rel(clean_path, root),
-        "raw_path": _repo_rel(raw_path, root),
         "catalog_path": _repo_rel(catalog_path, root),
         "legacy_files": legacy_used,
         "dry_run": dry_run,
@@ -271,7 +269,6 @@ def main() -> None:
         "fetched_rows",
         "merged_rows",
         "clean_path",
-        "raw_path",
         "catalog_path",
         "fetch_error",
     ):

@@ -3,19 +3,55 @@
   "symbols": {
     "BTCUSDT": {
       "1h": {
-        "rows": 500,
-        "start": "2026-03-06T18:00:00Z",
-        "end": "2026-03-27T13:00:00Z",
+        "rows": 8871,
+        "start": "2025-03-26T18:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
         "file": "data/clean/BTCUSDT/1h.parquet",
-        "updated_at": "2026-03-27T13:14:27Z",
+        "updated_at": "2026-03-31T08:38:33Z",
         "source": "binance"
       },
       "4h": {
-        "rows": 500,
-        "start": "2026-01-03T08:00:00Z",
-        "end": "2026-03-27T12:00:00Z",
+        "rows": 4408,
+        "start": "2024-03-26T20:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
         "file": "data/clean/BTCUSDT/4h.parquet",
-        "updated_at": "2026-03-27T13:14:36Z",
+        "updated_at": "2026-03-31T08:21:53Z",
+        "source": "binance"
+      }
+    },
+    "ETHUSDT": {
+      "1h": {
+        "rows": 1000,
+        "start": "2026-02-17T17:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
+        "file": "data/clean/ETHUSDT/1h.parquet",
+        "updated_at": "2026-03-31T08:21:34Z",
+        "source": "binance"
+      },
+      "4h": {
+        "rows": 1000,
+        "start": "2025-10-15T20:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
+        "file": "data/clean/ETHUSDT/4h.parquet",
+        "updated_at": "2026-03-31T08:21:38Z",
+        "source": "binance"
+      }
+    },
+    "SOLUSDT": {
+      "1h": {
+        "rows": 1000,
+        "start": "2026-02-17T17:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
+        "file": "data/clean/SOLUSDT/1h.parquet",
+        "updated_at": "2026-03-31T08:21:41Z",
+        "source": "binance"
+      },
+      "4h": {
+        "rows": 1000,
+        "start": "2025-10-15T20:00:00Z",
+        "end": "2026-03-31T08:00:00Z",
+        "file": "data/clean/SOLUSDT/4h.parquet",
+        "updated_at": "2026-03-31T08:21:44Z",
         "source": "binance"
       }
     }
