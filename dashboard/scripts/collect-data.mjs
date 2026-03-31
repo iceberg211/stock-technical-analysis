@@ -3,7 +3,7 @@
  * 扫描 outputs/ 目录，为每条信号计算事后验证状态，生成 Dashboard 所需的静态 JSON。
  * Run: node scripts/collect-data.mjs
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, statSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, statSync, unlinkSync } from 'fs';
 import { join, resolve } from 'path';
 import { execSync } from 'child_process';
 
@@ -111,8 +111,8 @@ json.dump(results, open('${tmpOut}', 'w'))
     console.warn('⚠️ Signal validation failed:', e.message?.slice(0, 200));
     return {};
   } finally {
-    try { require('fs').unlinkSync(tmpIn); } catch {}
-    try { require('fs').unlinkSync(tmpOut); } catch {}
+    try { unlinkSync(tmpIn); } catch {}
+    try { unlinkSync(tmpOut); } catch {}
   }
 }
 
@@ -171,6 +171,48 @@ function collectSignals() {
   return signals;
 }
 
+// ─── 从 metrics.json 生成 Markdown 摘要 ───
+
+function summaryFromMetrics(metrics, runId) {
+  if (!metrics) return '';
+  const m = metrics;
+  const date = runId.match(/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})/);
+  const dateStr = date ? `${date[1]}-${date[2]}-${date[3]} ${date[4]}:${date[5]} UTC` : runId;
+  const n = v => (v !== null && v !== undefined) ? (typeof v === 'number' ? (v % 1 === 0 ? String(v) : v.toFixed(4)) : String(v)) : '-';
+  const pct = v => (v !== null && v !== undefined) ? `${Number(v).toFixed(2)}%` : '-';
+
+  const lines = [
+    `## 回测总览 (${dateStr})`,
+    '',
+    '| 指标 | 数值 |',
+    '|---|---|',
+    `| 总 runs | ${n(m.total_runs)} |`,
+    `| 可交易信号 | ${n(m.tradable_signal_cases ?? m.executed_trade_cases)} |`,
+    `| 实际执行 | ${n(m.executed_trade_cases)} |`,
+    `| Win Rate | ${pct(m.win_rate_pct ?? m.win_rate)} |`,
+    `| Expectancy R | ${n(m.expectancy_r)} |`,
+    `| Profit Factor | ${n(m.profit_factor_r)} |`,
+    `| T1 命中 | ${n(m.t1_hit)} |`,
+    `| 止损触发 | ${n(m.sl_hit)} |`,
+    `| 漏触发 | ${n(m.missed_entry_cases)} |`,
+    `| 解析错误 | ${n(m.parse_error_cases)} |`,
+  ];
+
+  if (m.avg_realized_r_by_playbook && Object.keys(m.avg_realized_r_by_playbook).length) {
+    lines.push('', '## Playbook 表现', '| Playbook | Avg Realized R |', '|---|---|');
+    for (const [pb, r] of Object.entries(m.avg_realized_r_by_playbook)) {
+      lines.push(`| ${pb} | ${typeof r === 'number' ? r.toFixed(4) : '-'} |`);
+    }
+  }
+
+  if (m.baseline_reasons?.length) {
+    lines.push('', `## 基线判定: ${m.baseline_pass ? '✅ 通过' : '❌ 未通过'}`);
+    for (const reason of m.baseline_reasons) lines.push(`- ${reason}`);
+  }
+
+  return lines.join('\n');
+}
+
 // ─── 回测采集（只取 signal backtest，过滤掉 local engine） ───
 
 function collectBacktests() {
@@ -182,9 +224,7 @@ function collectBacktests() {
     const runDir = join(runsDir, runId);
     if (!statSync(runDir).isDirectory()) continue;
 
-    // 只保留 signal backtest 的运行（run_id 包含 signalbt）
     const isSignalBacktest = runId.includes('signalbt');
-
     const manifest = readJson(join(runDir, 'manifest.json'));
     const symbols = [];
 
@@ -192,47 +232,25 @@ function collectBacktests() {
       const symDir = join(runDir, item);
       if (!statSync(symDir).isDirectory()) continue;
 
-      const summary = readMd(join(symDir, 'summary.md'));
-      const details = readMd(join(symDir, 'details.md'));
       const metrics = readJson(join(symDir, 'metrics.json'));
       const config = readJson(join(symDir, 'config.json'));
 
-      if (!summary && !metrics) continue;
-      symbols.push({ symbol: item, summary, details, metrics, config });
+      if (!metrics && !manifest) continue;
+      symbols.push({
+        symbol: item,
+        summary: summaryFromMetrics(metrics, runId),
+        metrics,
+        config,
+      });
     }
 
     if (symbols.length === 0 && !manifest) continue;
 
-    runs.push({
-      run_id: runId,
-      type: isSignalBacktest ? 'skill' : 'local',
-      manifest,
-      symbols,
-    });
+    runs.push({ run_id: runId, type: isSignalBacktest ? 'skill' : 'local', manifest, symbols });
   }
 
   runs.sort((a, b) => b.run_id.localeCompare(a.run_id));
   return runs;
-}
-
-// ─── 对话采集 ───
-
-function collectConversations() {
-  const convDir = join(OUTPUTS, 'conversations');
-  if (!existsSync(convDir)) return [];
-
-  const globalIndex = readJsonl(join(convDir, 'index.jsonl'));
-  const conversations = [];
-
-  for (const entry of globalIndex) {
-    const dir = join(convDir, entry.path || `${entry.symbol}/${entry.conversation_id}`);
-    const transcript = readMd(join(dir, 'conversation.md'));
-    const metadata = readJson(join(dir, 'metadata.json'));
-    conversations.push({ ...entry, transcript, metadata });
-  }
-
-  conversations.sort((a, b) => (b.timestamp_utc || '').localeCompare(a.timestamp_utc || ''));
-  return conversations;
 }
 
 // ─── Main ───
@@ -289,13 +307,9 @@ const review = {
 console.log('📋 Collecting backtests...');
 const backtests = collectBacktests();
 
-console.log('💬 Collecting conversations...');
-const conversations = collectConversations();
-
 writeFileSync(join(OUT_DIR, 'signals.json'), JSON.stringify(signals, null, 2));
 writeFileSync(join(OUT_DIR, 'review.json'), JSON.stringify(review, null, 2));
 writeFileSync(join(OUT_DIR, 'backtests.json'), JSON.stringify(backtests, null, 2));
-writeFileSync(join(OUT_DIR, 'conversations.json'), JSON.stringify(conversations, null, 2));
 
 const skillBacktests = backtests.filter(b => b.type === 'skill').length;
 
@@ -303,4 +317,3 @@ console.log(`\n✅ Data collected:`);
 console.log(`   Signals: ${signals.length} (${tradable.length} tradable, ${validated.length} validated)`);
 console.log(`   Validation: ${wins.length} wins / ${validated.length} total${review.win_rate ? ` (${review.win_rate}%)` : ''}`);
 console.log(`   Backtests: ${backtests.length} total (${skillBacktests} skill, ${backtests.length - skillBacktests} local)`);
-console.log(`   Conversations: ${conversations.length}`);

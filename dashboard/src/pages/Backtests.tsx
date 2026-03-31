@@ -30,7 +30,6 @@ function MetricCard({ label, value, suffix, color }: { label: string; value: str
 }
 
 function RunDetail({ run, onBack }: { run: Backtest; onBack: () => void }) {
-  const [tab, setTab] = useState<'summary' | 'details'>('summary');
   const sym = run.symbols[0];
   const m = sym?.metrics as Record<string, unknown> | null;
 
@@ -50,30 +49,16 @@ function RunDetail({ run, onBack }: { run: Backtest; onBack: () => void }) {
 
       {m && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <MetricCard label="胜率" value={extractMetric(m, 'win_rate')} suffix="%" />
+          <MetricCard label="胜率" value={extractMetric(m, 'win_rate_pct')} suffix="%" />
           <MetricCard label="期望 R" value={extractMetric(m, 'expectancy_r')} />
           <MetricCard label="利润因子" value={extractMetric(m, 'profit_factor_r')} />
-          <MetricCard label="交易次数" value={extractMetric(m, 'executed_trades')} color="text-gray-900" />
+          <MetricCard label="执行笔数" value={extractMetric(m, 'executed_trade_cases')} color="text-gray-900" />
         </div>
       )}
 
-      <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit mb-4">
-        {([['summary', '概览'], ['details', '明细']] as const).map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setTab(key as 'summary' | 'details')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              tab === key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
       <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
         <div className="prose text-sm text-gray-700">
-          <ReactMarkdown>{tab === 'summary' ? sym?.summary || '暂无概览' : sym?.details || '暂无明细'}</ReactMarkdown>
+          <ReactMarkdown>{sym?.summary || '暂无数据'}</ReactMarkdown>
         </div>
       </div>
     </div>

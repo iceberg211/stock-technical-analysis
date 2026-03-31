@@ -1,5 +1,148 @@
 [
   {
+    "signal_id": "20260331_090000",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-31T09:00:00Z",
+    "price_at_signal": 66504,
+    "market_state_4h": "downtrend",
+    "market_state_1h": "downtrend_accelerating",
+    "decision": "short",
+    "bias": "bearish",
+    "confidence": "high",
+    "playbook": "trend-pullback",
+    "conditional_entry": 66500,
+    "stop_loss": 67100,
+    "t1": 65000,
+    "t2": 63000,
+    "note": "射击之星确认+1H MACD死叉+放量下跌，强信号入场",
+    "path": "20260331_090000/",
+    "snapshot": {
+      "time_utc": "2026-03-31T09:00:00Z",
+      "price_now": 66504,
+      "4h": {
+        "state": "downtrend",
+        "close": 66502,
+        "ema20": 67168.3,
+        "ema50": 68063.4,
+        "ema200": 69097.6,
+        "rsi14": 43.1,
+        "macd": -292.6,
+        "signal": -421.8,
+        "hist": 129.2,
+        "atr14": 984.6,
+        "resistance_top3": [
+          68408,
+          72026,
+          70924
+        ],
+        "support_top3": [
+          66233,
+          65548,
+          65000
+        ],
+        "swing_highs": [
+          72026,
+          68408,
+          68170
+        ],
+        "swing_lows": [
+          65000,
+          65548,
+          66233
+        ],
+        "momentum": "bearish",
+        "volume_state": "放量下跌+上攻被拒",
+        "rsi_divergence": "none",
+        "macd_divergence": "none",
+        "trend_health": "healthy",
+        "key_candle": "03-31 00:00 射击之星(body=907, upper_wick=704)在68408阻力位被拒"
+      },
+      "1h": {
+        "state": "downtrend_accelerating",
+        "close": 66504,
+        "ema20": 67210.8,
+        "ema50": 67133.5,
+        "rsi14": 38.7,
+        "macd": 1.8,
+        "signal": 84.3,
+        "hist": -82.5,
+        "atr14": 511.8,
+        "momentum": "bearish",
+        "volume_state": "放量下跌",
+        "position": "near_support",
+        "rsi_divergence": "none",
+        "macd_divergence": "none",
+        "key_signal": "1H MACD完成死叉，Hist-82.5加速扩大"
+      },
+      "decision": "short",
+      "playbook": "trend-pullback",
+      "bias": "bearish",
+      "confidence": "high",
+      "verdict": {
+        "bias": "bearish",
+        "confidence": "high",
+        "signal_strength": "strong",
+        "mtf_alignment": "aligned"
+      },
+      "structure": {
+        "market_state": "downtrend",
+        "trend_health": "healthy",
+        "latest_bos_choch": "bos_bear",
+        "notes": "LH+LL序列清晰: 72026→68408(LH), 65548→65000(LL). 射击之星在Fib50%被拒. 1H MACD死叉确认."
+      },
+      "levels": {
+        "resistances": [
+          68408,
+          72026
+        ],
+        "supports": [
+          66233,
+          65548,
+          65000,
+          63000
+        ],
+        "current_price": 66504,
+        "position": "near_support",
+        "immediate_support": 66233,
+        "fib_50_level": 68513
+      },
+      "pattern": {
+        "candle_pattern": "shooting_star_confirmed",
+        "chart_pattern": "dead_cat_bounce_complete",
+        "signal_score": 5
+      },
+      "trade": {
+        "entry_price": 66500,
+        "stop_loss": 67100,
+        "t1": 65000,
+        "t2": 63000,
+        "risk_reward": 2.4,
+        "trigger_type": "price_touch",
+        "invalidation": "1H收盘突破67100"
+      },
+      "checklist": {
+        "htf_direction": "pass",
+        "position": "pass",
+        "setup_match": "pass",
+        "trigger": "pass",
+        "risk_reward": "pass",
+        "events": "pass",
+        "counter_reason": "degraded"
+      },
+      "checklist_result": "pass",
+      "position_size_pct": 100,
+      "counter_reasons": [
+        "65000-65548双底支撑区域可能形成W底反弹",
+        "已距最佳入场位(68400)较远，下行空间相对压缩"
+      ]
+    },
+    "report": "# BTCUSDT 分析报告（2026-03-31 09:00 UTC）\n\n## 基础信息\n- 品种: BTCUSDT（加密货币）\n- 数据来源: Binance API (api2) OHLCV\n- 分析模式: 数据模式\n- 时间框架: HTF=4H, LTF=1H（两层模式）\n- 当前价格: 66,504\n\n## 市场结构\n- 市场状态: **下降趋势**（LH+LL 序列，2x BOS Bear）\n- 关键结构: 72,026 → 68,408（LH）；65,548 → 65,000（LL）\n- 趋势健康度: **健康** — Fib 50% 被拒，正回归主趋势\n- 当前: 从 68,408 LH 快速下行，向 66,233 支撑运动\n\n## 关键价位\n- 阻力 R1: **67,000–68,408**（LH 区域 + EMA20）\n- 支撑 S1: **66,100–66,233**（Mar 30 Swing Low）\n- 支撑 S2: **65,000–65,548**（双底支撑）\n- 支撑 S3: ~63,000（趋势等距投射）\n- 当前位置: 靠近 S1\n\n## 价格行为\n- 近期动量: **空头主导**\n- 关键K线: 4H 射击之星（03-31 00:00 @ 68,408，body=907，upper_wick=704）已被 3 根阴线确认反转\n- 量能: 放量上攻被拒，下跌放量，1H 07:00 放量(2.06x)阴线确认转空\n\n## 指标信号\n- RSI(4H): 43.1，从 52 持续下行；RSI背离: 无背离\n- MACD(4H): -292.6，Hist 从 254 → 129，收缩确认反弹结束；MACD背离: 无背离\n- 1H MACD: **完成死叉**，Hist -82.5 加速扩大\n- EMA(4H): 全面空头排列（价格 < EMA20 < EMA50 < EMA200）\n- 指标确认: **多指标一致确认空头**\n\n## 综合研判\n- 偏向: **偏空（高信心）**\n- 信心: **高**（结构+关键位拒绝+形态+指标 四重汇合）\n- 多周期一致性: **一致**（4H + 1H 全面偏空）\n- 信号强度: **强（5/5分）**\n\n---\n\n## 交易决策卡\n\n### 决策结论\n- 方向: **做空**\n- Playbook: trend-pullback（空头版）\n\n### 入场前检查\n- Setup 匹配: ✅（下降趋势+Fib 50%反弹被拒+射击之星）\n- 触发信号: ✅（1H MACD死叉+4H连续阴线）\n- 盈亏比: ✅（R:R到T2≈5.8:1）\n- HTF方向: ✅（4H下降趋势）\n- 位置: ✅（从阻力回落，进入做空窗口）\n- 事件风险: ✅\n- 否决理由: ⚠️（65000双底支撑风险）\n- 结论: **通过（标准仓位）**\n\n### 方案 A（推荐）\n- 入场: 66,400–66,600（当前区域）\n- 止损: 67,100（1H 结构失效位）\n- 目标1: 65,000（R:R ≈ 2.4:1）\n- 目标2: 63,000（R:R ≈ 5.8:1）\n- 仓位: 标准 1–2% 风险\n- 失效: 1H 收盘突破 67,100\n- 持仓管理: T1减仓50%+移止损至成本，剩余持有至T2\n\n> 以上分析仅供学习和参考，不构成投资建议。交易有风险，请基于自身判断做出决策，并自行承担所有风险。\n",
+    "validation": {
+      "outcome": "insufficient_data",
+      "entry_triggered": false
+    }
+  },
+  {
     "signal_id": "20260331_080000",
     "symbol": "BTCUSDT",
     "timestamp_utc": "2026-03-31T08:00:00Z",

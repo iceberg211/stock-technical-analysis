@@ -2,12 +2,51 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import urllib.request
 from datetime import datetime, timezone
 from typing import Any, Protocol
 from urllib.parse import urlencode
-from urllib.request import urlopen
 
 import pandas as pd
+
+
+def _make_opener() -> urllib.request.OpenerDirector:
+    """Build URL opener respecting system proxy (env vars or macOS system proxy)."""
+    proxies: dict[str, str] = {}
+    for key in ("ALL_PROXY", "HTTPS_PROXY", "HTTP_PROXY", "all_proxy", "https_proxy", "http_proxy"):
+        val = os.environ.get(key, "").strip()
+        if val:
+            proxies["https"] = val
+            proxies["http"] = val
+            break
+    if not proxies:
+        proxies = urllib.request.getproxies()
+    if proxies:
+        return urllib.request.build_opener(urllib.request.ProxyHandler(proxies))
+    return urllib.request.build_opener()
+
+
+_opener = _make_opener()
+
+
+def _fetch_url(url: str, timeout: int = 20) -> bytes:
+    """Fetch URL via opener (system proxy) with fallback to curl."""
+    try:
+        with _opener.open(url, timeout=timeout) as resp:
+            return resp.read()
+    except Exception as e:
+        # fallback: curl respects macOS system SOCKS/HTTP proxy natively
+        try:
+            result = subprocess.run(
+                ["curl", "-s", "--max-time", str(timeout), url],
+                capture_output=True, timeout=timeout + 5,
+            )
+            if result.returncode == 0 and result.stdout:
+                return result.stdout
+        except Exception:
+            pass
+        raise e
 
 
 REQUIRED_COLUMNS = ("timestamp", "open", "high", "low", "close", "volume")
@@ -72,7 +111,8 @@ def _safe_json_load(resp_bytes: bytes) -> Any:
 
 class BinanceKlineAdapter:
     source = "binance"
-    _base_url = "https://api.binance.com/api/v3/klines"
+    # api2 在国内网络更可达；api.binance.com 主域可能被封
+    _base_url = "https://api2.binance.com/api/v3/klines"
 
     def fetch(
         self,
@@ -95,8 +135,7 @@ class BinanceKlineAdapter:
             params["endTime"] = end_ms * 1000
 
         url = f"{self._base_url}?{urlencode(params)}"
-        with urlopen(url, timeout=20) as resp:
-            raw_bytes = resp.read()
+        raw_bytes = _fetch_url(url, timeout=20)
 
         payload = _safe_json_load(raw_bytes)
         rows: list[list[Any]] = payload if isinstance(payload, list) else []
@@ -162,8 +201,7 @@ class YahooKlineAdapter:
             params["range"] = "1y"
 
         url = f"{self._base_url}/{yahoo_symbol}?{urlencode(params)}"
-        with urlopen(url, timeout=20) as resp:
-            raw_bytes = resp.read()
+        raw_bytes = _fetch_url(url, timeout=20)
 
         payload = _safe_json_load(raw_bytes)
         result = ((payload or {}).get("chart", {}) or {}).get("result") or []

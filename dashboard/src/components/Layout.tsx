@@ -1,10 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { TrendingUp, BarChart3, MessageSquare, PieChart } from 'lucide-react';
+import { TrendingUp, BarChart3, PieChart } from 'lucide-react';
 
 const nav = [
   { to: '/', icon: TrendingUp, label: '交易信号' },
   { to: '/backtests', icon: BarChart3, label: '回测报告' },
-  { to: '/conversations', icon: MessageSquare, label: '分析对话' },
   { to: '/review', icon: PieChart, label: '复盘统计' },
 ];
 

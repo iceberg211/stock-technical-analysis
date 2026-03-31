@@ -29,10 +29,18 @@ data/mcp_kline/
 data/clean/
 
 # Pipeline outputs
-# runs 中间文件可再生；summary/details/scored/metrics 可按需入库
+# runs 中间文件可再生；scored/metrics/config 是核心产物入库
 outputs/runs/**/input.parquet
 outputs/runs/**/eval_input.csv
 outputs/runs/**/runs.jsonl
+outputs/runs/**/summary.md
+outputs/runs/**/details.md
+
+# Conversations 目录已废弃，不再使用
+outputs/conversations/
+
+# Dashboard 构建产物（deploy 时生成，不入库）
+dashboard/dist/
 
 # Data catalog（项目索引，建议入库）
 
@@ -42,3 +50,4 @@ eval/results/
 # 通用日志
 *.log
 dashboard/public/data/_*
+dashboard/.vite/_*

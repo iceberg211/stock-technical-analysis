@@ -24,7 +24,8 @@
       "Bash(ls -d outputs/runs/20260326_*/ outputs/runs/20260327_105927_*/)",
       "Bash(find /Users/wei.he/Documents/GitHub/stock-technical-analysis -type d -not -path */.*)",
       "Bash(wc:*)",
-      "Bash(find /Users/wei.he/Documents/GitHub/stock-technical-analysis/outputs -type f -name *.json -o -type f -name *.md)"
+      "Bash(find /Users/wei.he/Documents/GitHub/stock-technical-analysis/outputs -type f -name *.json -o -type f -name *.md)",
+      "Bash(find . -maxdepth 2 -not -path */node_modules/* -type d)"
     ]
   }
 }

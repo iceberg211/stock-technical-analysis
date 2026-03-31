@@ -19,7 +19,6 @@ export interface Signal {
 export interface BacktestSymbol {
   symbol: string;
   summary: string;
-  details: string;
   metrics: Record<string, unknown> | null;
   config: Record<string, unknown> | null;
 }
@@ -38,12 +37,3 @@ export interface ValidationResult {
   bars_to_outcome?: number | null;
 }
 
-export interface Conversation {
-  conversation_id: string;
-  symbol: string;
-  source: string;
-  title: string;
-  timestamp_utc: string;
-  transcript: string;
-  metadata: Record<string, unknown> | null;
-}

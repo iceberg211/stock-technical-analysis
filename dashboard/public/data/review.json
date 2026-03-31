@@ -1,12 +1,12 @@
 {
-  "total": 10,
-  "tradable": 6,
+  "total": 11,
+  "tradable": 7,
   "validated": 2,
   "wins": 0,
   "win_rate": "0.0",
   "byDecision": {
     "short": {
-      "total": 3,
+      "total": 4,
       "wins": 0,
       "losses": 0
     },
@@ -23,7 +23,7 @@
   },
   "byPlaybook": {
     "trend-pullback": {
-      "total": 4,
+      "total": 5,
       "wins": 0,
       "losses": 2
     },

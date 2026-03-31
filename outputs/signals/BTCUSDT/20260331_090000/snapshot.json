@@ -1,0 +1,96 @@
+{
+  "time_utc": "2026-03-31T09:00:00Z",
+  "price_now": 66504.0,
+  "4h": {
+    "state": "downtrend",
+    "close": 66502.0,
+    "ema20": 67168.3,
+    "ema50": 68063.4,
+    "ema200": 69097.6,
+    "rsi14": 43.1,
+    "macd": -292.6,
+    "signal": -421.8,
+    "hist": 129.2,
+    "atr14": 984.6,
+    "resistance_top3": [68408, 72026, 70924],
+    "support_top3": [66233, 65548, 65000],
+    "swing_highs": [72026, 68408, 68170],
+    "swing_lows": [65000, 65548, 66233],
+    "momentum": "bearish",
+    "volume_state": "放量下跌+上攻被拒",
+    "rsi_divergence": "none",
+    "macd_divergence": "none",
+    "trend_health": "healthy",
+    "key_candle": "03-31 00:00 射击之星(body=907, upper_wick=704)在68408阻力位被拒"
+  },
+  "1h": {
+    "state": "downtrend_accelerating",
+    "close": 66504.0,
+    "ema20": 67210.8,
+    "ema50": 67133.5,
+    "rsi14": 38.7,
+    "macd": 1.8,
+    "signal": 84.3,
+    "hist": -82.5,
+    "atr14": 511.8,
+    "momentum": "bearish",
+    "volume_state": "放量下跌",
+    "position": "near_support",
+    "rsi_divergence": "none",
+    "macd_divergence": "none",
+    "key_signal": "1H MACD完成死叉，Hist-82.5加速扩大"
+  },
+  "decision": "short",
+  "playbook": "trend-pullback",
+  "bias": "bearish",
+  "confidence": "high",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "high",
+    "signal_strength": "strong",
+    "mtf_alignment": "aligned"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "trend_health": "healthy",
+    "latest_bos_choch": "bos_bear",
+    "notes": "LH+LL序列清晰: 72026→68408(LH), 65548→65000(LL). 射击之星在Fib50%被拒. 1H MACD死叉确认."
+  },
+  "levels": {
+    "resistances": [68408, 72026],
+    "supports": [66233, 65548, 65000, 63000],
+    "current_price": 66504,
+    "position": "near_support",
+    "immediate_support": 66233,
+    "fib_50_level": 68513
+  },
+  "pattern": {
+    "candle_pattern": "shooting_star_confirmed",
+    "chart_pattern": "dead_cat_bounce_complete",
+    "signal_score": 5
+  },
+  "trade": {
+    "entry_price": 66500,
+    "stop_loss": 67100,
+    "t1": 65000,
+    "t2": 63000,
+    "risk_reward": 2.4,
+    "trigger_type": "price_touch",
+    "invalidation": "1H收盘突破67100"
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "pass",
+    "setup_match": "pass",
+    "trigger": "pass",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass",
+  "position_size_pct": 100,
+  "counter_reasons": [
+    "65000-65548双底支撑区域可能形成W底反弹",
+    "已距最佳入场位(68400)较远，下行空间相对压缩"
+  ]
+}
