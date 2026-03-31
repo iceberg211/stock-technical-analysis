@@ -9,6 +9,8 @@ from typing import Any
 
 import pandas as pd
 
+from src.pipeline.strategy import list_strategies
+
 
 # ── JSON 提取 ─────────────────────────────────────────
 
@@ -16,14 +18,8 @@ _JSON_BLOCK_RE = re.compile(r"```json\s*\n(.*?)\n\s*```", re.DOTALL)
 
 _ALLOWED_DATA_SOURCE = {"screenshot", "ohlc", "mixed"}
 _ALLOWED_ACTION = {"long", "short", "watch"}
-_ALLOWED_PLAYBOOK = {
-    "trend-pullback",
-    "breakout-retest",
-    "range-reversal",
-    "false-breakout-reversal",
-    "flag-wedge-breakout",
-    "none",
-}
+# 动态从策略 YAML 目录读取已注册 playbook，避免硬编码
+_ALLOWED_PLAYBOOK = set(list_strategies()) | {"none"}
 _ALLOWED_CHECKLIST_RESULT = {"pass", "pass_degraded", "fail"}
 _ALLOWED_CHECKLIST = {
     "htf_direction": {"pass", "fail", "degraded"},

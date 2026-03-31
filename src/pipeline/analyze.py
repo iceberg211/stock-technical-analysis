@@ -2,6 +2,48 @@ import pandas as pd
 from typing import Any, Tuple
 
 from src.indicators.calc import ema, rsi, atr, add_all_indicators
+from src.pipeline.strategy import list_strategies, get_conditions, get_stop_loss_atr, get_targets
+
+
+def _match_playbook(
+    market_state: str,
+    rsi_val: float,
+    hist: float,
+    close: float,
+) -> tuple[str, str]:
+    """
+    遍历所有已注册策略，寻找第一个满足条件的 playbook。
+
+    匹配逻辑：
+    - 依次检查 long / short 两个方向的条件
+    - 条件字段：market_state、rsi_min、rsi_max、macd_hist_min、macd_hist_max
+    - macd_hist_min / macd_hist_max 为价格归一化阈值（乘以 max(abs(close), 1.0)）
+    - 返回 (action, playbook_name)；若无匹配返回 ("watch", "none")
+    """
+    close_ref = max(abs(close), 1.0)
+    for strategy_name in list_strategies():
+        for direction in ("long", "short"):
+            conds = get_conditions(strategy_name, direction)
+            if not conds:
+                continue
+            # 检查 market_state
+            if conds.get("market_state") and market_state != conds["market_state"]:
+                continue
+            # 检查 RSI 下界
+            if "rsi_min" in conds and rsi_val < conds["rsi_min"]:
+                continue
+            # 检查 RSI 上界
+            if "rsi_max" in conds and rsi_val > conds["rsi_max"]:
+                continue
+            # 检查 MACD hist 下界（归一化）
+            if "macd_hist_min" in conds and hist < conds["macd_hist_min"] * close_ref:
+                continue
+            # 检查 MACD hist 上界（归一化）
+            if "macd_hist_max" in conds and hist > conds["macd_hist_max"] * close_ref:
+                continue
+            # 所有条件满足
+            return direction, strategy_name
+    return "watch", "none"
 
 
 def build_local_backtest_sample(
@@ -49,12 +91,8 @@ def build_local_backtest_sample(
         elif close < ma20: market_state = "downtrend"
         else: market_state = "range"
 
-    action = "watch"
-    playbook = "none"
-    if market_state == "uptrend" and rsi_val >= 52 and hist >= -0.02 * max(abs(close), 1.0):
-        action, playbook = "long", "trend-pullback"
-    elif market_state == "downtrend" and rsi_val <= 48 and hist <= 0.02 * max(abs(close), 1.0):
-        action, playbook = "short", "trend-pullback"
+    # 使用策略配置匹配 playbook，替代原先硬编码的判断逻辑
+    action, playbook = _match_playbook(market_state, rsi_val, hist, close)
 
     checklist = {
         "htf_direction": "pass" if action != "watch" else "degraded",
@@ -67,15 +105,20 @@ def build_local_backtest_sample(
     }
 
     if action == "long":
+        # 从策略配置读取 ATR 倍数
+        sl_mult = get_stop_loss_atr(playbook) if playbook != "none" else 1.0
+        t1_mult, t2_mult = get_targets(playbook) if playbook != "none" else (1.6, 3.0)
         entry = close
-        stop = close - atr_val
-        t1, t2 = close + 1.6 * atr_val, close + 3.0 * atr_val
+        stop = close - sl_mult * atr_val
+        t1, t2 = close + t1_mult * atr_val, close + t2_mult * atr_val
         rr = (t1 - entry) / max(entry - stop, 1e-6)
         trigger_type, invalidation = "close_above", "跌破止损"
     elif action == "short":
+        sl_mult = get_stop_loss_atr(playbook) if playbook != "none" else 1.0
+        t1_mult, t2_mult = get_targets(playbook) if playbook != "none" else (1.6, 3.0)
         entry = close
-        stop = close + atr_val
-        t1, t2 = close - 1.6 * atr_val, close - 3.0 * atr_val
+        stop = close + sl_mult * atr_val
+        t1, t2 = close - t1_mult * atr_val, close - t2_mult * atr_val
         rr = (entry - t1) / max(stop - entry, 1e-6)
         trigger_type, invalidation = "close_below", "升破止损"
     else:
