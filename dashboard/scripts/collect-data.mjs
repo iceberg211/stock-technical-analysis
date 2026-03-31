@@ -90,6 +90,24 @@ function collectSignals() {
   return signals;
 }
 
+function collectReview(signals) {
+  const byDecision = {};
+  const byPlaybook = {};
+
+  for (const s of signals) {
+    const dec = s.decision || 'unknown';
+    const pb = s.playbook || 'unknown';
+
+    if (!byDecision[dec]) byDecision[dec] = { total: 0 };
+    byDecision[dec].total++;
+
+    if (!byPlaybook[pb]) byPlaybook[pb] = { total: 0 };
+    byPlaybook[pb].total++;
+  }
+
+  return { total: signals.length, byDecision, byPlaybook };
+}
+
 function collectBacktests() {
   const runsDir = join(OUTPUTS, 'runs');
   if (!existsSync(runsDir)) return [];
@@ -162,15 +180,18 @@ function collectConversations() {
 mkdirSync(OUT_DIR, { recursive: true });
 
 const signals = collectSignals();
+const review = collectReview(signals);
 const backtests = collectBacktests();
 const conversations = collectConversations();
 
 writeFileSync(join(OUT_DIR, 'signals.json'), JSON.stringify(signals, null, 2));
+writeFileSync(join(OUT_DIR, 'review.json'), JSON.stringify(review, null, 2));
 writeFileSync(join(OUT_DIR, 'backtests.json'), JSON.stringify(backtests, null, 2));
 writeFileSync(join(OUT_DIR, 'conversations.json'), JSON.stringify(conversations, null, 2));
 
 console.log(`✅ Data collected:`);
 console.log(`   Signals: ${signals.length}`);
+console.log(`   Review: ${review.total} signals`);
 console.log(`   Backtests: ${backtests.length}`);
 console.log(`   Conversations: ${conversations.length}`);
 console.log(`   Output: ${OUT_DIR}`);

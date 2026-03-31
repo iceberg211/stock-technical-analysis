@@ -1,0 +1,31 @@
+{
+  "total": 10,
+  "byDecision": {
+    "short": {
+      "total": 3
+    },
+    "watch": {
+      "total": 4
+    },
+    "long": {
+      "total": 3
+    }
+  },
+  "byPlaybook": {
+    "trend-pullback": {
+      "total": 4
+    },
+    "none": {
+      "total": 2
+    },
+    "-": {
+      "total": 2
+    },
+    "range-reversal": {
+      "total": 1
+    },
+    "breakout-retest": {
+      "total": 1
+    }
+  }
+}

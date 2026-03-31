@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import Signals from './pages/Signals';
 import Backtests from './pages/Backtests';
 import Conversations from './pages/Conversations';
+import Review from './pages/Review';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
           <Route path="/" element={<Signals />} />
           <Route path="/backtests" element={<Backtests />} />
           <Route path="/conversations" element={<Conversations />} />
+          <Route path="/review" element={<Review />} />
         </Route>
       </Routes>
     </BrowserRouter>
