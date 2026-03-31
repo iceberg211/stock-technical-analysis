@@ -2,9 +2,35 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from src.pipeline.layout import RunLayout, REPO_ROOT
+
+
+def _to_repo_relative(value: str) -> str:
+    """将仓库内绝对路径转为相对路径，跨机器可复用。"""
+    try:
+        p = Path(value)
+    except Exception:
+        return value
+    if not p.is_absolute():
+        return value
+    try:
+        return p.relative_to(REPO_ROOT).as_posix()
+    except Exception:
+        return value
+
+
+def _normalize_paths(obj: Any) -> Any:
+    """递归规范化 dict/list 中的路径字符串。"""
+    if isinstance(obj, dict):
+        return {k: _normalize_paths(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_normalize_paths(v) for v in obj]
+    if isinstance(obj, str):
+        return _to_repo_relative(obj)
+    return obj
 
 
 class GlobalRegistry:
@@ -28,7 +54,7 @@ class GlobalRegistry:
             "symbol": symbol,
             "interval": interval,
             "status": status,
-            "path": run_path,
+            "path": _to_repo_relative(run_path),
             "error": error,
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
@@ -56,7 +82,8 @@ class RunManifest:
     def save(self) -> None:
         """保存为 manifest.json"""
         self.layout.setup()
+        normalized = _normalize_paths(self.data)
         self.layout.manifest_path.write_text(
-            json.dumps(self.data, ensure_ascii=False, indent=2),
+            json.dumps(normalized, ensure_ascii=False, indent=2),
             encoding="utf-8"
         )

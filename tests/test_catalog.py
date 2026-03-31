@@ -2,11 +2,20 @@ import unittest
 import tempfile
 import json
 from pathlib import Path
+import importlib.util
 
 import pandas as pd
 
 
+def _has_parquet_engine() -> bool:
+    return (
+        importlib.util.find_spec("pyarrow") is not None
+        or importlib.util.find_spec("fastparquet") is not None
+    )
+
+
 class TestCatalog(unittest.TestCase):
+    @unittest.skipUnless(_has_parquet_engine(), "需要 pyarrow 或 fastparquet")
     def test_read_clean_parquet(self):
         from src.pipeline.catalog import Catalog
         with tempfile.TemporaryDirectory() as td:

@@ -173,10 +173,10 @@ class TestEvalV2(unittest.TestCase):
             )
 
         sources = [r["forward_source"] for r in scored if r.get("case_id") in ("c1", "c2", "c3")]
-        self.assertEqual(sources, ["config_csv", "inline_forward_rows", "eval_input_csv"])
-        self.assertEqual(source_stats["config_csv"], 1)
+        self.assertEqual(sources, ["config_data", "inline_forward_rows", "run_input"])
+        self.assertEqual(source_stats["config_data"], 1)
         self.assertEqual(source_stats["inline_forward_rows"], 1)
-        self.assertEqual(source_stats["eval_input_csv"], 1)
+        self.assertEqual(source_stats["run_input"], 1)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,45 @@
+{
+  "time_utc": "2026-03-30T14:23:00Z",
+  "price_now": 68470.65,
+  "1h": {
+    "state": "downtrend",
+    "rsi": 33.18,
+    "macd": -379.32,
+    "macd_signal": -413.37
+  },
+  "4h": {
+    "state": "downtrend",
+    "rsi": 38.34,
+    "macd": -392.4,
+    "macd_signal": -144.18
+  },
+  "decision": "watch",
+  "playbook": "none",
+  "bias": "bearish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "medium",
+    "signal_strength": "medium"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "notes": "4h 偏空，1h 背离修复，位置贴近支撑"
+  },
+  "levels": {
+    "resistance": [
+      69147,
+      69441,
+      69859
+    ],
+    "support": [
+      68330,
+      68176,
+      67377
+    ]
+  },
+  "triggers": {
+    "short": "1h 实体收破 68176 且回踩不过",
+    "long": "1h 收回并站稳 69147，或假跌破后快速收回 68330 上方"
+  }
+}

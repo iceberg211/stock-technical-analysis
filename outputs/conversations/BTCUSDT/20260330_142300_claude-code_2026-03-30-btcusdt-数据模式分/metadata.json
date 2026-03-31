@@ -1,0 +1,9 @@
+{
+  "mode": "data_only",
+  "timeframes": [
+    "4h",
+    "1h"
+  ],
+  "mcp_available": false,
+  "data_source": "binance.us"
+}

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -18,9 +17,19 @@ from src.reporting.metrics import (
     build_consistency,
 )
 from src.reporting.markdown import render_summary_markdown, render_details_markdown
-from src.pipeline.layout import SymbolLayout, REPO_ROOT
+from src.pipeline.layout import SymbolLayout
 from src.pipeline.analyze import build_local_backtest_sample
 from src.pipeline.reporting import build_analysis_report
+
+
+def _read_ohlcv_input(path: Path) -> pd.DataFrame:
+    """兼容读取 input.parquet（新）与 eval_input.csv（旧）。"""
+    suffix = path.suffix.lower()
+    if suffix in (".parquet", ".pq"):
+        df = pd.read_parquet(path)
+    else:
+        df = pd.read_csv(path)
+    return df.reset_index(drop=True)
 
 
 def _write_case_artifacts(
@@ -42,7 +51,7 @@ def _write_case_artifacts(
 
 
 def generate_local_runs(
-    eval_csv: Path,
+    input_data_file: Path,
     symbol: str,
     interval: str,
     layout: SymbolLayout,
@@ -57,7 +66,7 @@ def generate_local_runs(
     write_case_artifacts: bool,
 ) -> dict[str, Any]:
     """本地兜底引擎运行主循环"""
-    df = pd.read_csv(eval_csv)
+    df = _read_ohlcv_input(input_data_file)
     cases = make_cases(df, lookback, forward, sample, step, case_mode=case_mode, warmup_bars=warmup_bars)
 
     out_runs_file = layout.runs_jsonl
@@ -123,9 +132,13 @@ def score_and_report(layout: SymbolLayout, slippage_pct: float = 0.0005, fee_pct
 
     primary_df = _load_csv_df(primary_csv_path)
     fallback_df = None
-    fallback_path = layout.eval_input_csv
+    fallback_path = layout.input_parquet
     if fallback_path.exists():
         fallback_df = _load_csv_df(str(fallback_path))
+    else:
+        legacy_fallback = layout.eval_input_csv
+        if legacy_fallback.exists():
+            fallback_df = _load_csv_df(str(legacy_fallback))
 
     # 1) 评分
     scored, source_stats = _score_runs(

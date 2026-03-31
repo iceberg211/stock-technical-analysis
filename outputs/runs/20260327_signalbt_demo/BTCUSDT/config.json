@@ -1,0 +1,17 @@
+{
+  "run_id": "20260327_signalbt_demo",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "csv": "data/clean/BTCUSDT/1h.parquet",
+  "lookback": 160,
+  "forward": 40,
+  "source": "signal_backtest",
+  "signal_filters": {
+    "since": null,
+    "until": null,
+    "limit": 10
+  },
+  "artifact_level": "standard",
+  "embed_forward_rows": false,
+  "run_schema_version": "run_v2"
+}

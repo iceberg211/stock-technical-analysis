@@ -53,7 +53,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--prepare-only",
         action="store_true",
-        help="只做数据准备（输出 eval_input.csv），不跑 LLM 回测",
+        help="只做数据准备（输出 input.parquet），不跑 LLM 回测",
     )
     parser.add_argument(
         "--model",

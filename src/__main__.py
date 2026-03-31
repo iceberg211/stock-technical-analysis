@@ -7,13 +7,10 @@ Pipeline 主入口。
 """
 
 import json
-import os
-import sys
 from datetime import datetime, timezone
-from pathlib import Path
 
 from src.pipeline.cli import parse_args
-from src.pipeline.layout import RunLayout, REPO_ROOT
+from src.pipeline.layout import RunLayout
 from src.pipeline.manifest import RunManifest, GlobalRegistry
 from src.pipeline.catalog import Catalog
 from src.pipeline.backtest import generate_local_runs, score_and_report
@@ -45,7 +42,7 @@ def main():
             sym_layout.setup()
 
             interval = args.interval
-            item["input"] = catalog.prepare_eval_input(symbol, interval, sym_layout.eval_input_csv)
+            item["input"] = catalog.prepare_eval_input(symbol, interval, sym_layout.input_parquet)
 
             config_record = {"run_id": run_id, "symbol": symbol, "args": vars(args)}
             sym_layout.config_json.write_text(json.dumps(config_record, ensure_ascii=False, indent=2))
@@ -57,7 +54,7 @@ def main():
                 continue
 
             meta = generate_local_runs(
-                sym_layout.eval_input_csv, symbol, args.interval, sym_layout,
+                sym_layout.input_parquet, symbol, args.interval, sym_layout,
                 args.repeat, args.sample, args.step, args.lookback, args.forward,
                 args.case_mode, args.warmup_bars, args.embed_forward_rows,
                 write_case_artifacts=(args.artifact_level == "full"),
