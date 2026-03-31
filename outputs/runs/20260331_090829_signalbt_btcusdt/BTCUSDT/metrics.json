@@ -1,0 +1,44 @@
+{
+  "schema_version": "report_metrics_v2",
+  "generated_at_utc": "2026-03-31T09:08:29Z",
+  "total_runs": 2,
+  "parse_error_cases": 0,
+  "tradable_signal_cases": 2,
+  "executed_trade_cases": 2,
+  "watch_cases": 0,
+  "missed_entry_cases": 0,
+  "t1_hit": 0,
+  "sl_hit": 2,
+  "neither": 0,
+  "win_rate": 0.0,
+  "entry_trigger_rate": 1.0,
+  "missed_entry_rate": 0.0,
+  "win_rate_pct": 0.0,
+  "entry_trigger_rate_pct": 100.0,
+  "missed_entry_rate_pct": 0.0,
+  "expectancy_r": -1.0962,
+  "profit_factor_r": 0.0,
+  "avg_estimated_rr": 1.5,
+  "median_bars_to_outcome": 5.5,
+  "mfe_quantiles": {
+    "p50": 374.2684,
+    "p75": 523.8653,
+    "p90": 613.6234
+  },
+  "mae_quantiles": {
+    "p50": 980.6216,
+    "p75": 1095.5597,
+    "p90": 1164.5226
+  },
+  "avg_realized_r_by_playbook": {
+    "trend-pullback": -1.0962
+  },
+  "sample_sufficient": false,
+  "baseline_pass": false,
+  "baseline_reasons": [
+    "有效执行样本少于 30",
+    "high 命中率 0.00% < 60%",
+    "medium 命中率 0.00% < 50%",
+    "high 命中率未高于 medium"
+  ]
+}
