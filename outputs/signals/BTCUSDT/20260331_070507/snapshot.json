@@ -1,0 +1,17 @@
+{
+  "decision": "long",
+  "bias": "bullish",
+  "confidence": "medium",
+  "playbook": "range-reversal",
+  "entry_price": 70500,
+  "stop_loss": 69500,
+  "t1": 71700,
+  "t2": 72800,
+  "market_structure": {
+    "h4": "uptrend_pullback",
+    "h1": "downtrend"
+  },
+  "price_at_signal": 70000,
+  "conditional_entry": 70500,
+  "trigger_type": "close_above"
+}

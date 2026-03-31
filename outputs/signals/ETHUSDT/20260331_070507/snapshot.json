@@ -1,0 +1,17 @@
+{
+  "decision": "short",
+  "bias": "bearish",
+  "confidence": "medium",
+  "playbook": "breakout-retest",
+  "entry_price": 2120,
+  "stop_loss": 2160,
+  "t1": 2050,
+  "t2": 2022,
+  "market_structure": {
+    "h4": "range_weakening",
+    "h1": "downtrend"
+  },
+  "price_at_signal": 2075,
+  "conditional_entry": 2120,
+  "trigger_type": "close_below"
+}

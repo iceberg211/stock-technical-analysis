@@ -1,0 +1,620 @@
+[
+  {
+    "run_id": "20260330_103900_btcusdt",
+    "manifest": {
+      "run_id": "20260330_103900_btcusdt",
+      "created_at": "2026-03-30T10:39:00.881636+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "repeat": 1,
+        "sample": 30,
+        "step": 10,
+        "lookback": 160,
+        "forward": 40,
+        "case_mode": "non_overlap",
+        "warmup_bars": 120,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "cache_file": "kline_1h_clean.csv",
+        "prepare_only": false,
+        "model": null,
+        "engine": "local",
+        "hide_analysis": true
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 8760,
+            "start": "2025-03-26T18:00:00Z",
+            "end": "2026-03-26T17:00:00Z",
+            "path": "/Users/wei.he/Documents/GitHub/stock-technical-analysis/outputs/runs/20260330_103900_btcusdt/BTCUSDT/eval_input.csv"
+          },
+          "local_generation": {
+            "cases": 30,
+            "runs": 30,
+            "parse_errors": 0
+          },
+          "summary": {
+            "runs": 30,
+            "trade_cases": 16,
+            "t1_hit": 8,
+            "t2_hit": 1,
+            "sl_hit": 6,
+            "missed_entry": 1,
+            "watch_or_no_trade": 13,
+            "parse_error": 0,
+            "win_rate_pct": 50
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "# 回测执行总览 (2026-03-30 10:39 UTC)\n\n来源: `scored.jsonl`\n\n## 结论\n- 样本覆盖: 总 runs=30，可交易信号=17，实际执行=16\n- 胜率 (Win Rate): 50.00%\n- 平均实现 R (Expectancy): -0.3599\n- 利润因子 (Profit Factor R): 0.2298\n- 入场触发率: 94.12%；漏触发率: 5.88%\n- 基线判定: **未通过**（原因: 有效执行样本少于 30）\n\n## 风险提示\n- watch=13，missed_entry=1，parse_error=0\n- 样本充分性: 不足（<30）\n\n详见 `details.md`（策略明细与 AI 诊断）和 `metrics.json`（程序化消费）。\n",
+        "details": "# 回测详细报告 (2026-03-30 10:39 UTC)\n\n来源: `scored.jsonl`\n\n## 核心 KPI\n| 指标 | 数值 |\n|---|---|\n| 总 runs | 30 |\n| 可交易信号 | 17 |\n| 实际执行 | 16 |\n| Win Rate | 50.00% |\n| Expectancy R | -0.3599 |\n| Profit Factor R | 0.2298 |\n| Avg Estimated RR | 1.6000 |\n| Median Bars To Outcome | 6.00 |\n\n## 策略表现明细 (Playbook)\n| Playbook | 识别次数 | 执行次数 | 胜率 | Avg Estimated RR | Avg Realized R |\n|---|---|---|---|---|---|\n| trend-pullback | 17 | 16 | 50.00% | 1.6000 | -0.3599 |\n\n## AI Diagnostics - Confidence\n| Confidence | 总样本 | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|---|\n| medium | 17 | 16 | 50.00% | -0.3599 |\n| low | 13 | 0 | N/A | N/A |\n\n## AI Diagnostics - Market State\n| Market State | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|\n| downtrend | 7 | 28.57% | -0.5819 |\n| uptrend | 9 | 66.67% | -0.1872 |\n\n## 一致性率 (Consistency)\n无多次重复运行样本（需要 repeat > 1）。\n",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-30T10:39:01Z",
+          "total_runs": 30,
+          "parse_error_cases": 0,
+          "tradable_signal_cases": 17,
+          "executed_trade_cases": 16,
+          "watch_cases": 13,
+          "missed_entry_cases": 1,
+          "t1_hit": 8,
+          "sl_hit": 6,
+          "neither": 2,
+          "win_rate": 0.5,
+          "entry_trigger_rate": 0.9412,
+          "missed_entry_rate": 0.0588,
+          "win_rate_pct": 50,
+          "entry_trigger_rate_pct": 94.12,
+          "missed_entry_rate_pct": 5.88,
+          "expectancy_r": -0.3599,
+          "profit_factor_r": 0.2298,
+          "avg_estimated_rr": 1.6,
+          "median_bars_to_outcome": 6,
+          "mfe_quantiles": {
+            "p50": 411.5449,
+            "p75": 916.9296,
+            "p90": 1399.6795
+          },
+          "mae_quantiles": {
+            "p50": 729.4839,
+            "p75": 1255.8821,
+            "p90": 1407.7629
+          },
+          "avg_realized_r_by_playbook": {
+            "trend-pullback": -0.3599
+          },
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30"
+          ]
+        },
+        "config": {
+          "run_id": "20260330_103900_btcusdt",
+          "symbol": "BTCUSDT",
+          "args": {
+            "symbols": [
+              "BTCUSDT"
+            ],
+            "interval": "1h",
+            "repeat": 1,
+            "sample": 30,
+            "step": 10,
+            "lookback": 160,
+            "forward": 40,
+            "case_mode": "non_overlap",
+            "warmup_bars": 120,
+            "artifact_level": "standard",
+            "embed_forward_rows": false,
+            "cache_file": "kline_1h_clean.csv",
+            "prepare_only": false,
+            "model": null,
+            "engine": "local",
+            "hide_analysis": true
+          }
+        }
+      }
+    ]
+  },
+  {
+    "run_id": "20260330_103851_btcusdt",
+    "manifest": {
+      "run_id": "20260330_103851_btcusdt",
+      "created_at": "2026-03-30T10:38:51.837734+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "repeat": 1,
+        "sample": 10,
+        "step": 10,
+        "lookback": 160,
+        "forward": 40,
+        "case_mode": "non_overlap",
+        "warmup_bars": 120,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "cache_file": "kline_1h_clean.csv",
+        "prepare_only": false,
+        "model": null,
+        "engine": "local",
+        "hide_analysis": true
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 8760,
+            "start": "2025-03-26T18:00:00Z",
+            "end": "2026-03-26T17:00:00Z",
+            "path": "/Users/wei.he/Documents/GitHub/stock-technical-analysis/outputs/runs/20260330_103851_btcusdt/BTCUSDT/eval_input.csv"
+          },
+          "local_generation": {
+            "cases": 10,
+            "runs": 10,
+            "parse_errors": 0
+          },
+          "summary": {
+            "runs": 10,
+            "trade_cases": 4,
+            "t1_hit": 1,
+            "t2_hit": 0,
+            "sl_hit": 2,
+            "missed_entry": 0,
+            "watch_or_no_trade": 6,
+            "parse_error": 0,
+            "win_rate_pct": 25
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "# 回测执行总览 (2026-03-30 10:38 UTC)\n\n来源: `scored.jsonl`\n\n## 结论\n- 样本覆盖: 总 runs=10，可交易信号=4，实际执行=4\n- 胜率 (Win Rate): 25.00%\n- 平均实现 R (Expectancy): -0.5220\n- 利润因子 (Profit Factor R): 0.1195\n- 入场触发率: 100.00%；漏触发率: 0.00%\n- 基线判定: **未通过**（原因: 有效执行样本少于 30；medium 命中率 25.00% < 50%）\n\n## 风险提示\n- watch=6，missed_entry=0，parse_error=0\n- 样本充分性: 不足（<30）\n\n详见 `details.md`（策略明细与 AI 诊断）和 `metrics.json`（程序化消费）。\n",
+        "details": "# 回测详细报告 (2026-03-30 10:38 UTC)\n\n来源: `scored.jsonl`\n\n## 核心 KPI\n| 指标 | 数值 |\n|---|---|\n| 总 runs | 10 |\n| 可交易信号 | 4 |\n| 实际执行 | 4 |\n| Win Rate | 25.00% |\n| Expectancy R | -0.5220 |\n| Profit Factor R | 0.1195 |\n| Avg Estimated RR | 1.6000 |\n| Median Bars To Outcome | 5.00 |\n\n## 策略表现明细 (Playbook)\n| Playbook | 识别次数 | 执行次数 | 胜率 | Avg Estimated RR | Avg Realized R |\n|---|---|---|---|---|---|\n| trend-pullback | 4 | 4 | 25.00% | 1.6000 | -0.5220 |\n\n## AI Diagnostics - Confidence\n| Confidence | 总样本 | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|---|\n| medium | 4 | 4 | 25.00% | -0.5220 |\n| low | 6 | 0 | N/A | N/A |\n\n## AI Diagnostics - Market State\n| Market State | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|\n| downtrend | 2 | 0.00% | -0.6153 |\n| uptrend | 2 | 50.00% | -0.4286 |\n\n## 一致性率 (Consistency)\n无多次重复运行样本（需要 repeat > 1）。\n",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-30T10:38:51Z",
+          "total_runs": 10,
+          "parse_error_cases": 0,
+          "tradable_signal_cases": 4,
+          "executed_trade_cases": 4,
+          "watch_cases": 6,
+          "missed_entry_cases": 0,
+          "t1_hit": 1,
+          "sl_hit": 2,
+          "neither": 1,
+          "win_rate": 0.25,
+          "entry_trigger_rate": 1,
+          "missed_entry_rate": 0,
+          "win_rate_pct": 25,
+          "entry_trigger_rate_pct": 100,
+          "missed_entry_rate_pct": 0,
+          "expectancy_r": -0.522,
+          "profit_factor_r": 0.1195,
+          "avg_estimated_rr": 1.6,
+          "median_bars_to_outcome": 5,
+          "mfe_quantiles": {
+            "p50": 107.692,
+            "p75": 496.2369,
+            "p90": 1001.7719
+          },
+          "mae_quantiles": {
+            "p50": 1058.8383,
+            "p75": 1260.4953,
+            "p90": 1303.2337
+          },
+          "avg_realized_r_by_playbook": {
+            "trend-pullback": -0.522
+          },
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30",
+            "medium 命中率 25.00% < 50%"
+          ]
+        },
+        "config": {
+          "run_id": "20260330_103851_btcusdt",
+          "symbol": "BTCUSDT",
+          "args": {
+            "symbols": [
+              "BTCUSDT"
+            ],
+            "interval": "1h",
+            "repeat": 1,
+            "sample": 10,
+            "step": 10,
+            "lookback": 160,
+            "forward": 40,
+            "case_mode": "non_overlap",
+            "warmup_bars": 120,
+            "artifact_level": "standard",
+            "embed_forward_rows": false,
+            "cache_file": "kline_1h_clean.csv",
+            "prepare_only": false,
+            "model": null,
+            "engine": "local",
+            "hide_analysis": true
+          }
+        }
+      }
+    ]
+  },
+  {
+    "run_id": "20260327_signalbt_demo2",
+    "manifest": {
+      "run_id": "20260327_signalbt_demo2",
+      "created_at": "2026-03-27T13:15:42.629201+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "lookback": 160,
+        "forward": 40,
+        "since": null,
+        "until": null,
+        "limit": 20,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "import_legacy": false,
+        "run_id": "20260327_signalbt_demo2",
+        "slippage": 0.0005,
+        "fee": 0.001
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 500,
+            "start": "2026-03-06T18:00:00Z",
+            "end": "2026-03-27T13:00:00Z",
+            "path": "outputs/runs/20260327_signalbt_demo2/BTCUSDT/input.parquet"
+          },
+          "signal_candidates": 2,
+          "runs_written": 1,
+          "skipped": 1,
+          "parse_errors": 0,
+          "summary": {
+            "runs": 1,
+            "trade_cases": 1,
+            "t1_hit": 0,
+            "t2_hit": 0,
+            "sl_hit": 1,
+            "missed_entry": 0,
+            "watch_or_no_trade": 0,
+            "parse_error": 0,
+            "win_rate_pct": 0
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "# 回测执行总览 (2026-03-27 13:15 UTC)\n\n来源: `scored.jsonl`\n\n## 结论\n- 样本覆盖: 总 runs=1，可交易信号=1，实际执行=1\n- 胜率 (Win Rate): 0.00%\n- 平均实现 R (Expectancy): -1.0871\n- 利润因子 (Profit Factor R): 0.0000\n- 入场触发率: 100.00%；漏触发率: 0.00%\n- 基线判定: **未通过**（原因: 有效执行样本少于 30；high 命中率 0.00% < 60%）\n\n## 风险提示\n- watch=0，missed_entry=0，parse_error=0\n- 样本充分性: 不足（<30）\n\n详见 `details.md`（策略明细与 AI 诊断）和 `metrics.json`（程序化消费）。\n",
+        "details": "# 回测详细报告 (2026-03-27 13:15 UTC)\n\n来源: `scored.jsonl`\n\n## 核心 KPI\n| 指标 | 数值 |\n|---|---|\n| 总 runs | 1 |\n| 可交易信号 | 1 |\n| 实际执行 | 1 |\n| Win Rate | 0.00% |\n| Expectancy R | -1.0871 |\n| Profit Factor R | 0.0000 |\n| Avg Estimated RR | 1.5000 |\n| Median Bars To Outcome | 8.00 |\n\n## 策略表现明细 (Playbook)\n| Playbook | 识别次数 | 执行次数 | 胜率 | Avg Estimated RR | Avg Realized R |\n|---|---|---|---|---|---|\n| trend-pullback | 1 | 1 | 0.00% | 1.5000 | -1.0871 |\n\n## AI Diagnostics - Confidence\n| Confidence | 总样本 | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|---|\n| high | 1 | 1 | 0.00% | -1.0871 |\n\n## AI Diagnostics - Market State\n| Market State | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|\n| uptrend | 1 | 0.00% | -1.0871 |\n\n## 一致性率 (Consistency)\n无多次重复运行样本（需要 repeat > 1）。\n",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-27T13:15:42Z",
+          "total_runs": 1,
+          "parse_error_cases": 0,
+          "tradable_signal_cases": 1,
+          "executed_trade_cases": 1,
+          "watch_cases": 0,
+          "missed_entry_cases": 0,
+          "t1_hit": 0,
+          "sl_hit": 1,
+          "neither": 0,
+          "win_rate": 0,
+          "entry_trigger_rate": 1,
+          "missed_entry_rate": 0,
+          "win_rate_pct": 0,
+          "entry_trigger_rate_pct": 100,
+          "missed_entry_rate_pct": 0,
+          "expectancy_r": -1.0871,
+          "profit_factor_r": 0,
+          "avg_estimated_rr": 1.5,
+          "median_bars_to_outcome": 8,
+          "mfe_quantiles": {
+            "p50": 682.1621,
+            "p75": 682.1621,
+            "p90": 682.1621
+          },
+          "mae_quantiles": {
+            "p50": 1210.4979,
+            "p75": 1210.4979,
+            "p90": 1210.4979
+          },
+          "avg_realized_r_by_playbook": {
+            "trend-pullback": -1.0871
+          },
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30",
+            "high 命中率 0.00% < 60%"
+          ]
+        },
+        "config": {
+          "run_id": "20260327_signalbt_demo2",
+          "symbol": "BTCUSDT",
+          "interval": "1h",
+          "csv": "data/clean/BTCUSDT/1h.parquet",
+          "lookback": 160,
+          "forward": 40,
+          "source": "signal_backtest",
+          "signal_filters": {
+            "since": null,
+            "until": null,
+            "limit": 20
+          },
+          "artifact_level": "standard",
+          "embed_forward_rows": false,
+          "run_schema_version": "run_v2"
+        }
+      }
+    ]
+  },
+  {
+    "run_id": "20260327_signalbt_demo",
+    "manifest": {
+      "run_id": "20260327_signalbt_demo",
+      "created_at": "2026-03-27T13:14:57.678602+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "lookback": 160,
+        "forward": 40,
+        "since": null,
+        "until": null,
+        "limit": 10,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "import_legacy": false,
+        "run_id": "20260327_signalbt_demo",
+        "slippage": 0.0005,
+        "fee": 0.001
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 500,
+            "start": "2026-03-06T18:00:00Z",
+            "end": "2026-03-27T13:00:00Z",
+            "path": "outputs/runs/20260327_signalbt_demo/BTCUSDT/input.parquet"
+          },
+          "signal_candidates": 1,
+          "runs_written": 0,
+          "skipped": 1,
+          "parse_errors": 0,
+          "summary": {
+            "runs": 0
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "# 回测执行总览 (2026-03-27 13:14 UTC)\n\n来源: `scored.jsonl`\n\n## 结论\n- 样本覆盖: 总 runs=0，可交易信号=0，实际执行=0\n- 胜率 (Win Rate): N/A\n- 平均实现 R (Expectancy): N/A\n- 利润因子 (Profit Factor R): N/A\n- 入场触发率: N/A；漏触发率: N/A\n- 基线判定: **未通过**（原因: 有效执行样本少于 30）\n\n## 风险提示\n- watch=0，missed_entry=0，parse_error=0\n- 样本充分性: 不足（<30）\n\n详见 `details.md`（策略明细与 AI 诊断）和 `metrics.json`（程序化消费）。\n",
+        "details": "# 回测详细报告 (2026-03-27 13:14 UTC)\n\n来源: `scored.jsonl`\n\n## 核心 KPI\n| 指标 | 数值 |\n|---|---|\n| 总 runs | 0 |\n| 可交易信号 | 0 |\n| 实际执行 | 0 |\n| Win Rate | N/A |\n| Expectancy R | N/A |\n| Profit Factor R | N/A |\n| Avg Estimated RR | N/A |\n| Median Bars To Outcome | N/A |\n\n## 策略表现明细 (Playbook)\n无有效 playbook 样本。\n\n## AI Diagnostics - Confidence\n无 confidence 诊断样本。\n\n## AI Diagnostics - Market State\n无 market_state 诊断样本。\n\n## 一致性率 (Consistency)\n无多次重复运行样本（需要 repeat > 1）。\n",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-27T13:14:57Z",
+          "total_runs": 0,
+          "parse_error_cases": 0,
+          "tradable_signal_cases": 0,
+          "executed_trade_cases": 0,
+          "watch_cases": 0,
+          "missed_entry_cases": 0,
+          "t1_hit": 0,
+          "sl_hit": 0,
+          "neither": 0,
+          "win_rate": null,
+          "entry_trigger_rate": null,
+          "missed_entry_rate": null,
+          "win_rate_pct": null,
+          "entry_trigger_rate_pct": null,
+          "missed_entry_rate_pct": null,
+          "expectancy_r": null,
+          "profit_factor_r": null,
+          "avg_estimated_rr": null,
+          "median_bars_to_outcome": null,
+          "mfe_quantiles": {
+            "p50": null,
+            "p75": null,
+            "p90": null
+          },
+          "mae_quantiles": {
+            "p50": null,
+            "p75": null,
+            "p90": null
+          },
+          "avg_realized_r_by_playbook": {},
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30"
+          ]
+        },
+        "config": {
+          "run_id": "20260327_signalbt_demo",
+          "symbol": "BTCUSDT",
+          "interval": "1h",
+          "csv": "data/clean/BTCUSDT/1h.parquet",
+          "lookback": 160,
+          "forward": 40,
+          "source": "signal_backtest",
+          "signal_filters": {
+            "since": null,
+            "until": null,
+            "limit": 10
+          },
+          "artifact_level": "standard",
+          "embed_forward_rows": false,
+          "run_schema_version": "run_v2"
+        }
+      }
+    ]
+  },
+  {
+    "run_id": "20260327_110047_btcusdt",
+    "manifest": {
+      "run_id": "20260327_110047_btcusdt",
+      "created_at": "2026-03-27T11:00:47.331023+00:00",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "config": {
+        "symbols": [
+          "BTCUSDT"
+        ],
+        "interval": "1h",
+        "repeat": 1,
+        "sample": 3,
+        "step": 10,
+        "lookback": 160,
+        "forward": 40,
+        "case_mode": "non_overlap",
+        "warmup_bars": 120,
+        "artifact_level": "standard",
+        "embed_forward_rows": false,
+        "cache_file": "kline_1h_clean.csv",
+        "prepare_only": false,
+        "model": null,
+        "engine": "local",
+        "hide_analysis": false
+      },
+      "items": [
+        {
+          "symbol": "BTCUSDT",
+          "status": "done",
+          "input": {
+            "rows": 8760,
+            "start": "2025-03-26T18:00:00Z",
+            "end": "2026-03-26T17:00:00Z",
+            "path": "/Users/wei.he/Documents/GitHub/stock-technical-analysis/outputs/runs/20260327_110047_btcusdt/BTCUSDT/eval_input.csv"
+          },
+          "local_generation": {
+            "cases": 3,
+            "runs": 3,
+            "parse_errors": 3
+          },
+          "summary": {
+            "runs": 3,
+            "trade_cases": 0,
+            "t1_hit": 0,
+            "t2_hit": 0,
+            "sl_hit": 0,
+            "missed_entry": 0,
+            "watch_or_no_trade": 0,
+            "parse_error": 3,
+            "win_rate_pct": null
+          }
+        }
+      ]
+    },
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "summary": "# 回测执行总览 (2026-03-27 11:00 UTC)\n\n来源: `scored.jsonl`\n\n## 结论\n- 样本覆盖: 总 runs=3，可交易信号=0，实际执行=0\n- 胜率 (Win Rate): N/A\n- 平均实现 R (Expectancy): N/A\n- 利润因子 (Profit Factor R): N/A\n- 入场触发率: N/A；漏触发率: N/A\n- 基线判定: **未通过**（原因: 有效执行样本少于 30）\n\n## 风险提示\n- watch=0，missed_entry=0，parse_error=3\n- 样本充分性: 不足（<30）\n\n详见 `details.md`（策略明细与 AI 诊断）和 `metrics.json`（程序化消费）。\n",
+        "details": "# 回测详细报告 (2026-03-27 11:00 UTC)\n\n来源: `scored.jsonl`\n\n## 核心 KPI\n| 指标 | 数值 |\n|---|---|\n| 总 runs | 3 |\n| 可交易信号 | 0 |\n| 实际执行 | 0 |\n| Win Rate | N/A |\n| Expectancy R | N/A |\n| Profit Factor R | N/A |\n| Avg Estimated RR | N/A |\n| Median Bars To Outcome | N/A |\n\n## 策略表现明细 (Playbook)\n无有效 playbook 样本。\n\n## AI Diagnostics - Confidence\n| Confidence | 总样本 | 执行次数 | 胜率 | Avg Realized R |\n|---|---|---|---|---|\n| unknown | 3 | 0 | N/A | N/A |\n\n## AI Diagnostics - Market State\n无 market_state 诊断样本。\n\n## 一致性率 (Consistency)\n无多次重复运行样本（需要 repeat > 1）。\n",
+        "metrics": {
+          "schema_version": "report_metrics_v2",
+          "generated_at_utc": "2026-03-27T11:00:47Z",
+          "total_runs": 3,
+          "parse_error_cases": 3,
+          "tradable_signal_cases": 0,
+          "executed_trade_cases": 0,
+          "watch_cases": 0,
+          "missed_entry_cases": 0,
+          "t1_hit": 0,
+          "sl_hit": 0,
+          "neither": 0,
+          "win_rate": null,
+          "entry_trigger_rate": null,
+          "missed_entry_rate": null,
+          "win_rate_pct": null,
+          "entry_trigger_rate_pct": null,
+          "missed_entry_rate_pct": null,
+          "expectancy_r": null,
+          "profit_factor_r": null,
+          "avg_estimated_rr": null,
+          "median_bars_to_outcome": null,
+          "mfe_quantiles": {
+            "p50": null,
+            "p75": null,
+            "p90": null
+          },
+          "mae_quantiles": {
+            "p50": null,
+            "p75": null,
+            "p90": null
+          },
+          "avg_realized_r_by_playbook": {},
+          "sample_sufficient": false,
+          "baseline_pass": false,
+          "baseline_reasons": [
+            "有效执行样本少于 30"
+          ]
+        },
+        "config": {
+          "run_id": "20260327_110047_btcusdt",
+          "symbol": "BTCUSDT",
+          "args": {
+            "symbols": [
+              "BTCUSDT"
+            ],
+            "interval": "1h",
+            "repeat": 1,
+            "sample": 3,
+            "step": 10,
+            "lookback": 160,
+            "forward": 40,
+            "case_mode": "non_overlap",
+            "warmup_bars": 120,
+            "artifact_level": "standard",
+            "embed_forward_rows": false,
+            "cache_file": "kline_1h_clean.csv",
+            "prepare_only": false,
+            "model": null,
+            "engine": "local",
+            "hide_analysis": false
+          }
+        }
+      }
+    ]
+  }
+]

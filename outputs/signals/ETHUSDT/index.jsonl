@@ -1,0 +1,1 @@
+{"signal_id": "20260331_070507", "symbol": "ETHUSDT", "timestamp_utc": null, "price_at_signal": null, "market_state_4h": null, "market_state_1h": null, "decision": "short", "bias": "bearish", "confidence": "medium", "playbook": "breakout-retest", "conditional_entry": 2120, "stop_loss": 2160, "t1": 2050, "t2": 2022, "path": "20260331_070507/"}

@@ -1,0 +1,293 @@
+[
+  {
+    "signal_id": "20260330_142300",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-30T14:23:00Z",
+    "price_at_signal": 68470.65,
+    "market_state_4h": "downtrend",
+    "market_state_1h": "downtrend",
+    "decision": "watch",
+    "bias": "bearish",
+    "confidence": "medium",
+    "playbook": "none",
+    "conditional_entry": null,
+    "stop_loss": null,
+    "t1": null,
+    "t2": null,
+    "note": "等待触发，不直接开仓",
+    "path": "20260330_142300/",
+    "snapshot": {
+      "time_utc": "2026-03-30T14:23:00Z",
+      "price_now": 68470.65,
+      "1h": {
+        "state": "downtrend",
+        "rsi": 33.18,
+        "macd": -379.32,
+        "macd_signal": -413.37
+      },
+      "4h": {
+        "state": "downtrend",
+        "rsi": 38.34,
+        "macd": -392.4,
+        "macd_signal": -144.18
+      },
+      "decision": "watch",
+      "playbook": "none",
+      "bias": "bearish",
+      "confidence": "medium",
+      "verdict": {
+        "bias": "bearish",
+        "confidence": "medium",
+        "signal_strength": "medium"
+      },
+      "structure": {
+        "market_state": "downtrend",
+        "notes": "4h 偏空，1h 背离修复，位置贴近支撑"
+      },
+      "levels": {
+        "resistance": [
+          69147,
+          69441,
+          69859
+        ],
+        "support": [
+          68330,
+          68176,
+          67377
+        ]
+      },
+      "triggers": {
+        "short": "1h 实体收破 68176 且回踩不过",
+        "long": "1h 收回并站稳 69147，或假跌破后快速收回 68330 上方"
+      }
+    },
+    "report": "# BTCUSDT 分析报告（2026-03-30 归档）\n\n## 基础信息\n- 品种: BTCUSDT\n- 时间框架: HTF=4h, LTF=1h\n- 已收线截止: 1h=2026-03-27T07:00:00Z, 4h=2026-03-27T04:00:00Z\n- 当前参考价: 68470.65\n\n## 市场结构与信号\n- 市场状态: 偏空（1h LH/LL，4h 回落段）\n- 阻力: 69147 / 69441 / 69859\n- 支撑: 68330 / 68176 / 67377\n- 1h 出现 RSI 与 MACD 常规看涨背离，4h 无背离\n\n## 交易决策卡\n- 方向: 观望\n- Playbook: none\n- 结论: 不做，等待触发\n- 空头触发: 1h 实体收破 68176 且回踩不过\n- 多头触发: 1h 收回并站稳 69147，或假跌破后快速收回 68330 上方\n"
+  },
+  {
+    "signal_id": "20260327_130000",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-27T13:00:00Z",
+    "price_at_signal": 66530.01,
+    "market_state_4h": "uptrend",
+    "market_state_1h": "uptrend",
+    "decision": "long",
+    "bias": "bullish",
+    "confidence": "medium",
+    "playbook": "trend-pullback",
+    "conditional_entry": 66463.48,
+    "stop_loss": 65931.77,
+    "t1": 67261.04,
+    "t2": 67792.75,
+    "path": "20260327_130000/",
+    "snapshot": {
+      "time_utc": "2026-03-27T13:00:00Z",
+      "price_now": 66530.01,
+      "1h": {
+        "state": "uptrend"
+      },
+      "4h": {
+        "state": "uptrend"
+      },
+      "decision": "long"
+    },
+    "report": "# synthetic signal\n"
+  },
+  {
+    "signal_id": "20260327_110000",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-27T11:00:00Z",
+    "price_at_signal": 69500,
+    "decision": "watch",
+    "bias": "bearish",
+    "confidence": "medium",
+    "playbook": "-",
+    "market_structure": {
+      "h4": "downtrend",
+      "h1": "downtrend"
+    },
+    "snapshot": {
+      "time_utc": "2026-03-27T11:00:00Z",
+      "price_now": 69500,
+      "1h": {
+        "state": "downtrend"
+      },
+      "4h": {
+        "state": "downtrend"
+      }
+    },
+    "report": "# E2E Test Signal\nVerification run."
+  },
+  {
+    "signal_id": "20260326_170000",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-26T17:00:00Z",
+    "price_at_signal": 68987.56,
+    "decision": "watch",
+    "bias": "bearish",
+    "confidence": "medium",
+    "playbook": "-",
+    "market_structure": {
+      "h4": "downtrend",
+      "h1": "downtrend"
+    },
+    "snapshot": {
+      "time_utc": "2026-03-26T17:00:00Z",
+      "price_now": 68987.56,
+      "4h": {
+        "state": "downtrend",
+        "close": 68963.2,
+        "ma20": 70463.25,
+        "ma60": 70797.71,
+        "rsi14": 40.49,
+        "macd": -150.1295,
+        "signal": 44.2415,
+        "hist": -194.3711,
+        "resistance_top3": [
+          76100,
+          74909.08,
+          74893.94
+        ],
+        "support_top3": [
+          63030,
+          63372.1,
+          63820.5
+        ]
+      },
+      "1h": {
+        "state": "downtrend",
+        "close": 68987.56,
+        "ma20": 70099.54,
+        "ma60": 70529.72,
+        "rsi14": 31.3,
+        "macd": -481.522,
+        "signal": -366.8343,
+        "hist": -114.6877,
+        "momentum": "bearish",
+        "volume_state": "contracting",
+        "volume_text": "缩量整理",
+        "resistance_top3": [
+          72000,
+          71955.17,
+          71936.36
+        ],
+        "support_top3": [
+          67377.05,
+          67445.18,
+          67502.48
+        ],
+        "position": "middle",
+        "rsi_divergence": "bullish_regular",
+        "macd_divergence": "none",
+        "price_anchor": [
+          69192.96,
+          68632.4
+        ],
+        "rsi_anchor": [
+          27.38,
+          31.51
+        ],
+        "macd_anchor": null
+      }
+    },
+    "report": "#### 基础信息\n- 品种: BTCUSDT\n- 数据来源: OHLC（Binance 公共 API）\n- 图表数量: 无截图\n- 分析模式: 数据模式\n- 时间框架: Direction=4h, Signal=1h, Entry=1h\n\n#### 市场结构\n- 市场状态: 4h=下降趋势，1h=下降趋势\n- 关键 BOS/CHoCH: 4h 与 1h 均在 MA20/MA60 下方，延续性偏空，未见明确反转 BOS 确认\n- 趋势健康度: 结构偏空但 1h 出现 RSI 常规看涨背离，存在短线反抽风险\n\n#### 关键价位\n- 阻力: 1h=71936.36, 71955.17, 72000.0；4h=74893.94, 74909.08, 76100.0\n- 支撑: 1h=67377.05, 67445.18, 67502.48；4h=63030.0, 63372.1, 63820.5\n- 当前位置: 中间（现价 68987.56）\n\n#### 价格行为\n- 近期动量: 空头主导\n- 关键K线: 最近 5 根 1h K 线连续走弱后小幅反抽，尚未形成结构性转强\n- 量能结论: 缩量整理\n\n#### 形态识别\n- K线形态: 无明显反转形态\n- 图表形态: 无明确整理突破形态\n- 信号强度: 中\n\n#### 指标信号（如可见）\n- RSI背离: 常规看涨（价格锚点: 69192.96->68632.4, RSI锚点: 27.38->31.51）\n- MACD背离: 无背离（价格锚点: 69192.96->68632.4, MACD锚点: 无->无）\n- RSI数值: 1h=31.3，4h=40.49（均未到极端超卖）\n- MACD数值: 1h=-481.522 / signal=-366.8343；4h=-150.1295 / signal=44.2415\n- 指标确认: 仅 RSI 出现反弹信号，MACD 仍偏空，暂不形成强反转共振\n\n#### 综合研判\n- 偏向: 偏空（等待更优触发）\n- 信心: 中\n- 多周期一致性: 结构一致（偏空）但短线指标有反抽分歧\n- 核心逻辑: 高低周期同向偏空，优先按趋势延续思路处理；当前处于中间区域且出现 RSI 背离，不追空，等待反弹至阻力后的二次转弱触发。\n\n---\n\n交易决策卡\n\n### 决策结论\n- 方向: 观望（条件触发后考虑偏空）\n- 理由: 方向虽偏空，但当前不在理想阻力位且存在短线背离，直接追单性价比不足。\n\n### Setup & Checklist\n- Playbook: trend-pullback（候选）\n- 入场前检查:\n  硬否决项:\n  - Setup 匹配: ⚠️（方向匹配但位置不理想）\n  - 触发信号: ❌（尚未出现“反弹到阻力后再转弱”的确认）\n  - 盈亏比(R:R): ⚠️（未触发前无法锁定）\n  软降级项:\n  - HTF 方向一致性: ✅（4h 与 1h 同向偏空）\n  - 位置有效性: ⚠️（中间区域，非阻力附近）\n  - 事件风险: ⚠️（未引入事件日历，需执行前再检查）\n  - 否决理由检查: ✅（短线背离存在，避免追空）\n  结论: 不做（等待触发）\n\n### 交易方案（如通过检查）\n- 入场: 若 1h 反弹到 70050~70300 区域并出现转弱（收盘重回 69900 下方）再考虑空单\n- 止损: 70680（理由：反弹失效区上方）\n- 目标1: 68150（R:R 约 1.6:1）\n- 目标2: 67450（可选）\n- 仓位: 风险 0.5%~1%（当前为分歧环境，先降仓）\n- 失效条件: 1h 连续收盘站上 70680 且量能放大\n- 持仓管理: 到达 T1 后减仓并将止损上移至成本价\n\n> 以上分析仅供学习和参考，不构成投资建议。交易有风险，请基于自身判断做出决策，并自行承担所有风险。\n"
+  },
+  {
+    "signal_id": "20260324_060000",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": "2026-03-24T06:00:00Z",
+    "price_at_signal": 70541.38,
+    "market_state_4h": "uptrend",
+    "market_state_1h": "uptrend",
+    "decision": "long",
+    "bias": "bullish",
+    "confidence": "high",
+    "playbook": "trend-pullback",
+    "conditional_entry": 70611.92,
+    "stop_loss": 69905.8,
+    "t1": 71671.1,
+    "t2": 72377.22,
+    "path": "20260324_060000/",
+    "snapshot": {
+      "time_utc": "2026-03-24T06:00:00Z",
+      "price_now": 70541.38,
+      "1h": {
+        "state": "uptrend"
+      },
+      "4h": {
+        "state": "uptrend"
+      },
+      "decision": "long"
+    },
+    "report": "# synthetic historical signal\n"
+  },
+  {
+    "signal_id": "20260331_070507",
+    "symbol": "BTCUSDT",
+    "timestamp_utc": null,
+    "price_at_signal": null,
+    "market_state_4h": null,
+    "market_state_1h": null,
+    "decision": "long",
+    "bias": "bullish",
+    "confidence": "medium",
+    "playbook": "range-reversal",
+    "conditional_entry": 70500,
+    "stop_loss": 69500,
+    "t1": 71700,
+    "t2": 72800,
+    "path": "20260331_070507/",
+    "snapshot": {
+      "decision": "long",
+      "bias": "bullish",
+      "confidence": "medium",
+      "playbook": "range-reversal",
+      "entry_price": 70500,
+      "stop_loss": 69500,
+      "t1": 71700,
+      "t2": 72800,
+      "market_structure": {
+        "h4": "uptrend_pullback",
+        "h1": "downtrend"
+      },
+      "price_at_signal": 70000,
+      "conditional_entry": 70500,
+      "trigger_type": "close_above"
+    },
+    "report": "## BTC 4h+1h 分析 (2026-03-26)\n\n**偏向:** 观望为主，条件满足后偏多\n**Playbook:** range-reversal\n\n### 条件式方案\n- 入场: 1h 收盘站上 70500\n- 止损: 69500\n- T1: 71700 (1.5R)\n- T2: 72800 (2.5R)\n- 失效: 1h 跌破 68900"
+  },
+  {
+    "signal_id": "20260331_070507",
+    "symbol": "ETHUSDT",
+    "timestamp_utc": null,
+    "price_at_signal": null,
+    "market_state_4h": null,
+    "market_state_1h": null,
+    "decision": "short",
+    "bias": "bearish",
+    "confidence": "medium",
+    "playbook": "breakout-retest",
+    "conditional_entry": 2120,
+    "stop_loss": 2160,
+    "t1": 2050,
+    "t2": 2022,
+    "path": "20260331_070507/",
+    "snapshot": {
+      "decision": "short",
+      "bias": "bearish",
+      "confidence": "medium",
+      "playbook": "breakout-retest",
+      "entry_price": 2120,
+      "stop_loss": 2160,
+      "t1": 2050,
+      "t2": 2022,
+      "market_structure": {
+        "h4": "range_weakening",
+        "h1": "downtrend"
+      },
+      "price_at_signal": 2075,
+      "conditional_entry": 2120,
+      "trigger_type": "close_below"
+    },
+    "report": "## ETH 4h+1h 分析 (2026-03-26)\n\n**偏向:** 偏空\n**Playbook:** breakout-retest\n\n### 交易方案\n- 入场: 1h 反抽 2115-2135 出现拒绝后，2120 附近\n- 止损: 2160\n- T1: 2050 (1.75R)\n- T2: 2022 (2.5R)\n- 失效: 1h 收复并站稳 2160"
+  }
+]

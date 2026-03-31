@@ -1,0 +1,49 @@
+[
+  {
+    "conversation_id": "20260330_142300_claude-code_2026-03-30-btcusdt-数据模式分",
+    "symbol": "BTCUSDT",
+    "source": "claude-code",
+    "title": "2026-03-30 BTCUSDT 数据模式分析",
+    "timestamp_utc": "2026-03-30T14:23:00Z",
+    "path": "BTCUSDT/20260330_142300_claude-code_2026-03-30-btcusdt-数据模式分/",
+    "created_at": "2026-03-30T14:23:00Z",
+    "metadata_file": "metadata.json",
+    "transcript_file": "conversation.md",
+    "transcript": "# 2026-03-30 BTCUSDT 分析归档\n\n## 执行结果\n- MCP 不可用，回退 Binance API。\n- 主站接口超时，最终使用 `api.binance.us` 拉取 `BTCUSDT` 的 `1h/4h` 各 500 根。\n- 按 `SKILL.md` Step 0~8 完成分析。\n\n## 结论摘要\n- 偏向：偏空（短线可能反抽）\n- 决策：观望\n- 信心：中\n- HTF/LTF：4h 偏空，1h 有背离修复\n- 触发条件：\n  - 空：`1h` 实体收破 `68176` 且回踩不过\n  - 多：`1h` 收回并站稳 `69147`，或假跌破后快速收回 `68330` 上方\n",
+    "metadata": {
+      "mode": "data_only",
+      "timeframes": [
+        "4h",
+        "1h"
+      ],
+      "mcp_available": false,
+      "data_source": "binance.us"
+    }
+  },
+  {
+    "conversation_id": "20260326_090000_claude_2026-03-26-eth-4h-1h-bre",
+    "symbol": "ETHUSDT",
+    "source": "claude",
+    "title": "2026-03-26 ETH 4h+1h breakout-retest 条件做空",
+    "timestamp_utc": "2026-03-26T09:00:00Z",
+    "path": "ETHUSDT/20260326_090000_claude_2026-03-26-eth-4h-1h-bre/",
+    "created_at": "2026-03-31T07:05:07Z",
+    "metadata_file": "metadata.json",
+    "transcript_file": "conversation.md",
+    "transcript": "#### 基础信息\n- 品种: ETH（ETH-USDT）\n- 数据来源: OKX K线\n- 时间框架: HTF=4h, LTF=1h\n- 截止时间: 2026-03-26 09:00 UTC\n\n#### 综合研判\n- 偏向: 偏空（但不建议在 2075 附近追空）\n- 信心: 中\n\n#### 交易方案\n- 入场条件: 1h 反抽 2115-2135 区域出现看跌拒绝\n- 入场价: 2120 附近\n- 止损: 2160\n- T1: 2050 (1.75R)\n- T2: 2022 (2.5R)",
+    "metadata": {}
+  },
+  {
+    "conversation_id": "20260326_080000_claude_2026-03-26-btc-4h-1h-ran",
+    "symbol": "BTCUSDT",
+    "source": "claude",
+    "title": "2026-03-26 BTC 4h+1h range-reversal 条件做多",
+    "timestamp_utc": "2026-03-26T08:00:00Z",
+    "path": "BTCUSDT/20260326_080000_claude_2026-03-26-btc-4h-1h-ran/",
+    "created_at": "2026-03-31T07:05:07Z",
+    "metadata_file": "metadata.json",
+    "transcript_file": "conversation.md",
+    "transcript": "#### 基础信息\n- 品种: BTC\n- 时间框架: HTF=4h, LTF=1h\n- 数据来源: MCP OHLC（Crypto.com）\n\n#### 综合研判\n- 偏向: 观望为主，条件满足后偏多\n- 信心: 中\n- 多周期一致性: 中性（HTF 偏多结构，LTF 仍在回调）\n\n#### 条件式方案\n- 入场条件: 1h 收盘重新站上 70,500 且不再跌破 69,700\n- 止损: 69,500 下方\n- 目标1: 71,700（约 1.5R）\n- 目标2: 72,800（约 2.5R）",
+    "metadata": {}
+  }
+]
