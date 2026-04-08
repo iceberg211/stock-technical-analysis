@@ -15,6 +15,7 @@ description: |
 
 - 优先使用 MCP / OHLC / 结构化行情数据；截图用于辅助确认结构、关键位与形态。
 - 先识别用户是图片分析、数据分析，还是二者结合，再加载 workflow。
+- 先识别市场类型，再决定数据源与默认周期，禁止把 A 股和币圈按同一套周期模板处理。
 - 默认按 workflow 内置规则完成分析，不要为了走流程而机械读取所有 `references/` 文件。
 - 仅在遇到模糊形态、少见指标、复杂 Playbook 分歧时，再按最小必要原则读取单个 reference 文件。
 - 只有图片、且价格刻度或最近几根 K 线细节不清晰时，只输出结构与条件，不输出具体价位或微观 K 线断言。
@@ -28,9 +29,29 @@ description: |
 |------|---------|
 | 上传一张或多张同品种 K 线图，要求分析走势 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
 | 要求完整技术分析或多时间框架联动分析 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
-| 要求使用 MCP / OHLC / 实时行情数据分析 | `workflows/chart-analysis-workflow.md`（分析流程 Step 0~7） |
+| 只给标的名称 / 代码，要求主动拉取结构化数据分析 | `workflows/data-acquisition-workflow.md` -> `workflows/chart-analysis-workflow.md` |
+| 要求使用 MCP / OHLC / 实时行情数据分析 | `workflows/data-acquisition-workflow.md` -> `workflows/chart-analysis-workflow.md` |
 | 分析完成后需要输出交易方案 | `workflows/trading-decision.md`（Playbook 匹配、Checklist、仓位、回测） |
 | 输出格式选择 | `workflows/output-templates.md`（标准模板、决策卡、AI 注意事项） |
+
+## Workflow 顺序
+
+在需要结构化数据的场景下，按以下顺序执行：
+
+1. `workflows/data-acquisition-workflow.md`
+2. `workflows/chart-analysis-workflow.md`
+3. `workflows/trading-decision.md`（仅在需要交易方案时）
+4. `workflows/output-templates.md`
+
+## 数据获取约定
+
+完整细则移动到 `workflows/data-acquisition-workflow.md`，本文件只保留总约束：
+
+- 先分市场，再取数，再分析。
+- A 股默认模板是 `1D + 60m`，币圈默认模板是 `4H + 1H`。
+- A 股 `4H` 只能由 `60m` 派生，不能把外部 `4H` 当默认真值。
+- 分析层必须使用固定窗口，不直接吃全量缓存。
+- 只要使用了结构化数据，最终输出必须保留 `requested_bars / actual_bars / analysis_bars / timeframe_status`。
 
 ## 知识加载
 

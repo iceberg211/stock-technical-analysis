@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import urllib.request
+from functools import lru_cache
 from datetime import datetime, timezone
 from typing import Any, Protocol
 from urllib.parse import urlencode
@@ -107,6 +109,99 @@ def _safe_json_load(resp_bytes: bytes) -> Any:
         return json.loads(resp_bytes.decode("utf-8"))
     except Exception:
         return {"raw_text": resp_bytes.decode("utf-8", errors="replace")}
+
+
+def _apply_time_filters(
+    df: pd.DataFrame,
+    start: str | None = None,
+    end: str | None = None,
+    limit: int = 1000,
+) -> pd.DataFrame:
+    """按时间范围与根数裁剪标准化后的 OHLCV。"""
+    out = df.copy()
+    start_ts = pd.to_datetime(start, errors="coerce", utc=True) if start else None
+    end_ts = pd.to_datetime(end, errors="coerce", utc=True) if end else None
+    if start_ts is not None and not pd.isna(start_ts):
+        out = out[out["timestamp"] >= start_ts]
+    if end_ts is not None and not pd.isna(end_ts):
+        out = out[out["timestamp"] <= end_ts]
+    out = out.reset_index(drop=True)
+    if limit > 0 and len(out) > limit:
+        out = out.tail(limit).reset_index(drop=True)
+    return out
+
+
+def _infer_cn_exchange(code: str) -> str:
+    if code.startswith(("4", "8")):
+        return "BJ"
+    if code.startswith(("5", "6", "9")):
+        return "SH"
+    return "SZ"
+
+
+@lru_cache(maxsize=1)
+def _load_akshare_code_name_table() -> pd.DataFrame:
+    try:
+        import akshare as ak
+    except Exception as e:
+        raise RuntimeError("未安装 akshare，无法解析 A 股简称。") from e
+
+    df = ak.stock_info_a_code_name()
+    if not {"code", "name"}.issubset(df.columns):
+        raise RuntimeError("AKShare 返回的 A 股代码表缺少 code/name 列。")
+
+    out = df[["code", "name"]].copy()
+    out["code"] = out["code"].astype(str).str.extract(r"(\d{6})", expand=False)
+    out["name"] = out["name"].astype(str).str.strip()
+    out = out.dropna(subset=["code", "name"]).drop_duplicates(subset=["code"]).reset_index(drop=True)
+    return out
+
+
+def _resolve_akshare_symbol(symbol: str) -> dict[str, str]:
+    """将简称、6 位代码或交易所代码解析为 AKShare 取数所需格式。"""
+    raw = symbol.strip()
+    if not raw:
+        raise ValueError("symbol 不能为空")
+
+    raw_upper = raw.upper()
+    code: str | None = None
+    exchange: str | None = None
+
+    if re.fullmatch(r"\d{6}", raw):
+        code = raw
+    elif re.fullmatch(r"(SH|SZ|BJ)[.:]?\d{6}", raw_upper):
+        exchange = raw_upper[:2]
+        code = raw_upper[-6:]
+    elif re.fullmatch(r"\d{6}\.(SH|SZ|BJ)", raw_upper):
+        code = raw_upper[:6]
+        exchange = raw_upper[-2:]
+    else:
+        table = _load_akshare_code_name_table()
+        exact = table[table["name"] == raw]
+        if exact.empty:
+            exact = table[table["name"].str.contains(raw, na=False)]
+        if exact.empty:
+            raise ValueError(f"无法识别 A 股标的: {symbol}")
+        if len(exact) > 1:
+            names = exact.head(5).apply(lambda row: f"{_infer_cn_exchange(row['code'])}.{row['code']} {row['name']}", axis=1).tolist()
+            raise ValueError(f"A 股简称匹配到多个结果: {', '.join(names)}")
+        code = str(exact.iloc[0]["code"])
+
+    exchange = exchange or _infer_cn_exchange(code)
+    return {
+        "exchange": exchange,
+        "code": code,
+        "store_symbol": f"{exchange}.{code}",
+        "daily_symbol": f"{exchange.lower()}{code}",
+    }
+
+
+def normalize_symbol_for_source(source: str, symbol: str) -> str:
+    """按数据源规范化 symbol，用于 clean 目录与后续流程。"""
+    source_l = source.strip().lower()
+    if source_l == "akshare":
+        return _resolve_akshare_symbol(symbol)["store_symbol"]
+    return symbol.strip().upper()
 
 
 class BinanceKlineAdapter:
@@ -244,6 +339,111 @@ class YahooKlineAdapter:
         return df, raw_payload
 
 
+class AkshareKlineAdapter:
+    source = "akshare"
+
+    _minute_interval_map = {
+        "1m": "1",
+        "5m": "5",
+        "15m": "15",
+        "30m": "30",
+        "60m": "60",
+        "1h": "60",
+    }
+
+    _daily_interval_map = {
+        "1d": "daily",
+        "1w": "weekly",
+        "1mo": "monthly",
+    }
+
+    def fetch(
+        self,
+        symbol: str,
+        interval: str,
+        start: str | None = None,
+        end: str | None = None,
+        limit: int = 1000,
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
+        try:
+            import akshare as ak
+        except Exception as e:
+            raise RuntimeError("未安装或无法导入 akshare。") from e
+
+        resolved = _resolve_akshare_symbol(symbol)
+        interval_l = interval.strip().lower()
+
+        if interval_l in self._daily_interval_map:
+            # 日线优先走 stock_zh_a_daily，稳定性更好；周月线再走 hist。
+            if interval_l == "1d":
+                raw_df = ak.stock_zh_a_daily(symbol=resolved["daily_symbol"], adjust="qfq")
+                raw_df = raw_df.rename(columns={"date": "timestamp"})
+            else:
+                raw_df = ak.stock_zh_a_hist(
+                    symbol=resolved["code"],
+                    period=self._daily_interval_map[interval_l],
+                    adjust="qfq",
+                )
+                raw_df = raw_df.rename(
+                    columns={
+                        "日期": "timestamp",
+                        "开盘": "open",
+                        "收盘": "close",
+                        "最高": "high",
+                        "最低": "low",
+                        "成交量": "volume",
+                    }
+                )
+            df = _normalize_ohlcv(raw_df)
+        elif interval_l in self._minute_interval_map:
+            raw_df = ak.stock_zh_a_hist_min_em(
+                symbol=resolved["code"],
+                period=self._minute_interval_map[interval_l],
+                adjust="qfq",
+            )
+            raw_df = raw_df.rename(
+                columns={
+                    "时间": "timestamp",
+                    "开盘": "open",
+                    "收盘": "close",
+                    "最高": "high",
+                    "最低": "low",
+                    "成交量": "volume",
+                }
+            )
+            if "timestamp" not in raw_df.columns:
+                raise RuntimeError("AKShare 分钟数据缺少时间列。")
+            ts = pd.to_datetime(raw_df["timestamp"], errors="coerce")
+            if getattr(ts.dt, "tz", None) is None:
+                ts = ts.dt.tz_localize("Asia/Shanghai")
+            raw_df["timestamp"] = ts.dt.tz_convert("UTC")
+            df = _normalize_ohlcv(raw_df)
+        else:
+            raise ValueError(
+                f"AKShare 暂不支持周期 {interval}。A 股默认建议使用 1d / 60m / 15m。"
+            )
+
+        df = _apply_time_filters(df, start=start, end=end, limit=limit)
+        raw_payload = {
+            "source": self.source,
+            "fetched_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "request": {
+                "symbol": symbol,
+                "resolved_symbol": resolved["store_symbol"],
+                "interval": interval,
+                "start": start,
+                "end": end,
+                "limit": limit,
+            },
+            "response_meta": {
+                "rows": int(len(df)),
+                "exchange": resolved["exchange"],
+                "code": resolved["code"],
+            },
+        }
+        return df, raw_payload
+
+
 class FutuKlineAdapter:
     source = "futu"
 
@@ -325,6 +525,8 @@ class FutuKlineAdapter:
 
 def get_adapter(source: str) -> KlineAdapter:
     s = source.strip().lower()
+    if s == "akshare":
+        return AkshareKlineAdapter()
     if s == "binance":
         return BinanceKlineAdapter()
     if s == "futu":

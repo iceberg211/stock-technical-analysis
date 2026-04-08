@@ -8,7 +8,7 @@
 
 | 模式 | 触发场景 | 输出内容 |
 | ------ | --------- | --------- |
-| 完整模式 | 首次分析 | 完整走 Step 0~8 + 交易决策卡 + 免责声明 |
+| 完整模式 | 首次分析 | 先完成数据获取 workflow（如需），再走 Step 0~8 + 交易决策卡 + 免责声明 |
 | 精简模式 | 追问/更新（如“现在呢”“止损要调吗”） | 只输出变化项 + 结论更新 + 免责声明 |
 | 快问快答 | 单点问题（如“支撑在哪”） | 直接回答 + 免责声明 |
 
@@ -19,7 +19,12 @@
 ```text
 #### 基础信息
 - 品种: xxx
+- 市场类型: [cn_equity / crypto_spot / futures / forex]
 - 数据来源: [截图 / MCP / OHLC / 混合]
+- 数据通道: [AKShare / Binance Spot / 本地缓存 / 派生周期]
+- 取数说明: [requested_bars=xxx, actual_bars=xxx, analysis_bars=xxx]
+- 周期状态: [1D=complete, 60m=degraded_recent_only, 4H=complete ...]
+- 数据完整性: [完整 / 降级]（原因: xxx）
 - 图表数量: [1张 / 2张及以上 / 无截图]
 - 分析模式: [图片模式 / 数据模式 / 混合模式]
 - 时间框架: [Direction=xxx, Signal=xxx, Entry=xxx 或 HTF=xxx, LTF=xxx 或 单一周期=xxx]
@@ -147,9 +152,18 @@ interface SharedStructure {
 interface EvalJSON extends SharedStructure {
   meta: {
     symbol: string;
+    market: "cn_equity" | "crypto_spot" | "other";
     interval: string;
     analysis_time: string; // ISO 8601 UTC
     data_source: "screenshot" | "ohlc" | "mixed";
+    source_name?: string;
+    requested_bars?: number;
+    actual_bars?: number;
+    analysis_bars?: number;
+    derived_from?: string | null;
+    is_complete?: boolean;
+    degrade_reason?: string | null;
+    timeframe_status?: Record<string, string>;
     mtf_role: "direction" | "signal" | "entry" | "single";
   };
   structure: {
@@ -227,11 +241,16 @@ interface BacktestJSON extends SharedStructure {
 
 1. 不要跳步：必须从 Step 0 开始。
 2. 先分析后结论：先完成 Step 0~7，再输出 Step 8。
-3. 指标段必须先给 RSI/MACD 背离结论，再给数值辅助。
-4. 无背离时必须显式写“无背离”，不能省略。
-5. 单靠超买超卖、金叉死叉、零轴位置不得上调高信心。
-6. 有 volume 字段时必须输出“量能结论”；无 volume 时明确写“量能数据不可用”。
-7. 数据优先：结构化数据 > 用户指定值 > 清晰截图 > 模糊截图。
-8. 不要编造价位：刻度不可读时改为条件描述。
-9. Checklist 禁止只写编号（如“3/4/5”），必须写项目中文名与原因。
-10. 每次文本输出末尾都要附加免责声明。
+3. 结构化数据场景下，先执行 `data-acquisition-workflow.md`，再进入 `chart-analysis-workflow.md`。
+4. 只要使用结构化数据，必须输出 `requested_bars / actual_bars / analysis_bars`。
+5. A 股默认周期模板为 `1D + 60m`，币圈默认周期模板为 `4H + 1H`，除非用户明确指定。
+6. A 股若出现 `4H`，默认视为由 `60m` 派生，必须写明 `derived_from=60m`。
+7. A 股若 `1D` 成功但 `60m` 失败，允许输出日线主结论，但必须显式写 `timeframe_status` 与降级原因。
+8. 指标段必须先给 RSI/MACD 背离结论，再给数值辅助。
+9. 无背离时必须显式写“无背离”，不能省略。
+10. 单靠超买超卖、金叉死叉、零轴位置不得上调高信心。
+11. 有 volume 字段时必须输出“量能结论”；无 volume 时明确写“量能数据不可用”。
+12. 数据优先：结构化数据 > 用户指定值 > 清晰截图 > 模糊截图。
+13. 不要编造价位：刻度不可读时改为条件描述。
+14. Checklist 禁止只写编号（如“3/4/5”），必须写项目中文名与原因。
+15. 每次文本输出末尾都要附加免责声明。

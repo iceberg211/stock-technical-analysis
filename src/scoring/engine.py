@@ -3,10 +3,10 @@
 
 用法:
     # 推荐：指定 run 目录（自动读取 config.json + runs.jsonl + CSV）
-    python -m eval.score_eval --dir eval/results/20260322_0939_BTCUSDT_4h
+    python3 -m eval.score_eval --dir eval/results/20260322_0939_BTCUSDT_4h
 
     # 兼容：手动指定 runs.jsonl + CSV
-    python -m eval.score_eval --results runs.jsonl --csv data.csv --lookback 200 --forward 50
+    python3 -m eval.score_eval --results runs.jsonl --csv data.csv --lookback 200 --forward 50
 """
 
 from __future__ import annotations

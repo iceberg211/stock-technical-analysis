@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.pipeline.adapters import get_adapter
+from src.pipeline.adapters import get_adapter, normalize_symbol_for_source
 from src.pipeline.layout import REPO_ROOT
 
 
@@ -152,7 +152,7 @@ def _write_compat_manifest(root: Path, symbol: str, interval: str, used_files: l
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="行情摄入：source -> raw -> clean(parquet) + catalog")
-    parser.add_argument("--source", required=True, choices=["binance", "futu", "yahoo"], help="数据源")
+    parser.add_argument("--source", required=True, choices=["akshare", "binance", "futu", "yahoo"], help="数据源")
     parser.add_argument("--symbol", required=True, help="标的代码，如 BTCUSDT / SH.600410 / US.AAPL")
     parser.add_argument("--interval", required=True, help="周期，如 1h / 4h / 1d")
     parser.add_argument("--start", default=None, help="开始时间（ISO）")
@@ -176,7 +176,8 @@ def run_ingest(
 ) -> dict[str, Any]:
     root = root or REPO_ROOT
     source_l = source.lower().strip()
-    symbol_u = symbol.upper().strip()
+    requested_symbol = symbol.strip()
+    symbol_u = normalize_symbol_for_source(source_l, requested_symbol)
 
     clean_path = _clean_file(root, symbol_u, interval)
     clean_path.parent.mkdir(parents=True, exist_ok=True)
@@ -232,6 +233,7 @@ def run_ingest(
 
     return {
         "source": source_l,
+        "requested_symbol": requested_symbol,
         "symbol": symbol_u,
         "interval": interval,
         "existing_rows": int(len(existing_df)),

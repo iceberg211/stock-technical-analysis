@@ -31,7 +31,7 @@ class Catalog:
         if not path.exists():
             raise FileNotFoundError(
                 f"未找到 {symbol}/{interval} 数据: {path}\n"
-                f"请先运行数据摄入: python -m src.pipeline.ingest --source binance --symbol {symbol} --interval {interval}"
+                f"请先运行数据摄入: python3 -m src.pipeline.ingest --source binance --symbol {symbol} --interval {interval}"
             )
         return pd.read_parquet(path)
 

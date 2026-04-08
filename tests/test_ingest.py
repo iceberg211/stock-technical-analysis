@@ -91,6 +91,27 @@ class TestIngest(unittest.TestCase):
             self.assertTrue(result["clean_path"].endswith("data/clean/BTCUSDT/1h.parquet"))
             self.assertFalse((root / "data" / "clean" / "BTCUSDT" / "1h.parquet").exists())
 
+    def test_run_ingest_akshare_uses_resolved_symbol(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            with patch("src.pipeline.ingest.normalize_symbol_for_source", return_value="SH.600410"):
+                with patch("src.pipeline.ingest.get_adapter", return_value=_FakeAdapter(rows=4)):
+                    result = run_ingest(
+                        source="akshare",
+                        symbol="华胜天成",
+                        interval="1d",
+                        start=None,
+                        end=None,
+                        limit=100,
+                        bootstrap_legacy=False,
+                        dry_run=True,
+                        root=root,
+                    )
+
+            self.assertEqual(result["requested_symbol"], "华胜天成")
+            self.assertEqual(result["symbol"], "SH.600410")
+            self.assertTrue(result["clean_path"].endswith("data/clean/SH.600410/1d.parquet"))
+
 
 if __name__ == "__main__":
     unittest.main()

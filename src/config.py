@@ -3,7 +3,7 @@
 全局配置常量。
 
 通过环境变量覆盖默认值：
-    EVAL_MODEL=gpt-4o-mini python -m src ...
+    EVAL_MODEL=gpt-4o-mini python3 -m src ...
 """
 
 import os
@@ -30,6 +30,7 @@ DEFAULT_STEP = int(os.getenv("EVAL_STEP", "10"))         # 窗口步进
 # ── Skill 文件（按拼接顺序） ─────────────────────────
 SKILL_FILES = [
     REPO_ROOT / "SKILL.md",
+    REPO_ROOT / "workflows" / "data-acquisition-workflow.md",
     REPO_ROOT / "workflows" / "chart-analysis-workflow.md",
     REPO_ROOT / "workflows" / "output-templates.md",
     REPO_ROOT / "workflows" / "trading-decision.md",

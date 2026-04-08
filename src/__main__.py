@@ -2,8 +2,8 @@
 Pipeline 主入口。
 
 用法：
-    python -m src --symbols BTCUSDT --interval 1h
-    python -m src --symbols BTCUSDT ETHUSDT --engine local --sample 5
+    python3 -m src --symbols BTCUSDT --interval 1h
+    python3 -m src --symbols BTCUSDT ETHUSDT --engine local --sample 5
 """
 
 import json

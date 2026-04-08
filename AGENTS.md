@@ -11,10 +11,10 @@
 
 ## 构建、测试与开发命令
 
-- `python -m src --symbols BTCUSDT --interval 1h --engine local --sample 5`：运行主流水线（本地规则引擎示例）。
-- `python -m src.pipeline.ingest --source binance --symbol BTCUSDT --interval 1h --limit 1000`：拉取并整理行情到 `data/clean/`。
-- `python -m unittest discover -s tests -p "test_*.py"`：运行全部测试。
-- `python -m unittest tests.test_ingest`：定向运行单个测试模块。
+- `python3 -m src --symbols BTCUSDT --interval 1h --engine local --sample 5`：运行主流水线（本地规则引擎示例）。
+- `python3 -m src.pipeline.ingest --source binance --symbol BTCUSDT --interval 1h --limit 1000`：拉取并整理行情到 `data/clean/`。
+- `python3 -m unittest discover -s tests -p "test_*.py"`：运行全部测试。
+- `python3 -m unittest tests.test_ingest`：定向运行单个测试模块。
 
 ## 代码风格与命名规范
 
@@ -51,5 +51,5 @@
 
 - 新增指标：在 `src/indicators/calc.py` 增加函数，在 `tests/test_indicators.py` 增加同名场景测试。
 - 新增信号规则：修改 `src/pipeline/signals.py` 或 `src/pipeline/signal_backtest.py`，并验证 `outputs/signals/<SYMBOL>/index.jsonl` 结构未破坏。
-- 调整评分逻辑：修改 `src/scoring/engine.py`、`src/reporting/metrics.py` 后，至少运行 `python -m unittest tests.test_scoring`。
-- 回归验证建议：提交前执行一次 `python -m unittest discover -s tests -p "test_*.py"` 并在 PR 描述中粘贴关键结果。
+- 调整评分逻辑：修改 `src/scoring/engine.py`、`src/reporting/metrics.py` 后，至少运行 `python3 -m unittest tests.test_scoring`。
+- 回归验证建议：提交前执行一次 `python3 -m unittest discover -s tests -p "test_*.py"` 并在 PR 描述中粘贴关键结果。
