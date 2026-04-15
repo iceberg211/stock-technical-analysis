@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
 import Signals from './pages/Signals';
 import Backtests from './pages/Backtests';
 import Review from './pages/Review';
@@ -9,7 +10,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Signals />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/signals" element={<Signals />} />
           <Route path="/backtests" element={<Backtests />} />
           <Route path="/review" element={<Review />} />
         </Route>

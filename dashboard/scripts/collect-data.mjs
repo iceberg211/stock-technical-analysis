@@ -294,6 +294,14 @@ for (const s of signals) {
   if (s.validation?.outcome === 'sl_hit') byPlaybook[pb].losses++;
 }
 
+// Outcome distribution
+const byOutcome = {};
+for (const s of signals) {
+  const outcome = s.validation?.outcome || 'pending';
+  if (!byOutcome[outcome]) byOutcome[outcome] = 0;
+  byOutcome[outcome]++;
+}
+
 const review = {
   total: signals.length,
   tradable: tradable.length,
@@ -302,6 +310,7 @@ const review = {
   win_rate: validated.length > 0 ? (wins.length / validated.length * 100).toFixed(1) : null,
   byDecision,
   byPlaybook,
+  byOutcome,
 };
 
 console.log('📋 Collecting backtests...');

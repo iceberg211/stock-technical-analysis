@@ -3,55 +3,55 @@
   "symbols": {
     "BTCUSDT": {
       "1h": {
-        "rows": 500,
-        "start": "2026-03-18T20:00:00Z",
-        "end": "2026-04-08T15:00:00Z",
+        "rows": 9229,
+        "start": "2025-03-26T18:00:00Z",
+        "end": "2026-04-15T06:00:00Z",
         "file": "data/clean/BTCUSDT/1h.parquet",
-        "updated_at": "2026-04-08T15:33:51Z",
-        "source": "binance-spot-skill"
+        "updated_at": "2026-04-15T06:34:25Z",
+        "source": "binance"
       },
       "4h": {
-        "rows": 500,
-        "start": "2026-01-15T08:00:00Z",
-        "end": "2026-04-08T12:00:00Z",
+        "rows": 4497,
+        "start": "2024-03-26T20:00:00Z",
+        "end": "2026-04-15T04:00:00Z",
         "file": "data/clean/BTCUSDT/4h.parquet",
-        "updated_at": "2026-04-08T15:33:51Z",
-        "source": "binance-spot-skill"
+        "updated_at": "2026-04-15T06:34:21Z",
+        "source": "binance"
       }
     },
     "ETHUSDT": {
       "1h": {
-        "rows": 500,
-        "start": "2026-03-18T20:00:00Z",
-        "end": "2026-04-08T15:00:00Z",
+        "rows": 1358,
+        "start": "2026-02-17T17:00:00Z",
+        "end": "2026-04-15T06:00:00Z",
         "file": "data/clean/ETHUSDT/1h.parquet",
-        "updated_at": "2026-04-08T15:56:33Z",
-        "source": "binance-spot-skill"
+        "updated_at": "2026-04-15T06:56:52Z",
+        "source": "binance"
       },
       "4h": {
-        "rows": 300,
-        "start": "2026-02-17T16:00:00Z",
-        "end": "2026-04-08T12:00:00Z",
+        "rows": 1089,
+        "start": "2025-10-15T20:00:00Z",
+        "end": "2026-04-15T04:00:00Z",
         "file": "data/clean/ETHUSDT/4h.parquet",
-        "updated_at": "2026-04-08T15:56:33Z",
-        "source": "binance-spot-skill"
+        "updated_at": "2026-04-15T06:56:48Z",
+        "source": "binance"
       }
     },
     "SOLUSDT": {
       "1h": {
-        "rows": 500,
-        "start": "2026-03-18T21:00:00Z",
-        "end": "2026-04-08T16:00:00Z",
+        "rows": 1359,
+        "start": "2026-02-17T17:00:00Z",
+        "end": "2026-04-15T07:00:00Z",
         "file": "data/clean/SOLUSDT/1h.parquet",
-        "updated_at": "2026-04-08T16:30:48Z",
+        "updated_at": "2026-04-15T07:08:02Z",
         "source": "binance"
       },
       "4h": {
-        "rows": 300,
-        "start": "2026-02-17T20:00:00Z",
-        "end": "2026-04-08T16:00:00Z",
+        "rows": 1089,
+        "start": "2025-10-15T20:00:00Z",
+        "end": "2026-04-15T04:00:00Z",
         "file": "data/clean/SOLUSDT/4h.parquet",
-        "updated_at": "2026-04-08T16:31:03Z",
+        "updated_at": "2026-04-15T07:07:59Z",
         "source": "binance"
       }
     },

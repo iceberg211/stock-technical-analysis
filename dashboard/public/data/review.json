@@ -1,19 +1,19 @@
 {
   "total": 11,
   "tradable": 7,
-  "validated": 2,
+  "validated": 5,
   "wins": 0,
   "win_rate": "0.0",
   "byDecision": {
     "short": {
       "total": 4,
       "wins": 0,
-      "losses": 0
+      "losses": 3
     },
     "watch": {
       "total": 4,
       "wins": 0,
-      "losses": 0
+      "losses": 1
     },
     "long": {
       "total": 3,
@@ -25,12 +25,12 @@
     "trend-pullback": {
       "total": 5,
       "wins": 0,
-      "losses": 2
+      "losses": 5
     },
     "无匹配": {
       "total": 4,
       "wins": 0,
-      "losses": 0
+      "losses": 1
     },
     "range-reversal": {
       "total": 1,
@@ -42,5 +42,10 @@
       "wins": 0,
       "losses": 0
     }
+  },
+  "byOutcome": {
+    "sl_hit": 6,
+    "no_levels": 3,
+    "no_data": 2
   }
 }

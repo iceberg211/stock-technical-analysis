@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# Trading Copilot Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AI Signal Dashboard for stock/crypto technical analysis. Reads static JSON data and displays signals, backtest results, and performance metrics.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+# Collect data from outputs/ directory (requires Python + project dependencies)
+npm run collect
 
-## React Compiler
+# Start dev server
+npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Architecture
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The dashboard is a standalone React + Vite app that reads pre-computed JSON files:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+public/data/
+  signals.json     # Signal archive with validation results
+  backtests.json   # Backtest run results with metrics
+  review.json      # Aggregated review statistics
+```
+
+Data is collected by `scripts/collect-data.mjs` which scans `../outputs/` and generates static JSON. The dashboard has no runtime Python dependency.
+
+## Pages
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Dashboard | `/` | KPI cards, outcome distribution chart, signal breakdown, recent signals |
+| Signals | `/signals` | Full signal table with filters (direction/search), click for detail view |
+| Backtests | `/backtests` | Backtest run list with metrics, click for detailed report |
+| Review | `/review` | Performance review with charts: outcome donut, playbook performance bars |
+
+## Tech Stack
+
+- React 19 + TypeScript
+- Vite 8
+- Tailwind CSS 4
+- Recharts (data visualization)
+- Lucide React (icons)
+- React Router DOM (routing)
+- React Markdown (report rendering)
+
+## Data Contract
+
+The dashboard depends on three JSON files. To use independently, provide these files in `public/data/`:
+
+**signals.json**: Array of signal objects with `signal_id`, `symbol`, `timestamp_utc`, `decision`, `bias`, `confidence`, `playbook`, price levels, `snapshot`, `report`, and optional `validation` result.
+
+**backtests.json**: Array of backtest runs with `run_id`, `type` (skill/local), `symbols` array containing `metrics` and `summary`.
+
+**review.json**: Aggregated stats with `total`, `tradable`, `validated`, `wins`, `win_rate`, `byDecision`, `byPlaybook`, `byOutcome`.
