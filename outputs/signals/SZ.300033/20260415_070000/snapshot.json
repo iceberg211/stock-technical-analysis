@@ -1,0 +1,107 @@
+{
+  "time_utc": "2026-04-15T07:00:00Z",
+  "price_now": 239.59,
+  "4h": {
+    "state": "v_reversal_bos",
+    "close": 233.99,
+    "ema20": 230.87,
+    "ema50": 224.12,
+    "rsi14": 58.06,
+    "macd": 4.9951,
+    "signal": 5.5425,
+    "hist": -0.5474,
+    "atr14": 4.1864,
+    "resistance_top3": [
+      240.75,
+      246.61,
+      278.0
+    ],
+    "support_top3": [
+      236.98,
+      226.98,
+      204.69
+    ],
+    "momentum": "bullish_exhaustion",
+    "volume_state": "爆发性放量后高位缩量整理",
+    "rsi_divergence": "none",
+    "macd_divergence": "none"
+  },
+  "1h": {
+    "state": "transition_bos",
+    "close": 239.59,
+    "ema20": 221.8,
+    "ema50": 226.74,
+    "rsi14": 64.73,
+    "macd": 0.2017,
+    "signal": -3.513,
+    "hist": 3.7146,
+    "atr14": 9.4929,
+    "momentum": "bullish",
+    "volume_state": "放量上涨(192-261% VMA20)",
+    "position": "near_resistance",
+    "rsi_divergence": "bullish_regular",
+    "macd_divergence": "none",
+    "key_signal": "RSI看涨背离兑现(215.66->204.69 LL, RSI 25.3->26.9 HL) + MACD Apr-08金叉 + 3连动量蜡烛BOS突破236.98"
+  },
+  "decision": "long",
+  "playbook": "trend-pullback",
+  "bias": "bullish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bullish",
+    "confidence": "medium",
+    "signal_strength": "strong",
+    "mtf_alignment": "neutral"
+  },
+  "structure": {
+    "market_state": "transition",
+    "trend_health": "healthy",
+    "latest_bos_choch": "bos_bull",
+    "notes": "从204.69底部RSI看涨背离触发V形反转. 3根动量蜡烛(+12,+8,+10)放量推动BOS突破236.98. MACD金叉+hist急速扩大至+3.71. 但大级别仍为下降结构(305→205 LL), 当前为结构转换过渡期. Apr-14起动量衰减, 短线需回调消化."
+  },
+  "levels": {
+    "resistances": [
+      240.75,
+      246.61,
+      278.0
+    ],
+    "supports": [
+      236.98,
+      226.98,
+      220.0,
+      204.69
+    ],
+    "current_price": 239.59,
+    "position": "near_resistance"
+  },
+  "pattern": {
+    "candle_pattern": "three_momentum_candles",
+    "chart_pattern": "v_reversal_with_bos",
+    "signal_score": 4
+  },
+  "trade": {
+    "entry_price": 235,
+    "stop_loss": 225,
+    "t1": 240.75,
+    "t2": 250,
+    "risk_reward": 1.58,
+    "trigger_type": "price_touch",
+    "invalidation": "1D收盘跌破220"
+  },
+  "checklist": {
+    "htf_direction": "degraded",
+    "position": "degraded",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "position_size_pct": 50,
+  "counter_reasons": [
+    "大级别仍为下降结构(305→205), V形反转需时间确认",
+    "3天+17.6%涨幅后动量衰减, Apr-15冲高回落",
+    "当前在240.75阻力附近, 不宜追高, 需等回调227-237区域"
+  ]
+}

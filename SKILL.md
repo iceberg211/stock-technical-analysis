@@ -33,6 +33,7 @@ description: |
 | 要求使用 MCP / OHLC / 实时行情数据分析 | `workflows/data-acquisition-workflow.md` -> `workflows/chart-analysis-workflow.md` |
 | 分析完成后需要输出交易方案 | `workflows/trading-decision.md`（Playbook 匹配、Checklist、仓位、回测） |
 | 输出格式选择 | `workflows/output-templates.md`（标准模板、决策卡、AI 注意事项） |
+| 每日复盘 / 持仓巡检 / 批量分析持仓 | `workflows/daily-review.md`（持仓清单 → 逐标的分析 → 信号验证 → 汇总） |
 
 ## Workflow 顺序
 
@@ -85,10 +86,23 @@ description: |
 - 仓位计算、风险控制：
   `references/risk/INDEX.md` -> `references/risk/position-sizing.md`
 
+## 信号归档
+
+每次产出含交易方案的分析，必须归档信号到共享数据目录：
+
+```
+~/.trading-data/signals/{SYMBOL}/{signal_id}/
+  snapshot.json    — 完整分析快照（结构化 JSON）
+  report.md        — 人可读分析报告
+~/.trading-data/signals/{SYMBOL}/index.jsonl  — 追加式索引
+```
+
+数据目录默认 `~/.trading-data/`，可通过 `TRADING_DATA_DIR` 环境变量覆盖。
+
 ## 输出约束
 
 - 用概率语言表达结论，不做确定性承诺。
 - 优先给条件式交易计划，而不是绝对价位断言。
 - 图表信息不足时，停止推进到具体执行建议。
-- 指标段必须输出 RSI/MACD 背离结论（含锚点）；若证据不足，明确写“无背离”。
+- 指标段必须输出 RSI/MACD 背离结论（含锚点）；若证据不足，明确写”无背离”。
 - Checklist 段必须写项目中文名与原因，禁止仅用编号（如 3/4/5）表达状态。

@@ -1,0 +1,107 @@
+{
+  "time_utc": "2026-04-15T07:00:00Z",
+  "price_now": 34.8,
+  "4h": {
+    "state": "uptrend_recovery",
+    "close": 34.91,
+    "ema20": 34.38,
+    "ema50": 33.9,
+    "rsi14": 64.96,
+    "macd": 0.4239,
+    "signal": 0.3445,
+    "hist": 0.0794,
+    "atr14": 0.4357,
+    "resistance_top3": [
+      35.58,
+      37.64,
+      40.9
+    ],
+    "support_top3": [
+      33.95,
+      33.31,
+      32.33
+    ],
+    "momentum": "bullish",
+    "volume_state": "常态量能伴随上涨",
+    "rsi_divergence": "none",
+    "macd_divergence": "none"
+  },
+  "1h": {
+    "state": "uptrend_testing_resistance",
+    "close": 34.8,
+    "ema20": 33.97,
+    "ema50": 34.84,
+    "rsi14": 62.48,
+    "macd": -0.5332,
+    "signal": -0.8881,
+    "hist": 0.3549,
+    "atr14": 1.1936,
+    "momentum": "bullish",
+    "volume_state": "常态量能",
+    "position": "near_resistance",
+    "rsi_divergence": "none",
+    "macd_divergence": "none",
+    "key_signal": "1D MACD hist持续扩大, 价格测试EMA50(34.84)"
+  },
+  "decision": "long",
+  "playbook": "trend-pullback",
+  "bias": "bullish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bullish",
+    "confidence": "medium",
+    "signal_strength": "medium",
+    "mtf_alignment": "aligned"
+  },
+  "structure": {
+    "market_state": "uptrend",
+    "trend_health": "healthy",
+    "latest_bos_choch": "bos_bull",
+    "notes": "从29.80(RSI=9.8)极度超卖底部V形反弹, HH+HL清晰: 33.98→34.58→34.76→34.95(HH), 31.50→32.33→33.31(HL). 当前测试EMA50(34.84)+Fib 0.382(35.58). MACD hist持续正向扩大."
+  },
+  "levels": {
+    "resistances": [
+      35.0,
+      35.58,
+      40.9
+    ],
+    "supports": [
+      33.95,
+      33.31,
+      32.33
+    ],
+    "current_price": 34.8,
+    "position": "near_resistance",
+    "immediate_support": 33.95
+  },
+  "pattern": {
+    "candle_pattern": "none",
+    "chart_pattern": "v_recovery_ascending_channel",
+    "signal_score": 2.5
+  },
+  "trade": {
+    "entry_price": 34.0,
+    "stop_loss": 33.2,
+    "t1": 35.58,
+    "t2": 37.37,
+    "risk_reward": 1.97,
+    "trigger_type": "price_touch",
+    "invalidation": "1D收盘跌破32.33"
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "degraded",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "position_size_pct": 50,
+  "counter_reasons": [
+    "当前在EMA50阻力位, 需确认突破后入场或等回调",
+    "距大级别前高44.94仍有-22.5%, 上方阻力重重",
+    "A股涨跌停限制需注意"
+  ]
+}

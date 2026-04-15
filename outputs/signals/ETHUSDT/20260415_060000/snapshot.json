@@ -1,0 +1,120 @@
+{
+  "time_utc": "2026-04-15T06:00:00Z",
+  "price_now": 2317.14,
+  "4h": {
+    "state": "uptrend",
+    "close": 2317.14,
+    "ema20": 2290.38,
+    "ema50": 2235.04,
+    "ema200": 2147.59,
+    "rsi14": 70.81,
+    "macd": 34.69,
+    "signal": 32.2,
+    "hist": 2.49,
+    "atr14": 46.14,
+    "resistance_top3": [
+      2415,
+      2386
+    ],
+    "support_top3": [
+      2323,
+      2295,
+      2267
+    ],
+    "swing_highs": [
+      2415.5,
+      2329.93,
+      2273.87
+    ],
+    "swing_lows": [
+      2175.0,
+      2060.24,
+      2021.5
+    ],
+    "momentum": "exhaustion",
+    "volume_state": "放量冲高后缩量回踩",
+    "rsi_divergence": "bearish_regular",
+    "macd_divergence": "bearish_regular",
+    "trend_health": "healthy",
+    "key_candle": "Apr-14 12:00 极端长上影(uw=41 vs body=10)在2415新高被拒"
+  },
+  "1h": {
+    "state": "pullback_in_uptrend",
+    "close": 2317.14,
+    "ema20": 2329.55,
+    "ema50": 2308.88,
+    "rsi14": 41.98,
+    "macd": 0.48,
+    "signal": 4.88,
+    "hist": -4.4,
+    "atr14": 16.74,
+    "momentum": "indecisive",
+    "volume_state": "缩量整理",
+    "position": "near_support",
+    "rsi_divergence": "bearish_regular",
+    "macd_divergence": "none",
+    "key_signal": "1H RSI强看跌背离(84.7->46.8), 但价格在Fib 0.382支撑"
+  },
+  "decision": "long",
+  "playbook": "trend-pullback",
+  "bias": "bullish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bullish",
+    "confidence": "medium",
+    "signal_strength": "medium",
+    "mtf_alignment": "neutral"
+  },
+  "structure": {
+    "market_state": "uptrend",
+    "trend_health": "healthy",
+    "latest_bos_choch": "bos_bull",
+    "notes": "从1938底部HH+HL上升趋势: 高点2167→2274→2330→2415(HH), 低点2017→2060→2175(HL). BOS有效突破大级别前高2386(+1.2%). 4H/1H RSI+MACD三重看跌背离但结构未破."
+  },
+  "levels": {
+    "resistances": [
+      2415,
+      2386
+    ],
+    "supports": [
+      2323,
+      2295,
+      2267,
+      2175
+    ],
+    "current_price": 2317,
+    "position": "near_support",
+    "immediate_support": 2323,
+    "fib_50_level": 2295
+  },
+  "pattern": {
+    "candle_pattern": "shooting_star_at_new_high",
+    "chart_pattern": "potential_bull_flag",
+    "signal_score": 3.5
+  },
+  "trade": {
+    "entry_price": 2320,
+    "stop_loss": 2260,
+    "t1": 2415,
+    "t2": 2480,
+    "risk_reward": 1.58,
+    "trigger_type": "price_touch",
+    "invalidation": "4H收盘跌破2175(前Swing Low)"
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "pass",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "degraded",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "position_size_pct": 50,
+  "counter_reasons": [
+    "4H/1H RSI+MACD三重看跌背离, 上方阻力沉重",
+    "需等1H在2295-2330出现反转K线确认",
+    "跌破2175则上升结构破坏, 方案完全失效"
+  ]
+}

@@ -1,53 +1,7 @@
-# macOS / 系统文件
 .DS_Store
-
-# Python 缓存与虚拟环境
-__pycache__/
-*.py[cod]
-*.so
-.python-version
-.venv/
-venv/
-env/
-
-# 测试与工具缓存
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-
-# 本地环境变量
-.env
-.env.*
-
-# 历史行情与分析派生数据（默认不入库）
-
-# Raw and clean market data (regenerable)
-data/raw/
-data/binance_kline/
-data/opend_kline/
-data/mcp_kline/
-data/clean/
-
-# Pipeline outputs
-# runs 中间文件可再生；scored/metrics/config 是核心产物入库
-outputs/runs/**/input.parquet
-outputs/runs/**/eval_input.csv
-outputs/runs/**/runs.jsonl
-outputs/runs/**/summary.md
-outputs/runs/**/details.md
-
-# Conversations 目录已废弃，不再使用
-outputs/conversations/
-
-# Dashboard 构建产物（deploy 时生成，不入库）
-dashboard/dist/
-
-# Data catalog（项目索引，建议入库）
-
-# 回测运行产物（默认不入库）
-eval/results/
-
-# 通用日志
 *.log
-dashboard/public/data/_*
-dashboard/.vite/_*
+
+# 信号归档是核心资产，outputs/signals/ 保留 git 跟踪
+# 回测产物（由 stock-skill-backtest 生成）
+outputs/runs/
+outputs/registry.jsonl

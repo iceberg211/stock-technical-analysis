@@ -1,0 +1,122 @@
+{
+  "time_utc": "2026-04-15T07:00:00Z",
+  "price_now": 82.94,
+  "4h": {
+    "state": "range_recovery_in_downtrend",
+    "close": 82.94,
+    "ema20": 83.91,
+    "ema50": 83.41,
+    "ema200": 84.28,
+    "rsi14": 57.41,
+    "macd": 0.2451,
+    "signal": 0.365,
+    "hist": -0.12,
+    "atr14": 1.4557,
+    "resistance_top3": [
+      87.67,
+      87.02,
+      84.28
+    ],
+    "support_top3": [
+      82.64,
+      81.27,
+      78.38
+    ],
+    "swing_highs": [
+      87.67,
+      86.26,
+      85.95
+    ],
+    "swing_lows": [
+      81.27,
+      81.4,
+      78.38
+    ],
+    "momentum": "bearish",
+    "volume_state": "放量冲高失败+放量下跌",
+    "rsi_divergence": "none",
+    "macd_divergence": "bearish_regular",
+    "trend_health": "possible_reversal",
+    "key_candle": "Apr-14 12:00 极端射击之星(uw=1.72 vs body=0.17, 比值10:1)在87.67被拒"
+  },
+  "1h": {
+    "state": "oversold_decline",
+    "close": 82.95,
+    "ema20": 83.96,
+    "ema50": 84.13,
+    "rsi14": 20.87,
+    "macd": -0.4823,
+    "signal": -0.3189,
+    "hist": -0.1634,
+    "atr14": 0.5864,
+    "momentum": "bearish",
+    "volume_state": "放量下跌后缩量",
+    "position": "near_support",
+    "rsi_divergence": "bearish_regular",
+    "macd_divergence": "none",
+    "key_signal": "1H RSI=20.87深度超卖, 1H看跌背离(78.8->51.1)"
+  },
+  "decision": "short",
+  "playbook": "false-breakout-reversal",
+  "bias": "bearish",
+  "confidence": "medium",
+  "verdict": {
+    "bias": "bearish",
+    "confidence": "medium",
+    "signal_strength": "strong",
+    "mtf_alignment": "neutral"
+  },
+  "structure": {
+    "market_state": "downtrend",
+    "trend_health": "possible_reversal",
+    "latest_bos_choch": "bos_bear",
+    "notes": "大级别下降趋势(97.68→76.70)未改变, 距前高-10.2%. 87区域双顶(87.02+87.67)形成假突破反转. 中级别HH+HL不干净(86.26 LH打断序列). 回撤73.9%接近0.786极限. EMA压制格局(Price<EMA20<EMA200)."
+  },
+  "levels": {
+    "resistances": [
+      87.67,
+      87.02,
+      84.28
+    ],
+    "supports": [
+      82.64,
+      81.27,
+      78.38,
+      76.7
+    ],
+    "current_price": 82.94,
+    "position": "near_support",
+    "immediate_support": 82.64,
+    "fib_50_level": 84.47
+  },
+  "pattern": {
+    "candle_pattern": "extreme_shooting_star_10to1",
+    "chart_pattern": "double_top_87_area",
+    "signal_score": 4.5
+  },
+  "trade": {
+    "entry_price": 83.5,
+    "stop_loss": 85.5,
+    "t1": 81.27,
+    "t2": 79.0,
+    "risk_reward": 2.25,
+    "trigger_type": "price_touch",
+    "invalidation": "4H收盘站上87.67"
+  },
+  "checklist": {
+    "htf_direction": "pass",
+    "position": "degraded",
+    "setup_match": "pass",
+    "trigger": "degraded",
+    "risk_reward": "pass",
+    "events": "pass",
+    "counter_reason": "degraded"
+  },
+  "checklist_result": "pass_degraded",
+  "position_size_pct": 50,
+  "counter_reasons": [
+    "1H RSI=20.87深度超卖, 不宜立刻追空, 需等反弹至83.4-84.3均线阻力再入场",
+    "76.70→87.67反弹结构存在, 若BTC/ETH走强可能带动SOL补涨",
+    "若价格不反弹直接跌破81.27, 不追空"
+  ]
+}
