@@ -9,21 +9,28 @@
 | 模式 | 触发场景 | 输出内容 |
 | ------ | --------- | --------- |
 | 完整模式 | 首次分析 | 先完成数据获取 workflow（如需），再走 Step 0~8 + 交易决策卡 + 免责声明 |
+| 多标的模式 | 一次分析多个标的 | 共用数据说明一次 + 总览表 + 逐标的价格证据和条件；只有满足条件的标的附交易决策卡 |
 | 精简模式 | 追问/更新（如“现在呢”“止损要调吗”） | 只输出变化项 + 结论更新 + 免责声明 |
 | 快问快答 | 单点问题（如“支撑在哪”） | 直接回答 + 免责声明 |
 
 ---
+
+多标的模式使用 `batch-fast-path.md` 的交接摘要和输出约定。完整分析步骤仍执行，但不为每只标的重复展开相同的字段说明。逐标的保留周期根数、状态和质量异常；用户要求完整细节时按完整模式展开。
+
+普通批量报告默认使用总览表 + 每只标的三项（结构、关键位、确认/失效条件）+ 共用数据说明，六标的参考1000–1500中文字符，按实质证据调整。根数和状态用紧凑表保留；背离仅展开影响当前判断的成对锚点，完整指标证据留在会话快照。不能用缩短报告省略质量异常或把候选背离写成已确认。该模式的模板已包含在批量入口，不要求重复全文加载本文件。
 
 ## 标准输出模板（完整模式）
 
 ```text
 #### 基础信息
 - 品种: xxx
-- 市场类型: [cn_equity / crypto_spot / futures / forex]
+- 市场类型: [cn_equity / us_equity / hk_equity / crypto_spot / futures / forex]
 - 数据来源: [截图 / MCP / OHLC / 混合]
-- 数据通道: [AKShare / Binance Spot / 本地缓存 / 派生周期]
+- 数据通道: [Yahoo Finance chart API / Longbridge 备用 / Binance Spot skill / 本地缓存 / 派生周期]
+- 数据参数: [provider_symbol=xxx, adjust_type=xxx, trade_session=xxx]
 - 取数说明: [requested_bars=xxx, actual_bars=xxx, analysis_bars=xxx]
 - 周期状态: [1D=complete, 60m=degraded_recent_only, 4H=complete ...]
+- 首选源回退原因: [无 / longbridge_plugin_unavailable / longbridge_auth_required / ...]
 - 数据完整性: [完整 / 降级]（原因: xxx）
 - 图表数量: [1张 / 2张及以上 / 无截图]
 - 分析模式: [图片模式 / 数据模式 / 混合模式]
@@ -50,11 +57,11 @@
 - 信号强度: [弱 / 中 / 强]
 
 #### 指标信号（如可见）
-- RSI背离: [常规看涨 / 常规看跌 / 隐形看涨 / 隐形看跌 / 无背离 / 无数据]（价格锚点: x->y, RSI锚点: a->b）
-- MACD背离: [常规看涨 / 常规看跌 / 隐形看涨 / 隐形看跌 / 无背离 / 无数据]（价格锚点: x->y, MACD锚点: a->b）
+- RSI背离: [无背离 / 候选 / 已确认 / 无法判断]（有关系时给类型、价格锚点和RSI锚点）
+- MACD背离: [无背离 / 候选 / 已确认 / 无法判断]（有关系时给类型、价格锚点和DIF锚点）
 - RSI数值: xxx（仅辅助，不独立触发）
 - MACD数值: xxx（仅辅助，不独立触发）
-- 指标确认: [背离确认 / 无背离仅数值参考 / 无指标可判断]
+- 指标确认: [背离确认 / 候选待价格确认 / 无背离仅数值参考 / 无法判断]
 
 #### 综合研判
 - 偏向: [偏多 / 偏空 / 观望]
@@ -109,7 +116,7 @@
 ### 触发规则
 
 - 用户请求包含 `--json`。
-- 或分析模式为数据模式（OHLC/MCP）。
+- 或用户明确要求 eval / 结构化输出。普通 OHLC/MCP 问答使用人可读报告。
 
 ### 核心数据结构（TypeScript）
 
@@ -152,16 +159,21 @@ interface SharedStructure {
 interface EvalJSON extends SharedStructure {
   meta: {
     symbol: string;
-    market: "cn_equity" | "crypto_spot" | "other";
+    market: "cn_equity" | "us_equity" | "hk_equity" | "crypto_spot" | "other";
     interval: string;
     analysis_time: string; // ISO 8601 UTC
     data_source: "screenshot" | "ohlc" | "mixed";
     source_name?: string;
+    data_channel?: string;
+    provider_symbol?: string;
+    adjust_type?: string;
+    trade_session?: string;
     requested_bars?: number;
     actual_bars?: number;
     analysis_bars?: number;
     derived_from?: string | null;
     is_complete?: boolean;
+    source_fallback_reason?: string | null;
     degrade_reason?: string | null;
     timeframe_status?: Record<string, string>;
     mtf_role: "direction" | "signal" | "entry" | "single";
@@ -192,6 +204,7 @@ interface EvalJSON extends SharedStructure {
   };
   indicators: {
     rsi: {
+      divergence_status?: "none" | "candidate" | "confirmed" | "insufficient";
       value: number | null;
       condition: "overbought" | "oversold" | "neutral" | "na";
       divergence: "bullish_regular" | "bearish_regular" | "bullish_hidden" | "bearish_hidden" | "none" | "na";
@@ -199,6 +212,7 @@ interface EvalJSON extends SharedStructure {
       anchor_indicator: [number, number] | null;
     };
     macd: {
+      divergence_status?: "none" | "candidate" | "confirmed" | "insufficient";
       histogram: "expanding" | "contracting" | "near_zero" | "na";
       position: "above_zero" | "below_zero" | "na";
       divergence: "bullish_regular" | "bearish_regular" | "bullish_hidden" | "bearish_hidden" | "none" | "na";
@@ -242,15 +256,16 @@ interface BacktestJSON extends SharedStructure {
 1. 不要跳步：必须从 Step 0 开始。
 2. 先分析后结论：先完成 Step 0~7，再输出 Step 8。
 3. 结构化数据场景下，先执行 `data-acquisition-workflow.md`，再进入 `chart-analysis-workflow.md`。
-4. 只要使用结构化数据，必须输出 `requested_bars / actual_bars / analysis_bars`。
-5. A 股默认周期模板为 `1D + 60m`，币圈默认周期模板为 `4H + 1H`，除非用户明确指定。
-6. A 股若出现 `4H`，默认视为由 `60m` 派生，必须写明 `derived_from=60m`。
-7. A 股若 `1D` 成功但 `60m` 失败，允许输出日线主结论，但必须显式写 `timeframe_status` 与降级原因。
-8. 指标段必须先给 RSI/MACD 背离结论，再给数值辅助。
-9. 无背离时必须显式写“无背离”，不能省略。
-10. 单靠超买超卖、金叉死叉、零轴位置不得上调高信心。
-11. 有 volume 字段时必须输出“量能结论”；无 volume 时明确写“量能数据不可用”。
-12. 数据优先：结构化数据 > 用户指定值 > 清晰截图 > 模糊截图。
-13. 不要编造价位：刻度不可读时改为条件描述。
-14. Checklist 禁止只写编号（如“3/4/5”），必须写项目中文名与原因。
-15. 每次文本输出末尾都要附加免责声明。
+4. 只要使用结构化数据，必须输出 `data_channel / requested_bars / actual_bars / analysis_bars / timeframe_status`。
+5. 股票市场默认直接使用 Yahoo Finance chart API；用户明确指定 Yahoo 时跳过长桥探测。只有 Yahoo 失败或数据不足时才调用长桥备用，并记录明确原因。
+6. A 股、美股、港股默认周期模板为 `1D + 60m`，币圈默认周期模板为 `4H + 1H`，除非用户明确指定。
+7. A 股若出现 `4H`，默认视为由 `60m` 派生，必须写明 `derived_from=60m`。
+8. A 股、美股或港股若 `1D` 成功但分钟周期失败，允许输出日线主结论，但必须显式写 `timeframe_status` 与降级原因。
+9. 指标段必须先给 RSI/MACD 背离结论，再给数值辅助。
+10. 背离状态区分“无背离 / 候选 / 已确认 / 无法判断”；只有做过有效比较才能写“无背离”，缺证据不能冒充无背离。
+11. 单靠超买超卖、金叉死叉、零轴位置不得上调高信心。
+12. 有 volume 字段时必须输出“量能结论”；无 volume 时明确写“量能数据不可用”。
+13. 数据优先：结构化数据 > 用户指定值 > 清晰截图 > 模糊截图。
+14. 不要编造价位：刻度不可读时改为条件描述。
+15. Checklist 禁止只写编号（如“3/4/5”），必须写项目中文名与原因。
+16. 每次文本输出末尾都要附加免责声明。

@@ -1,0 +1,208 @@
+{
+  "tested_at_beijing": "2026-10-03T12:21:42.612+08:00",
+  "mode": "真实行情只读接口集成测试及最终代码回放",
+  "live": {
+    "stocks": {
+      "symbols": [
+        "SNDK.US",
+        "601899.SH"
+      ],
+      "source": "longbridge",
+      "request_count": 6,
+      "fetch_wall_ms": 3479,
+      "processing_ms": 20,
+      "pipeline_observed_ms": 3500
+    },
+    "crypto": {
+      "symbol": "BTCUSDT",
+      "source": "binance_spot_skill:/api/v3/klines",
+      "clock_http_wall_ms": 1396,
+      "request_count": 2,
+      "fetch_wall_ms": 2523,
+      "processing_ms": 5,
+      "pipeline_observed_ms": 2529
+    }
+  },
+  "final_code_replay": {
+    "input_series": 8,
+    "unique_series": 8,
+    "failed_series": 0,
+    "duplicate_series": 0,
+    "normalize_indicator_ms": 21,
+    "render_ms": 1,
+    "total_processing_ms": 22,
+    "output_chars": 9334,
+    "network_requests": 0
+  },
+  "series": [
+    {
+      "market": "us_equity",
+      "symbol": "SNDK.US",
+      "interval": "1d",
+      "requested_bars": 300,
+      "actual_bars": 300,
+      "valid_complete_bars": 300,
+      "analysis_bars": 300,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 0,
+      "warnings": [
+        "calendar_unverified",
+        "session_calendar_unverified",
+        "timestamp_semantics_unverified"
+      ],
+      "coverage_start": "2025-07-25T04:00:00.000Z",
+      "coverage_end": "2026-10-02T04:00:00.000Z"
+    },
+    {
+      "market": "us_equity",
+      "symbol": "SNDK.US",
+      "interval": "60m",
+      "requested_bars": 300,
+      "actual_bars": 300,
+      "valid_complete_bars": 300,
+      "analysis_bars": 240,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 0,
+      "warnings": [
+        "calendar_unverified",
+        "session_calendar_unverified",
+        "timestamp_semantics_unverified"
+      ],
+      "coverage_start": "2026-08-14T18:30:00.000Z",
+      "coverage_end": "2026-10-02T19:30:00.000Z"
+    },
+    {
+      "market": "cn_equity",
+      "symbol": "601899.SH",
+      "interval": "1d",
+      "requested_bars": 300,
+      "actual_bars": 300,
+      "valid_complete_bars": 300,
+      "analysis_bars": 300,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 0,
+      "warnings": [
+        "calendar_unverified",
+        "timestamp_semantics_unverified"
+      ],
+      "coverage_start": "2025-07-09T16:00:00.000Z",
+      "coverage_end": "2026-09-29T16:00:00.000Z"
+    },
+    {
+      "market": "cn_equity",
+      "symbol": "601899.SH",
+      "interval": "60m",
+      "requested_bars": 160,
+      "actual_bars": 160,
+      "valid_complete_bars": 128,
+      "analysis_bars": 120,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 32,
+      "warnings": [
+        "calendar_unverified",
+        "closing_reference_unmerged",
+        "timestamp_semantics_unverified",
+        "unverified_grid_gaps"
+      ],
+      "coverage_start": "2026-08-18T06:00:00.000Z",
+      "coverage_end": "2026-09-30T06:00:00.000Z"
+    },
+    {
+      "market": "cn_equity",
+      "symbol": "601899.SH",
+      "interval": "30m",
+      "requested_bars": 240,
+      "actual_bars": 240,
+      "valid_complete_bars": 213,
+      "analysis_bars": 180,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 27,
+      "warnings": [
+        "calendar_unverified",
+        "closing_reference_unmerged",
+        "timestamp_semantics_unverified",
+        "unverified_grid_gaps"
+      ],
+      "coverage_start": "2026-08-28T03:00:00.000Z",
+      "coverage_end": "2026-09-30T06:30:00.000Z"
+    },
+    {
+      "market": "cn_equity",
+      "symbol": "601899.SH",
+      "interval": "5m",
+      "requested_bars": 240,
+      "actual_bars": 240,
+      "valid_complete_bars": 234,
+      "analysis_bars": 200,
+      "status": "degraded_quality",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 6,
+      "warnings": [
+        "calendar_unverified",
+        "closing_reference_unmerged",
+        "irregular_timestamp",
+        "timestamp_semantics_unverified",
+        "unverified_grid_gaps"
+      ],
+      "coverage_start": "2026-09-23T06:15:00.000Z",
+      "coverage_end": "2026-09-30T06:55:00.000Z"
+    },
+    {
+      "market": "crypto_spot",
+      "symbol": "BTCUSDT",
+      "interval": "4h",
+      "requested_bars": 300,
+      "actual_bars": 300,
+      "valid_complete_bars": 300,
+      "analysis_bars": 300,
+      "status": "complete",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 0,
+      "warnings": [],
+      "coverage_start": "2026-08-14T04:00:00.000Z",
+      "coverage_end": "2026-10-03T00:00:00.000Z"
+    },
+    {
+      "market": "crypto_spot",
+      "symbol": "BTCUSDT",
+      "interval": "60m",
+      "requested_bars": 500,
+      "actual_bars": 500,
+      "valid_complete_bars": 500,
+      "analysis_bars": 500,
+      "status": "complete",
+      "invalid_bars": 0,
+      "forming_bars": 0,
+      "reference_bars": 0,
+      "warnings": [],
+      "coverage_start": "2026-09-12T08:00:00.000Z",
+      "coverage_end": "2026-10-03T03:00:00.000Z"
+    }
+  ],
+  "automated_tests": {
+    "javascript": 69,
+    "python": 7,
+    "failed": 0
+  },
+  "limitations": [
+    "Yahoo成功路径未完成真实接口验证；当前沙箱直接HTTP探测返回DNS解析错误。",
+    "股票交易日历与长桥时间戳语义未核验，保持degraded_quality；参考记录未猜测合并。",
+    "API与计算计时不包含模型推理、报告生成和最终发送耗时，end_to_end_ms未测量。"
+  ],
+  "fixes": [
+    "币圈现货接入固定处理器，使用UTC连续交易和Binance服务器时钟。",
+    "Binance默认请求包含forming bar时会少一根，改用固定endTime获取完整窗口后复测通过。"
+  ]
+}

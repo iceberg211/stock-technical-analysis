@@ -20,6 +20,8 @@ a_stock:
     interval: [1d, 60m]
   - symbol: SH.601899    # 紫金矿业
     interval: [1d, 60m]
+  - symbol: SH.600410    # 华胜天成
+    interval: [1d, 60m]
 ```
 
 ## 执行流程
@@ -78,7 +80,7 @@ wait
 
 ```bash
 cd ~/Documents/GitHub/stock-skill-backtest
-python3 -m src --symbols BTCUSDT ETHUSDT SOLUSDT BNBUSDT SZ.300033 SH.601899 --interval 1h
+python3 -m src --symbols BTCUSDT ETHUSDT SOLUSDT BNBUSDT SZ.300033 SH.601899 SH.600410 --interval 1h
 ```
 
 ### Phase 4：输出汇总
@@ -86,33 +88,78 @@ python3 -m src --symbols BTCUSDT ETHUSDT SOLUSDT BNBUSDT SZ.300033 SH.601899 --i
 ```markdown
 ## 每日持仓复盘 {YYYY-MM-DD}
 
-### 今日分析
+### 0. 执行摘要
 
-| 标的 | 方向 | 偏向 | 信心 | 策略 | 关键理由 |
-|------|------|------|------|------|---------|
-| BTCUSDT | short | bearish | high | trend-pullback | ... |
-| ETHUSDT | watch | neutral | low | none | ... |
-| ... | | | | | |
+- 市场整体状态：{一句话说明多空/震荡/风险偏好}
+- 今日可执行信号：{有/无；如有列出标的}
+- 今日主要风险：{列出 2-3 条最重要风险}
+- 数据质量：{完整/降级；说明降级标的和原因}
 
-### 历史信号验证
+### 1. 总览表
+
+| 标的    | 方向  | 偏向    | 信心 | 策略           | 关键理由 |
+| ------- | ----- | ------- | ---- | -------------- | -------- |
+| BTCUSDT | short | bearish | high | trend-pullback | ...      |
+| ETHUSDT | watch | neutral | low  | none           | ...      |
+| ...     |       |         |      |                |          |
+
+### 2. 历史信号验证
 
 | 标的 | 信号时间 | 方向 | 结果 | R值 |
-|------|---------|------|------|-----|
-| ... | | | | |
+| ---- | -------- | ---- | ---- | --- |
+| ...  |          |      |      |     |
 
-### 需要关注
+### 3. 需要关注
 
 - {列出需要特别注意的变化}
+
+### 4. 个股细节
+
+#### {SYMBOL} {名称}
+
+**结论卡**
+- 方向：{做多/做空/观望}
+- 偏向：{bullish/bearish/neutral/watch}
+- 信心：{high/medium/low}
+- Playbook：{策略名/none}
+- 当前价：{price_at_signal}（来源：{1h/60m/1d}）
+
+**多周期结构**
+- HTF {周期}：结构={uptrend/downtrend/range/transition}，趋势健康度={healthy/exhaustion/possible_reversal}
+- LTF {周期}：结构={uptrend/downtrend/range/transition}，趋势健康度={healthy/exhaustion/possible_reversal}
+- 多周期一致性：{aligned/conflicting/neutral}
+
+**关键价位**
+- 支撑：{最多 3 个}
+- 阻力：{最多 3 个}
+- 当前位置：{支撑附近/阻力附近/中间位置}
+
+**行为与指标**
+- 近期动量：{多头主导/空头主导/犹豫不决}
+- 量价关系：{放量确认/缩量整理/背离/不可用}
+- RSI 背离：{类型/无}
+- MACD 背离：{类型/无}
+- 形态：{K线形态/图表形态/无}
+
+**执行计划**
+- 候选条件：{条件式触发}
+- 失效条件：{结构失效或数据降级触发的放弃条件}
+- 当前动作：{观望/等待回踩/等待跌破/等待突破回踩}
+
+**数据状态**
+- requested_bars / actual_bars / analysis_bars：{按周期列出}
+- timeframe_status：{按周期列出}
+- 降级原因：{无/具体原因}
 ```
 
 ## 使用方式
 
-| 工具 | 用法 |
-|------|------|
+| 工具        | 用法                                                               |
+| ----------- | ------------------------------------------------------------------ |
 | Claude Code | 在 stock-technical-analysis 项目中说"每日复盘"，自动触发并行 Agent |
-| Codex | 作为 task prompt 提交，Codex 自行调度并行 |
-| 定时 | 配合 `/schedule` 或 cron 定时触发 |
-| 手动 | 直接粘贴本文件内容作为 prompt |
+| Codex       | 作为 task prompt 提交，Codex 自行调度并行                          |
+| 定时        | 配合 `/schedule` 或 cron 定时触发                                  |
+| 手动        | 直接粘贴本文件内容作为 prompt                                      |
 
 ## 持仓变更
 
