@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+
+# 信号归档是核心资产，outputs/signals/ 保留 git 跟踪
+# 回测产物（由 stock-skill-backtest 生成）
+outputs/runs/
+outputs/registry.jsonl

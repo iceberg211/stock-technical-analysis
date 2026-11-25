@@ -1,0 +1,20 @@
+name: trend-pullback
+description: 顺势回调入场
+extends: _defaults
+conditions:
+  long:
+    market_state: uptrend
+    rsi_min: 52
+    macd_hist_min: -0.02
+  short:
+    market_state: downtrend
+    rsi_max: 48
+    macd_hist_max: 0.02
+entry:
+  trigger_type_long: close_above
+  trigger_type_short: close_below
+stop_loss:
+  atr_multiplier: 1.0
+targets:
+  t1_atr_multiplier: 1.6
+  t2_atr_multiplier: 3.0

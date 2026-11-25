@@ -1,0 +1,4 @@
+interface:
+  display_name: "市场行情数据"
+  short_description: "无缓存、纯脚本化的多市场多周期 OHLCV 取数与指标预计算服务"
+  default_prompt: "运行 $market-data 脚本获取指定标的的无缓存多周期行情快照与预计算指标。"

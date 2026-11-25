@@ -1,0 +1,5 @@
+interface:
+  display_name: "交易风险计划"
+  short_description: "根据结构止损和账户约束计算仓位并检查计划风险"
+  default_prompt: "使用 $trade-risk 根据交易前提、逻辑止损和账户约束生成风险计划。"
+

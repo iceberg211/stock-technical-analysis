@@ -1,74 +1,88 @@
-# stock-technical-analysis
+# Trading Skills Suite (交易分析与决策技能套件)
 
-`stock-technical-analysis` 是一个给 AI Agent 使用的交易技术分析 Skill。  
-它的核心价值不是“讲概念”，而是把分析过程标准化，让不同 AI 在面对同一市场输入时，输出更一致、更可执行的条件式交易计划。
+这是一个专为 AI Agent（Claude Code、Codex、Gemini、Antigravity 等）打造的专业交易技术分析与价格行为技能套件。
 
-## 这个 Skill 解决什么问题
+本仓库采用多技能 Monorepo 统一组织，将交易流程清晰解耦为“**行情底座 $\rightarrow$ 平级分析器 $\rightarrow$ 仓位风控**”的专业化架构。
 
-- 把“凭感觉看图”变成可复用的多步骤分析流程。
-- 把“只给方向”升级为“方向 + 关键位 + 触发条件 + 风控”。
-- 降低 AI 在复杂分析中的幻觉率，优先使用结构化行情数据（MCP/OHLC）。
-- 减少风格漂移，让不同 AI 给出的结论结构一致、便于比较和复盘。
+---
 
-## 适用场景
+## 技能组成与职责划分
 
-- 用户上传 1 张或多张 K 线图，想快速判断当前结构与关键点位。
-- 用户要求多周期联动分析（例如 `4H + 1H`）并给出日内计划。
-- 用户不提供图片，只给标的，要求 AI 主动拉取行情并分析。
-- 用户需要“可执行计划”，而不是泛泛而谈的市场点评。
+```mermaid
+flowchart TD
+    MD["$market-data<br/>(多市场行情与指标底座)"] --> STA["$stock-technical-analysis<br/>(通用技术分析器)"]
+    MD --> PAD["$price-action-decision<br/>(Al Brooks 价格行为分析器)"]
+    STA --> TR["$trade-risk<br/>(仓位与风险管理)"]
+    PAD --> TR
+```
 
-## 输入与输出
+| 技能 (Skill) | 目录位置 | 核心定位与职责 |
+|---|---|---|
+| **market-data** | `skills/market-data/` | **行情事实与指标预计算**：支持 A股/ETF、港股、美股、加密货币。无缓存直接并发取数、完整 K 线剥离，预计算 EMA20/MA/VMA20/RSI14/MACD 及 Swing 极值。 |
+| **stock-technical-analysis** | `skills/stock-technical-analysis/` | **通用技术分析与条件式计划**：标准市场结构（BOS/CHoCH）、支撑阻力、形态识别、量价背离与多周期通用 Playbook。 |
+| **price-action-decision** | `skills/price-action-decision/` | **Al Brooks 价格行为决策器**：严格遵循 Al Brooks 原生体系（事实优先 $\rightarrow$ 市场周期 $\rightarrow$ Always In $\rightarrow$ 多空意图 $\rightarrow$ 最佳动作）。平级独立分析器。 |
+| **trade-risk** | `skills/trade-risk/` | **风控与仓位计算**：根据已确认的逻辑止损和账户约束，科学计算仓位规模，管理单笔与组合风险。 |
 
-输入支持：
+---
 
-- K 线截图（单图或多图）。
-- MCP / OHLC 结构化行情数据。
-- 图片 + 行情数据混合输入。
+## 目录结构
 
-输出目标：
+```text
+.
+├── skills/
+│   ├── market-data/               # 行情数据获取、清洗与指标预计算基座
+│   │   ├── SKILL.md
+│   │   ├── scripts/               # 多源取数与计算脚本
+│   │   ├── references/            # 接口与周期规范
+│   │   └── tests/
+│   ├── stock-technical-analysis/  # 通用技术分析工作流与知识库
+│   │   ├── SKILL.md
+│   │   ├── workflows/             # 分析与复盘工作流
+│   │   ├── references/            # 核心概念、指标、形态与 Playbook
+│   │   ├── strategies/            # 策略配置
+│   │   └── tests/
+│   ├── price-action-decision/     # Al Brooks 价格行为分析与决策
+│   │   ├── SKILL.md
+│   │   ├── scripts/               # 盘中切片与快照生成
+│   │   ├── references/            # Brooks 知识体系与战法
+│   │   └── tests/
+│   └── trade-risk/                # 交易风险与仓位控制
+│       ├── SKILL.md
+│       └── references/
+├── docs/                          # 架构与多维决策规范
+├── tests/                         # 套件集成测试入口
+├── CLAUDE.md                      # AI 协作指引
+└── README.md
+```
 
-- `分析证据`：市场结构、关键位、形态、动量、综合研判。
-- `交易决策卡`：方向、setup、触发、止损、目标、仓位建议、失效条件。
-- `风险约束`：明确不满足条件时观望，不强行给单。
+---
 
-## 核心方法
+## 本地安装与挂载方式
 
-- 先分析后结论：先证据，后决策，避免“先拍方向再补理由”。
-- 数据优先：`MCP/OHLC > 用户明确数值 > 清晰截图 > 模糊截图`。
-- 最小读取：高频规则内置在 workflow，只有边界情况再查 references。
-- 图片保守：图像细节不清时只给结构判断，不输出硬价位或微观 K 线强结论。
+各 AI 平台通过软链接接入本套件，修改本仓库即可实时生效：
 
-## 快速使用示例
+```bash
+# 挂载到 ~/.agents/skills/
+ln -snf "$(pwd)/skills/market-data" ~/.agents/skills/market-data
+ln -snf "$(pwd)/skills/stock-technical-analysis" ~/.agents/skills/stock-technical-analysis
+ln -snf "$(pwd)/skills/price-action-decision" ~/.agents/skills/price-action-decision
+ln -snf "$(pwd)/skills/trade-risk" ~/.agents/skills/trade-risk
 
-- `分析 BTC 4H 和 1H，给我今天可执行的多空条件。`
-- `只用你能拉到的 MCP 数据，做 ETH 日内交易计划。`
-- `我发两张图，你按高周期定方向、低周期找触发。`
-- `如果信号冲突，请明确告诉我观望，不要强行给点位。`
+# Codex / Gemini 亦可直接链接或引用 ~/.agents/skills
+```
 
-## 给不同 AI 的接入建议
+---
 
-- 必需文件：`SKILL.md`、`workflows/`
-- 建议文件：`references/`
-- 平台元数据：`agents/openai.yaml`
+## 运行测试
 
-加载顺序建议：
+套件包含完整的契约与规则回归测试：
 
-1. 读取 `SKILL.md`（触发条件 + 使用规则）。
-2. 执行 `workflows/chart-analysis-workflow.md`。
-3. 仅在需要时按需读取 `references/` 细节。
+```bash
+python3 tests/run_all_tests.py
+```
 
-## 仓库范围
-
-包含：
-
-- 图表/行情数据驱动的技术分析流程。
-- 多时间框架联动判断。
-- 条件式交易计划与风险控制框架。
-
-不包含：
-
-- 交易日志、复盘数据库、绩效统计系统。
+---
 
 ## 免责声明
 
-本 Skill 仅用于研究与学习，不构成任何投资建议。交易有风险，决策与结果由使用者自行承担。
+本套件所有 Skill 仅供研究与学习使用，不构成任何投资建议。实际交易存在高度风险，盈亏自负。

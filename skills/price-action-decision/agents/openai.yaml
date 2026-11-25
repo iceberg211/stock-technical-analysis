@@ -1,0 +1,4 @@
+interface:
+  display_name: "Al Brooks 价格行为交易决策"
+  short_description: "按七步看盘与交易者方程给出条件式计划"
+  default_prompt: "使用 $price-action-decision，先按七步看盘判断价格事实、环境、Always In、多空双方和主备解释，再选择一个交易模式、持仓方式与订单方式并给出条件式计划。"

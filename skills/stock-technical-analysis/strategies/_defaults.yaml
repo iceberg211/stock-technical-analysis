@@ -1,0 +1,19 @@
+version: "1.0"
+entry:
+  atr_multiplier: 1.0
+stop_loss:
+  atr_multiplier: 1.0
+targets:
+  t1_atr_multiplier: 1.6
+  t2_atr_multiplier: 3.0
+filters:
+  min_rsi_long: 52
+  max_rsi_short: 48
+  min_macd_hist_long: -0.02
+  max_macd_hist_short: 0.02
+position:
+  default_size_pct: 50.0
+  risk_pct: 1.0
+scoring:
+  slippage_pct: 0.05
+  fee_pct: 0.10
