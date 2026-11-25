@@ -1,0 +1,162 @@
+[
+  {
+    "id": "strong_trend_minor_reversal",
+    "facts": "强多头突破和窄幅通道后只出现一根空头反转K线，没有反向跟进。",
+    "expected": {
+      "price_facts": "原多头推动强，反向只有一根且无跟进。",
+      "environment": "窄幅多头通道",
+      "always_in": "long",
+      "bull_case": "多头交易小回调和趋势恢复。",
+      "bear_case": "空头只有小反转候选。",
+      "primary": "原多头趋势延续。",
+      "alternate": "先转为交易区间。",
+      "switch_condition": "连续强空头K线突破主要较高低点并获得跟进。",
+      "trade_style": "swing",
+      "order_type": "wait",
+      "stop_logic": "主要多头结构失效处。",
+      "target": "前高或趋势延续空间。",
+      "invalidation": "强反向突破和跟进改变Always In。"
+    },
+    "must_not_conclude": ["MTR已确认"]
+  },
+  {
+    "id": "broad_channel_two_sided",
+    "facts": "宽幅多头通道接近上沿，主要较高低点仍完整，局部出现空头反转。",
+    "expected": {
+      "price_facts": "主要结构仍抬高，但上沿出现局部空头压力。",
+      "environment": "宽幅多头通道",
+      "always_in": "long",
+      "bull_case": "多头等待回调做波段。",
+      "bear_case": "空头可在上沿尝试短线。",
+      "primary": "保留多头波段方向。",
+      "alternate": "通道变平后转为交易区间。",
+      "switch_condition": "主要较高低点被破坏且多头恢复失败。",
+      "trade_style": "scalp",
+      "order_type": "stop",
+      "stop_logic": "空头反转结构失效处。",
+      "target": "通道中部或前一摆动中心。",
+      "invalidation": "多头强势突破上沿并获得跟进。"
+    },
+    "must_not_conclude": ["自动切换为空头趋势"]
+  },
+  {
+    "id": "range_bottom_no_chase",
+    "facts": "交易区间下部出现强空头第二段，但突破尚未停留在区间外。",
+    "expected": {
+      "price_facts": "空头腿强但仍在区间下部，突破尚未被接受。",
+      "environment": "交易区间",
+      "always_in": "unclear",
+      "bull_case": "多头等待失败下破和反转。",
+      "bear_case": "空头需要区间外跟进才能追随。",
+      "primary": "等待失败下破或成功突破证据。",
+      "alternate": "空头成功突破进入趋势。",
+      "switch_condition": "完整K线持续收在区间外并获得跟进。",
+      "trade_style": "no_trade",
+      "order_type": "wait",
+      "stop_logic": "尚无合格交易，不设置入场止损。",
+      "target": "等待区间中部或突破目标可用。",
+      "invalidation": "突破被接受后停止区间逆势逻辑。"
+    },
+    "must_not_conclude": ["在区间底部直接追空"]
+  },
+  {
+    "id": "climax_defaults_to_correction",
+    "facts": "趋势后段出现全段最大趋势K线，随后只有普通获利了结。",
+    "expected": {
+      "price_facts": "趋势后段加速，但反向压力尚未形成强突破。",
+      "environment": "高潮风险",
+      "always_in": "原趋势方向",
+      "bull_case": "原趋势方可能在修正后恢复。",
+      "bear_case": "反向方先交易获利了结和短线修正。",
+      "primary": "优先考虑修正或交易区间。",
+      "alternate": "反向突破升级为MTR或新趋势。",
+      "switch_condition": "强反向突破、跟进和再次测试破坏原结构。",
+      "trade_style": "scalp",
+      "order_type": "wait",
+      "stop_logic": "反向短线结构失效处。",
+      "target": "高潮起点、突破点或附近支撑阻力。",
+      "invalidation": "原趋势恢复或反向趋势获得确认。"
+    },
+    "must_not_conclude": ["反向趋势已确认"]
+  },
+  {
+    "id": "late_trend_requires_equation",
+    "facts": "小回调趋势仍强，但入场较晚、结构止损较远且前方接近阻力。",
+    "expected": {
+      "price_facts": "趋势仍强，但入场价差、止损远且目标空间受压。",
+      "environment": "窄幅通道后段",
+      "always_in": "原趋势方向",
+      "bull_case": "顺势方交易继续，但需要较小仓位。",
+      "bear_case": "对手方等待高潮或区间转换。",
+      "primary": "先检查交易者方程，空间不足则放弃。",
+      "alternate": "趋势后段转为高潮或交易区间。",
+      "switch_condition": "连续失望K线、深回调或反向突破出现。",
+      "trade_style": "no_trade",
+      "order_type": "wait",
+      "stop_logic": "正确结构止损仍过远。",
+      "target": "前方阻力前没有足够空间。",
+      "invalidation": "出现新突破和足够目标空间后重新评估。"
+    },
+    "must_not_conclude": ["因为FOMO无条件追单"]
+  },
+  {
+    "id": "late_session_time_risk",
+    "facts": "尾盘出现区间突破候选，剩余时间很少，逆势限价方案需要深回撤和加仓。",
+    "expected": {
+      "price_facts": "尾盘突破候选存在，但复杂逆势方案需要市场回归和较长时间。",
+      "environment": "尾盘区间突破候选",
+      "always_in": "unclear",
+      "bull_case": "突破方需要立即跟进。",
+      "bear_case": "逆势方缺少等待价格回归的时间。",
+      "primary": "限制逆势限价和加仓，等待顺势确认或不交易。",
+      "alternate": "突破失败并快速回到区间。",
+      "switch_condition": "突破获得跟进或迅速回到旧区间。",
+      "trade_style": "no_trade",
+      "order_type": "wait",
+      "stop_logic": "剩余时间不支持原复杂管理。",
+      "target": "只接受尾盘内可达目标。",
+      "invalidation": "出现清晰收盘趋势后重新选择顺势方式。"
+    },
+    "must_not_conclude": ["忽略收盘时间继续复杂管理"]
+  },
+  {
+    "id": "good_trade_goes_bad",
+    "facts": "合理顺势入场后出现强反向突破、连续跟进，原趋势恢复多次失败。",
+    "expected": {
+      "price_facts": "反向突破强且有跟进，原趋势恢复持续失败。",
+      "environment": "原趋势前提失效",
+      "always_in": "候选翻转",
+      "bull_case": "原方向交易者应退出或降低风险。",
+      "bear_case": "反向方已开始通过普通交易获利。",
+      "primary": "主动退出，不等待加仓解套。",
+      "alternate": "退出后原趋势重新恢复。",
+      "switch_condition": "原方向重新突破并获得跟进。",
+      "trade_style": "no_trade",
+      "order_type": "market",
+      "stop_logic": "原交易前提已经失效。",
+      "target": "退出优先，不再坚持原目标。",
+      "invalidation": "新证据出现后生成新的交易事件。"
+    },
+    "must_not_conclude": ["加仓证明旧判断"]
+  },
+  {
+    "id": "alternate_path_takes_control",
+    "facts": "原预期区间突破失败，但价格连续收在区间外并获得同向跟进。",
+    "expected": {
+      "price_facts": "价格持续在区间外并获得同向跟进。",
+      "environment": "成功突破",
+      "always_in": "突破方向",
+      "bull_case": "突破方交易动量和后续延续。",
+      "bear_case": "逆势方原先的失败突破假设已被价格否定。",
+      "primary": "备选突破路径升级为主要解释并切换到BO+FT。",
+      "alternate": "突破后来失败并回到旧区间。",
+      "switch_condition": "价格重新进入旧区间并出现反向跟进。",
+      "trade_style": "swing",
+      "order_type": "stop",
+      "stop_logic": "突破回调或旧区间另一侧。",
+      "target": "测量移动、第二段或下一结构位。",
+      "invalidation": "突破被拒绝并回到旧结构。"
+    },
+    "must_not_conclude": ["继续用多数突破失败否认价格"]
+  }
+]

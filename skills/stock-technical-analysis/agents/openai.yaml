@@ -1,0 +1,8 @@
+interface:
+  display_name: "通用技术分析"
+  short_description: "分析结构、关键位、形态、量价与 RSI/MACD 信号"
+  default_prompt: "使用 $stock-technical-analysis 对图表或统一行情快照进行通用技术分析。"
+
+policy:
+  allow_implicit_invocation: true
+
